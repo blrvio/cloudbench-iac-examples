@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -13,14 +13,14 @@ resource "aws_snowball_job" "main" {
   number_of_devices = 1
   # Set the shipping address
   shipping_address {
-    name        = "Your Name"
-    company     = "Your Company"
-    address1    = "Your Address"
-    address2    = "Your Address (Optional)"
-    city        = "Your City"
-    state       = "Your State"
-    zip         = "Your Zip Code"
-    country     = "Your Country"
+    name         = "Your Name"
+    company      = "Your Company"
+    address1     = "Your Address"
+    address2     = "Your Address (Optional)"
+    city         = "Your City"
+    state        = "Your State"
+    zip          = "Your Zip Code"
+    country      = "Your Country"
     phone_number = "Your Phone Number"
   }
   # Set the notification settings

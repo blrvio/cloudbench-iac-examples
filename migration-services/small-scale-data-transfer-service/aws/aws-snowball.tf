@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -7,14 +7,14 @@ provider "aws" {
 # Create a Snowball Job
 resource "aws_snowball_job" "main" {
   address {
-    line1 = "123 Main Street"
-    line2 = "Suite 100"
-    city  = "Anytown"
-    state = "CA"
-    zip   = "91234"
+    line1   = "123 Main Street"
+    line2   = "Suite 100"
+    city    = "Anytown"
+    state   = "CA"
+    zip     = "91234"
     country = "US"
   }
-  description  = "My Snowball Job"
+  description = "My Snowball Job"
   job_type    = "IMPORT"
   notification {
     s3_event_notification {

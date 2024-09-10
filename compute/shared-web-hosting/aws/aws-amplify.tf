@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -21,7 +21,7 @@ resource "aws_amplify_app" "main" {
     notification_config {
       # Configure Slack notification parameters
       slack {
-        channel = "my-slack-channel" # Name of the Slack channel
+        channel     = "my-slack-channel"                     # Name of the Slack channel
         webhook_url = "https://hooks.slack.com/services/..." # Slack webhook URL
       }
     }
@@ -31,8 +31,8 @@ resource "aws_amplify_app" "main" {
 # Create an Amplify Branch
 resource "aws_amplify_branch" "main" {
   app_id = aws_amplify_app.main.id # ID of the Amplify app
-  name    = "main" # Name of the branch
-  stage   = "PROD" # Stage of the branch
+  name   = "main"                  # Name of the branch
+  stage  = "PROD"                  # Stage of the branch
   # Define the branch creation configurations
   build_spec = <<EOF
 version: 0.2
@@ -55,7 +55,7 @@ EOF
     notification_config {
       # Configure Slack notification parameters
       slack {
-        channel = "my-slack-channel" # Name of the Slack channel
+        channel     = "my-slack-channel"                     # Name of the Slack channel
         webhook_url = "https://hooks.slack.com/services/..." # Slack webhook URL
       }
     }
@@ -64,12 +64,12 @@ EOF
 
 # Create a custom domain for the Amplify app
 resource "aws_amplify_domain" "main" {
-  app_id  = aws_amplify_app.main.id
-  domain  = "my-domain.com"
+  app_id    = aws_amplify_app.main.id
+  domain    = "my-domain.com"
   subdomain = "www"
 
   # Optional settings
-  enable_cloudfront_mutli_az = true # Enable CloudFront Multi-AZ
+  enable_cloudfront_mutli_az       = true  # Enable CloudFront Multi-AZ
   enable_automated_branch_creation = false # Disable automatic branch creation
 
   # Define SSL certificate configurations
@@ -82,5 +82,3 @@ resource "aws_amplify_domain" "main" {
   #   subject_alternative_names = ["www.my-domain.com"]
   # }
 }
-
-  

@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -31,8 +31,8 @@ resource "aws_fsx_openzfs_file_system" "main" {
 
 # Create a subnet for the file system
 resource "aws_subnet" "main" {
-  availability_zone = "us-east-1a" # Select an Availability Zone
-  cidr_block         = "10.0.0.0/24" # Specify a CIDR block for the subnet
+  availability_zone = "us-east-1a"    # Select an Availability Zone
+  cidr_block        = "10.0.0.0/24"   # Specify a CIDR block for the subnet
   vpc_id            = aws_vpc.main.id # ID of the VPC
 }
 
@@ -47,7 +47,7 @@ resource "aws_vpc" "main" {
 
 # Create a security group for the file system
 resource "aws_security_group" "main" {
-  name   = "sg-fsx-openzfs"
+  name = "sg-fsx-openzfs"
   #  Define inbound and outbound rules for the security group
   ingress {
     from_port   = 22

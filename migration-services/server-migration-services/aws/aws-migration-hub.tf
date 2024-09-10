@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -45,8 +45,8 @@ resource "aws_migrationhub_service" "main" {
 # Create a Migration Hub Tag
 resource "aws_migrationhub_tag" "main" {
   migration_task_name = aws_migrationhub_migration_task.main.migration_task_name
-  tag_key     = "Environment"
-  tag_value   = "Production"
+  tag_key             = "Environment"
+  tag_value           = "Production"
 }
 
 # Create a Migration Hub User Account
@@ -58,13 +58,13 @@ resource "aws_migrationhub_user_account" "main" {
 
 # Create a Migration Hub User Account Association
 resource "aws_migrationhub_user_account_association" "main" {
-  account_id     = aws_caller_identity.current.account_id
+  account_id          = aws_caller_identity.current.account_id
   migration_task_name = aws_migrationhub_migration_task.main.migration_task_name
 }
 
 # Create a Migration Hub User Account Association with a Tag
 resource "aws_migrationhub_user_account_association" "main" {
-  account_id     = aws_caller_identity.current.account_id
+  account_id          = aws_caller_identity.current.account_id
   migration_task_name = aws_migrationhub_migration_task.main.migration_task_name
   tags = {
     Environment = "Production"

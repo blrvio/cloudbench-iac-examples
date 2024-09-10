@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -23,7 +23,7 @@ resource "aws_db_instance" "main" {
   availability_zone = "us-east-1a"
 
   # Optionally set the storage options for the database
-  storage_type = "gp2"
+  storage_type      = "gp2"
   allocated_storage = 10 # Size of the storage volume in GB
 
   # Set the subnet group
@@ -37,8 +37,8 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids = [aws_security_group.main.id]
 
   # Optionally configure backups for the database
-  backup_retention_period = 7 # Keep backups for 7 days
-  skip_final_snapshot = true # Don't take a snapshot before deleting the instance
+  backup_retention_period = 7    # Keep backups for 7 days
+  skip_final_snapshot     = true # Don't take a snapshot before deleting the instance
 
   # Optionally configure the deletion protection
   deletion_protection = false # Allow deletion of the instance
@@ -46,7 +46,7 @@ resource "aws_db_instance" "main" {
 
 # Create a security group for the RDS instance
 resource "aws_security_group" "main" {
-  name   = "sg-rds"
+  name = "sg-rds"
   # Allow inbound connections to the RDS instance on port 5432 (default Postgres port)
   ingress {
     from_port   = 5432

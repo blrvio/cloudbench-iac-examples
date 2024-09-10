@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -18,8 +18,8 @@ resource "aws_vpc" "main" {
 
 # Create a Subnet
 resource "aws_subnet" "main" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
@@ -58,20 +58,20 @@ resource "aws_security_group" "main" {
 
 # Create a Launch Template
 resource "aws_launch_template" "main" {
-  name_prefix  = "hpc-launch-template"
-  image_id     = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS
+  name_prefix   = "hpc-launch-template"
+  image_id      = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS
   instance_type = "c5.xlarge"
-  key_name     = "my-ssh-key"
+  key_name      = "my-ssh-key"
 
   # Assign security group to the launch template
   security_group_ids = [aws_security_group.main.id]
 
   # Configure the EBS volume
   ebs_block_device {
-    device_name = "/dev/sda1"
-    volume_type = "gp2"
+    device_name           = "/dev/sda1"
+    volume_type           = "gp2"
     delete_on_termination = true
-    volume_size = 100
+    volume_size           = 100
   }
 
   user_data = <<EOF
@@ -87,8 +87,8 @@ resource "aws_autoscaling_group" "main" {
   launch_template {
     id = aws_launch_template.main.id
   }
-  min_size  = 1
-  max_size  = 3
+  min_size         = 1
+  max_size         = 3
   desired_capacity = 2
 }
 

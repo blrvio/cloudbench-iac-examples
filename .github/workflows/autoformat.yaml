@@ -1,0 +1,39 @@
+name: Terraform Auto Format
+
+# Executar a action em push para a branch "update"
+on:
+  push:
+    branches:
+      - update  # A action será acionada ao fazer push para a branch "update"
+
+jobs:
+  terraform-fmt:
+    name: Format Terraform Code
+    runs-on: ubuntu-latest
+
+    steps:
+      # Verifica o repositório e baixa o código
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Instalar o Terraform (usando uma action pronta do Terraform)
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0  # Defina a versão desejada
+
+      # Executa terraform fmt para formatar o código
+      - name: Terraform Format
+        run: terraform fmt -recursive
+
+      # Adiciona o código formatado no git, commita e empurra de volta à branch "main"
+      - name: Commit and Push Changes to Main
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git checkout main  # Mudança para a branch "main"
+          git pull origin main  # Certifica-se de que está atualizado com a branch "main"
+          git add .
+          git commit -m "Auto format Terraform code"
+          git push origin main  # Push das mudanças para a branch "main"
+        continue-on-error: true  # Isso evita falha se não houver mudanças

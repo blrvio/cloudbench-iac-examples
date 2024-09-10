@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired AWS region
 }
@@ -11,7 +11,7 @@ resource "aws_migrationhub_home_region_control" "main" {
 
 # Create a Migration Hub Configuration
 resource "aws_migrationhub_configuration" "main" {
-  home_region  = aws_migrationhub_home_region_control.main.home_region
+  home_region = aws_migrationhub_home_region_control.main.home_region
   account_id  = aws_caller_identity.current.account_id
   # Optional configuration settings
   # logging_config {

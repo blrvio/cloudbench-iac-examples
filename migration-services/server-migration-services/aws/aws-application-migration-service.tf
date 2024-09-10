@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -40,7 +40,7 @@ resource "aws_migrationhub_ads_configuration" "main" {
 
 # Create an AWS MIGRATION HUB Migration Task
 resource "aws_migrationhub_migration_task" "main" {
-  name       = "my-migration-task" # Replace with your desired task name
+  name        = "my-migration-task" # Replace with your desired task name
   description = "My migration task description"
   # Optionally set the status of the task
   status = "COMPLETED"

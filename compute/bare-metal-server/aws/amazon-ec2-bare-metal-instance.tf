@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -26,7 +26,7 @@ resource "aws_security_group" "main" {
 # Create a Bare Metal Instance
 resource "aws_ec2_instance" "main" {
   ami           = "ami-08c40ec972c57421d" # AMI for Ubuntu Server 20.04 LTS
-  instance_type = "x1e.32xlarge" # Bare Metal Instance type
+  instance_type = "x1e.32xlarge"          # Bare Metal Instance type
   # Specify the SSH key to access the instance
   key_name = "my-ssh-key"
   # Define tags for the instance

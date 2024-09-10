@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -12,11 +12,11 @@ resource "aws_ecs_cluster" "main" {
 # Create a Task Definition
 resource "aws_ecs_task_definition" "main" {
   family                   = "my-task-definition"
-  network_mode              = "awsvpc"
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                     = 256
-  memory                  = 512
-  container_definitions = <<EOF
+  cpu                      = 256
+  memory                   = 512
+  container_definitions    = <<EOF
 [    {
       "name": "my-container",
       "image": "nginx:latest",
@@ -36,7 +36,7 @@ EOF
 
 # Create an IAM Role for ECS Task Execution
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name               = "ecsTaskExecutionRole"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -104,15 +104,15 @@ resource "aws_security_group" "ecs_sg" {
 
 # Create an ECS Service
 resource "aws_ecs_service" "main" {
-  cluster        = aws_ecs_cluster.main.id
-  name           = "my-ecs-service"
+  cluster         = aws_ecs_cluster.main.id
+  name            = "my-ecs-service"
   task_definition = aws_ecs_task_definition.main.arn
-  desired_count = 1
-  launch_type = "FARGATE"
+  desired_count   = 1
+  launch_type     = "FARGATE"
   network_configuration {
     awsvpc_configuration {
-      subnets           = ["your-subnet-id"] # Replace with your subnet IDs
-      security_groups = [aws_security_group.ecs_sg.id]
+      subnets          = ["your-subnet-id"] # Replace with your subnet IDs
+      security_groups  = [aws_security_group.ecs_sg.id]
       assign_public_ip = true
     }
   }

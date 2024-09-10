@@ -1,17 +1,17 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Lambda Function
 resource "aws_lambda_function" "main" {
-  function_name = "my-lambda-function" # Name of your Lambda function
-  runtime       = "nodejs16.x" # Runtime environment for the function
-  handler       = "index.handler" # Entry point for the function
+  function_name = "my-lambda-function"         # Name of your Lambda function
+  runtime       = "nodejs16.x"                 # Runtime environment for the function
+  handler       = "index.handler"              # Entry point for the function
   role          = aws_iam_role.lambda_role.arn # IAM role for the function
-  memory_size   = 128 # Memory allocated to the function (MB)
-  timeout       = 30 # Timeout for the function (seconds)
+  memory_size   = 128                          # Memory allocated to the function (MB)
+  timeout       = 30                           # Timeout for the function (seconds)
 
   # Define the code for the function
   # You can either provide the code directly in the code attribute, or
@@ -49,8 +49,8 @@ EOF
 
 # Attach the necessary permissions to the IAM role
 resource "aws_iam_role_policy" "lambda_policy" {
-  name = "lambda_policy"
-  role = aws_iam_role.lambda_role.id
+  name   = "lambda_policy"
+  role   = aws_iam_role.lambda_role.id
   policy = <<EOF
 {
   "Version": "2012-10-17",

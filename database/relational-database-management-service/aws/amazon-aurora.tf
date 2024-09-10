@@ -1,12 +1,12 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a security group for Aurora
 resource "aws_security_group" "aurora_sg" {
-  name   = "aurora_sg"
+  name = "aurora_sg"
   ingress {
     from_port   = 3306
     to_port     = 3306
@@ -23,8 +23,8 @@ resource "aws_security_group" "aurora_sg" {
 
 # Create a parameter group
 resource "aws_db_parameter_group" "aurora_parameter_group" {
-  name = "aurora_parameter_group"
-  family = "aurora-mysql-5.7"
+  name        = "aurora_parameter_group"
+  family      = "aurora-mysql-5.7"
   description = "Parameter group for Aurora MySQL 5.7"
   parameters = {
     "character_set_server" = "utf8mb4"
@@ -34,11 +34,11 @@ resource "aws_db_parameter_group" "aurora_parameter_group" {
 
 # Create an Aurora Cluster
 resource "aws_db_cluster" "aurora_cluster" {
-  cluster_identifier = "aurora-cluster"
-  engine = "aurora-mysql"
-  engine_version = "5.7.12"
-  master_username = "admin"
-  master_password = "password123" # Replace with a strong password
+  cluster_identifier              = "aurora-cluster"
+  engine                          = "aurora-mysql"
+  engine_version                  = "5.7.12"
+  master_username                 = "admin"
+  master_password                 = "password123" # Replace with a strong password
   db_cluster_parameter_group_name = aws_db_parameter_group.aurora_parameter_group.name
   # Define the number of read replicas in the cluster
   # This example creates one read replica.
@@ -48,7 +48,7 @@ resource "aws_db_cluster" "aurora_cluster" {
   # Define the storage settings for the cluster
   # This example uses 10 GB of storage
   storage_encrypted = true # Enable encryption for the cluster
-  storage_type = "gp2"
+  storage_type      = "gp2"
   allocated_storage = 10
   # Enable IAM authentication for the cluster
   # You can specify the IAM roles that are allowed to access the cluster.
@@ -70,18 +70,18 @@ resource "aws_db_subnet_group" "aurora_subnet_group" {
   # Optional settings for the subnet group
   # description = "Aurora subnet group"
   # tags = {
-    # Name = "Aurora subnet group"
+  # Name = "Aurora subnet group"
   #}
 }
 
 # Create an Aurora DB instance
 resource "aws_db_instance" "aurora_db_instance" {
-  db_name = "my_db"
+  db_name               = "my_db"
   db_cluster_identifier = aws_db_cluster.aurora_cluster.id
-  allocated_storage = 10
-  engine = "aurora-mysql"
-  engine_version = "5.7.12"
-  storage_type = "gp2"
+  allocated_storage     = 10
+  engine                = "aurora-mysql"
+  engine_version        = "5.7.12"
+  storage_type          = "gp2"
   # Specify the subnet group for the instance
   # This example uses the subnet group created earlier
   subnet_group_name = aws_db_subnet_group.aurora_subnet_group.name

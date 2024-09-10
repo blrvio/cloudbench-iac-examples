@@ -1,5 +1,5 @@
 
-    # Configure the AWS provider
+# Configure the AWS provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -7,8 +7,8 @@ provider "aws" {
 # Create an EBS volume
 resource "aws_ebs_volume" "main" {
   availability_zone = "us-east-1a" # Select an availability zone
-  size              = 10 # Volume size in GB
-  type              = "gp2" # Volume type (GP2)
+  size              = 10           # Volume size in GB
+  type              = "gp2"        # Volume type (GP2)
   # Add tags to the volume
   tags = {
     Name = "My EBS Volume"

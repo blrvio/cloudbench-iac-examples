@@ -1,12 +1,12 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a VPC
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16" # Replace with your desired CIDR block
+  cidr_block           = "10.0.0.0/16" # Replace with your desired CIDR block
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
@@ -46,7 +46,7 @@ resource "aws_security_group" "main" {
 resource "aws_instance" "main" {
   ami           = "ami-08c40ec972c57421d" # Replace with your desired AMI
   instance_type = "t3.xlarge"
-  key_name       = "my-key-pair"
+  key_name      = "my-key-pair"
   subnet_id     = aws_subnet.main.id
   # Enable Nitro Enclaves
   enclave_options {
