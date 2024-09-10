@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -26,8 +26,8 @@ resource "aws_internet_gateway" "main" {
 # Create a Subnet
 resource "aws_subnet" "main" {
   vpc_id            = aws_vpc.main.id # The VPC to which the subnet belongs
-  cidr_block         = "10.0.1.0/24" # The CIDR block for the subnet
-  availability_zone = "us-east-1a" # Choose an availability zone
+  cidr_block        = "10.0.1.0/24"   # The CIDR block for the subnet
+  availability_zone = "us-east-1a"    # Choose an availability zone
 
   # Add tags for identification
   tags = {
@@ -48,7 +48,7 @@ resource "aws_route_table" "main" {
 
 # Associate the route table with the subnet
 resource "aws_route_table_association" "main" {
-  subnet_id = aws_subnet.main.id
+  subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
 }
 

@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -20,8 +20,8 @@ resource "aws_transit_gateway" "main" {
 # Create a Transit Gateway VPC Attachment
 resource "aws_transit_gateway_vpc_attachment" "main" {
   transit_gateway_id = aws_transit_gateway.main.id
-  vpc_id            = aws_vpc.main.id
-  subnet_ids        = [aws_subnet.main.id]
+  vpc_id             = aws_vpc.main.id
+  subnet_ids         = [aws_subnet.main.id]
   # Optionally, define the DNS options for the VPC attachment
   dns_options {
     # Enable DNS support for the VPC attachment
@@ -62,15 +62,15 @@ resource "aws_route_table" "main" {
 
 # Associate the Route Table with the Subnet
 resource "aws_route_table_association" "main" {
-  subnet_id     = aws_subnet.main.id
+  subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
 }
 
 # Create a Route for the Transit Gateway
 resource "aws_route" "main" {
-  route_table_id = aws_route_table.main.id
+  route_table_id         = aws_route_table.main.id
   destination_cidr_block = "0.0.0.0/0"
-  transit_gateway_id = aws_transit_gateway.main.id
+  transit_gateway_id     = aws_transit_gateway.main.id
 }
 
   

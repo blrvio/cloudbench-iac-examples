@@ -1,14 +1,14 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Dedicated Host
 resource "aws_ec2_dedicated_host" "main" {
-  auto_placement = "on" # Automatically place instances on the host
-  host_type = "m5.xlarge" # Host type to use (e.g., m5.xlarge, m5n.xlarge, etc.)
-  instance_family = "m5" # Instance family to use
+  auto_placement    = "on"         # Automatically place instances on the host
+  host_type         = "m5.xlarge"  # Host type to use (e.g., m5.xlarge, m5n.xlarge, etc.)
+  instance_family   = "m5"         # Instance family to use
   availability_zone = "us-east-1a" # Availability Zone for the host
   # Define the host attributes
   host_properties {
@@ -18,7 +18,7 @@ resource "aws_ec2_dedicated_host" "main" {
 
 # Create a Security Group
 resource "aws_security_group" "main" {
-  name   = "sg-dedicated-host"
+  name = "sg-dedicated-host"
   # Define the ingress and egress rules
   ingress {
     from_port   = 22
@@ -37,7 +37,7 @@ resource "aws_security_group" "main" {
 # Create an EC2 instance on the Dedicated Host
 resource "aws_instance" "main" {
   ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "m5.xlarge" # Instance type to use
+  instance_type = "m5.xlarge"             # Instance type to use
   # Define the SSH key to use for accessing the instance
   key_name = "my-ssh-key"
   # Define the tags for the instance

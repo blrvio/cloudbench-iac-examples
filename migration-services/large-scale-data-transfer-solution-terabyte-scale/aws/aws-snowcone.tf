@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -24,7 +24,7 @@ resource "aws_snowcone_device" "main" {
 # Create a Snowcone Job
 resource "aws_snowcone_job" "main" {
   device_id = aws_snowcone_device.main.id # ID of your Snowcone device
-  name = "my-snowcone-job" # Name of your Snowcone job
+  name      = "my-snowcone-job"           # Name of your Snowcone job
   # Description of the job
   description = "My Snowcone Job"
 

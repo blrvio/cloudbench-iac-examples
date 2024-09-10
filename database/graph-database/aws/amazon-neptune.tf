@@ -1,7 +1,7 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
-  region = "us-east-1"  # Replace with your desired region
+  region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Neptune cluster
@@ -12,7 +12,7 @@ resource "aws_neptune_cluster" "main" {
   # Choose an instance type that supports Neptune
   instance_class = "db.r5.large"
   # Choose a subnet group
-  subnet_group_name   = "my-neptune-subnet-group"
+  subnet_group_name = "my-neptune-subnet-group"
   # Choose a security group
   vpc_security_group_ids = [aws_security_group.main.id]
   # Enable deletion protection to prevent accidental deletion
@@ -26,7 +26,7 @@ resource "aws_neptune_cluster" "main" {
 
 # Create a security group for Neptune access
 resource "aws_security_group" "main" {
-  name   = "sg-neptune"
+  name = "sg-neptune"
   # Allow access from your IP address to the Neptune cluster
   ingress {
     from_port   = 3306
@@ -53,8 +53,8 @@ resource "aws_neptune_subnet_group" "main" {
 
 # Create subnets for the Neptune cluster
 resource "aws_subnet" "main" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.0.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.0.0/24"
   availability_zone = "us-east-1a"
   # Add tags for organization and management
   tags = {
@@ -63,8 +63,8 @@ resource "aws_subnet" "main" {
 }
 
 resource "aws_subnet" "main2" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1b"
   # Add tags for organization and management
   tags = {

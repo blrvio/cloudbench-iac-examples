@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -33,7 +33,7 @@ resource "aws_transfer_server" "main" {
 
 # Create a Role for the Server
 resource "aws_iam_role" "main" {
-  name = "my-transfer-server-role"
+  name               = "my-transfer-server-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -54,7 +54,7 @@ EOF
 resource "aws_transfer_server_user" "main" {
   server_id = aws_transfer_server.main.id
   user_name = "my-user"
-  role = aws_iam_role.main.arn
+  role      = aws_iam_role.main.arn
 }
 
   

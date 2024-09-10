@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -12,10 +12,10 @@ resource "aws_ecs_cluster" "main" {
 # Create a Task Definition
 resource "aws_ecs_task_definition" "main" {
   family                   = "my-fargate-task"
-  network_mode            = "awsvpc"
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                     = 256
-  memory                  = 512
+  cpu                      = 256
+  memory                   = 512
   # Define the container for the task
   container_definitions = <<EOF
 [  
@@ -48,12 +48,12 @@ resource "aws_ecs_service" "main" {
   name            = "my-fargate-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.main.id
-  desired_count  = 1
+  desired_count   = 1
   # Define the network configuration for the service
   network_configuration {
     awsvpc_configuration {
       # Define the subnets for the service
-      subnets = ["subnet-1234567890abcdef0","subnet-0987654321fedcba9"]
+      subnets = ["subnet-1234567890abcdef0", "subnet-0987654321fedcba9"]
       # Define the security groups for the service
       security_groups = [aws_security_group.main.id]
       # Assign a public IP address to the service
@@ -70,7 +70,7 @@ resource "aws_ecs_service" "main" {
 
 # Create a Security Group
 resource "aws_security_group" "main" {
-  name   = "my-fargate-security-group"
+  name = "my-fargate-security-group"
   ingress {
     from_port   = 80
     to_port     = 80

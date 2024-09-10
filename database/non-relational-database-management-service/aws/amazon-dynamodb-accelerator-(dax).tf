@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -25,7 +25,7 @@ resource "aws_dax_subnet_group" "main" {
 
 # Create a Security Group
 resource "aws_security_group" "main" {
-  name   = "sg-dax"
+  name = "sg-dax"
   # Define the ingress and egress rules
   ingress {
     from_port   = 6379 # DAX port

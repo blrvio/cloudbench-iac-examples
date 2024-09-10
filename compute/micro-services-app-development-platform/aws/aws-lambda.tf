@@ -1,12 +1,12 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create an IAM role for the Lambda function
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_role"
+  name               = "lambda_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -25,7 +25,7 @@ EOF
 
 # Attach the necessary policies to the IAM role
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  role = aws_iam_role.lambda_role.id
+  role       = aws_iam_role.lambda_role.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
@@ -33,7 +33,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 resource "aws_lambda_function" "main" {
   function_name = "my-lambda-function"
   runtime       = "nodejs16.x"
-  handler      = "index.handler"
+  handler       = "index.handler"
   role          = aws_iam_role.lambda_role.arn
   filename      = "lambda_function.zip"
   # This will create a zip file in the current directory named 'lambda_function.zip'
@@ -43,8 +43,8 @@ resource "aws_lambda_function" "main" {
 
   # Optional settings
   memory_size = 128
-  timeout      = 30
-  publish      = true
+  timeout     = 30
+  publish     = true
 }
 
 # Create an API Gateway endpoint for the Lambda function
@@ -59,18 +59,18 @@ resource "aws_api_gateway_resource" "main" {
 }
 
 resource "aws_api_gateway_method" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id  = aws_api_gateway_resource.main.id
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.main.id
   http_method   = "GET"
   authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id  = aws_api_gateway_resource.main.id
-  http_method   = "GET"
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.main.id
+  http_method      = "GET"
   integration_type = "aws_proxy"
-  integration_uri = aws_lambda_function.main.invoke_arn
+  integration_uri  = aws_lambda_function.main.invoke_arn
 }
 
   

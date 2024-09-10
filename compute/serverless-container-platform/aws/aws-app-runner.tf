@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -56,7 +56,7 @@ resource "aws_apprunner_service" "main" {
 # This resource is used to connect your App Runner service to external services
 # such as a database.
 resource "aws_apprunner_connection" "main" {
-  name   = "my-apprunner-connection"
+  name    = "my-apprunner-connection"
   service = aws_apprunner_service.main.id
   # Define the connection configuration
   connection_config {

@@ -1,19 +1,19 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Batch compute environment
 resource "aws_batch_compute_environment" "main" {
-  name           = "my-batch-compute-environment"
-  type           = "MANAGED"
+  name = "my-batch-compute-environment"
+  type = "MANAGED"
   compute_resources {
     # Minimum vCPU and memory resources
-    minv_cpus  = 2
-    memory     = 4096
+    minv_cpus = 2
+    memory    = 4096
     # Maximum vCPU and memory resources
-    maxv_cpus  = 16
+    maxv_cpus = 16
     # Set the desired number of instances
     desiredv_cpus = 4
     # Instance types
@@ -25,9 +25,9 @@ resource "aws_batch_compute_environment" "main" {
 
 # Create a Batch job queue
 resource "aws_batch_job_queue" "main" {
-  name             = "my-batch-job-queue"
+  name                      = "my-batch-job-queue"
   compute_environment_order = [aws_batch_compute_environment.main.arn]
-  priority         = 1000
+  priority                  = 1000
   # Configure the service role for the job queue
   service_role = aws_iam_role.batch_job_queue_role.arn
 }
@@ -54,7 +54,7 @@ resource "aws_batch_job_definition" "main" {
 
 # Create an IAM role for the Batch service
 resource "aws_iam_role" "batch_service_role" {
-  name = "batch-service-role"
+  name               = "batch-service-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -73,7 +73,7 @@ EOF
 
 # Create an IAM role for the Batch job queue
 resource "aws_iam_role" "batch_job_queue_role" {
-  name = "batch-job-queue-role"
+  name               = "batch-job-queue-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

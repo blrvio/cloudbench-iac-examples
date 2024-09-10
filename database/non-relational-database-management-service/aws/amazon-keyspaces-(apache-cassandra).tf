@@ -1,15 +1,15 @@
 
-    # Configure the AWS provider
+# Configure the AWS provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Keyspaces table
 resource "aws_keyspaces_table" "main" {
-  name               = "my-keyspaces-table"
-  keyspace_name       = "my-keyspace"
-  partition_key       = ["id"] # Define the partition key
-  clustering_key      = ["timestamp"] # Define the clustering key
+  name                 = "my-keyspaces-table"
+  keyspace_name        = "my-keyspace"
+  partition_key        = ["id"]        # Define the partition key
+  clustering_key       = ["timestamp"] # Define the clustering key
   billing_mode         = "PAY_PER_REQUEST"
   read_capacity_units  = 10
   write_capacity_units = 5
@@ -27,8 +27,8 @@ resource "aws_keyspaces_table" "main" {
 
 # Create a Keyspaces keyspace
 resource "aws_keyspaces_keyspace" "main" {
-  name     = "my-keyspace"
-  region   = "us-east-1" # Replace with your desired region
+  name   = "my-keyspace"
+  region = "us-east-1" # Replace with your desired region
   tags = {
     Name = "My Keyspaces Keyspace"
   }

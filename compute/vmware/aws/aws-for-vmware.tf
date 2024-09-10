@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -25,7 +25,7 @@ resource "aws_internet_gateway" "main" {
 
 # Create a Subnet
 resource "aws_subnet" "main" {
-  vpc_id = aws_vpc.main.id
+  vpc_id     = aws_vpc.main.id
   cidr_block = "10.0.1.0/24"
   # Availability Zone
   availability_zone = "us-east-1a"
@@ -46,7 +46,7 @@ resource "aws_route_table" "main" {
 
 # Create a Security Group
 resource "aws_security_group" "main" {
-  name   = "sg-vmware"
+  name = "sg-vmware"
   # Create ingress rule for SSH
   ingress {
     from_port   = 22

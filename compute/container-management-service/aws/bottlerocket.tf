@@ -1,12 +1,12 @@
 
-    # Configure the AWS provider
+# Configure the AWS provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Bottlerocket AMI
 resource "aws_ec2_ami" "main" {
-  name    = "bottlerocket-ami"
+  name        = "bottlerocket-ami"
   description = "Bottlerocket AMI for testing"
   # Use the Bottlerocket AMI from the AWS Marketplace
   source_ami_id = "ami-0567a9548067f23e9"
@@ -36,7 +36,7 @@ resource "aws_instance" "main" {
 
 # Create a security group
 resource "aws_security_group" "main" {
-  name   = "sg-bottlerocket"
+  name = "sg-bottlerocket"
   # Define ingress and egress rules
   ingress {
     from_port   = 22

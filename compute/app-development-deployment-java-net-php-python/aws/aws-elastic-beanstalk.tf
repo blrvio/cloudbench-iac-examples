@@ -1,5 +1,5 @@
 
-    # Configure the AWS provider
+# Configure the AWS provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -11,8 +11,8 @@ resource "aws_elasticbeanstalk_application" "main" {
 
 # Create an Elastic Beanstalk environment
 resource "aws_elasticbeanstalk_environment" "main" {
-  application_name = aws_elasticbeanstalk_application.main.name # Name of the Elastic Beanstalk application
-  environment_name = "my-elasticbeanstalk-env" # Name of the Elastic Beanstalk environment
+  application_name    = aws_elasticbeanstalk_application.main.name         # Name of the Elastic Beanstalk application
+  environment_name    = "my-elasticbeanstalk-env"                          # Name of the Elastic Beanstalk environment
   solution_stack_name = "64bit Amazon Linux 2 v3.1.5 running Node.js 14.x" # Solution stack to use for the environment
   # Define the CNAME prefix for the environment
   cname_prefix = "my-elasticbeanstalk-env"
@@ -35,7 +35,7 @@ resource "aws_elasticbeanstalk_environment" "main" {
 resource "aws_elasticbeanstalk_application_version" "main" {
   application_name = aws_elasticbeanstalk_application.main.name # Name of the Elastic Beanstalk application
   source_bundle {
-    s3_bucket = "my-s3-bucket" # Name of the S3 bucket containing the application source code
+    s3_bucket = "my-s3-bucket"      # Name of the S3 bucket containing the application source code
     s3_key    = "my-app-source.zip" # Key of the S3 object containing the application source code
   }
   # Set the version label for the application version

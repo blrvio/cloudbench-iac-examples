@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -7,7 +7,7 @@ provider "aws" {
 # Create a DataSync Agent
 resource "aws_datasync_agent" "main" {
   activation_key = "your-activation-key"
-  name            = "my-datasync-agent"
+  name           = "my-datasync-agent"
   # Optional: Assign tags to the DataSync agent
   tags = {
     Name = "My DataSync Agent"
@@ -17,7 +17,7 @@ resource "aws_datasync_agent" "main" {
 # Create a DataSync Location (S3)
 resource "aws_datasync_location_s3" "main" {
   subdirectory = "my-data-sync-bucket/data"
-  bucket_name   = "my-data-sync-bucket"
+  bucket_name  = "my-data-sync-bucket"
   # Optional: Configure access control for the S3 location
   access_control_rule {
     rule_type = "ACCOUNT_ID"
@@ -28,14 +28,14 @@ resource "aws_datasync_location_s3" "main" {
 
 # Create a DataSync Task
 resource "aws_datasync_task" "main" {
-  name                 = "my-datasync-task"
+  name                = "my-datasync-task"
   source_location_arn = aws_datasync_location_s3.main.arn
   # Optional: Configure the destination location
   # If you have another location created (e.g., EFS), provide its ARN here
   destination_location_arn = aws_datasync_location_s3.main.arn
 
   # Specify the schedule for the task
-  schedule { 
+  schedule {
     schedule_type = "MANUAL"
     # Optional: Set a schedule for automated data transfers
     # schedule_type = "CRONTIME"
@@ -47,7 +47,7 @@ resource "aws_datasync_task" "main" {
   # exclusion_filters = ["*.log"]
   # Configure data transfer options
   # options { 
-    #  transfer_mode = "CHANGED"
+  #  transfer_mode = "CHANGED"
   #}
 }
 

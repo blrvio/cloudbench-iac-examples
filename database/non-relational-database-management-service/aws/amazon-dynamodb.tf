@@ -1,14 +1,14 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a DynamoDB table
 resource "aws_dynamodb_table" "main" {
-  name           = "my-dynamodb-table"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
+  name         = "my-dynamodb-table"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
   attribute {
     name = "id"
     type = "S"
@@ -35,11 +35,11 @@ resource "aws_dynamodb_table" "main" {
 # Create a DynamoDB table item
 resource "aws_dynamodb_item" "main" {
   table_name = aws_dynamodb_table.main.name
-  hash_key  = "id"
+  hash_key   = "id"
   item = {
-    "id"       = "user1"
-    "name"     = "John Doe"
-    "age"     = 30
+    "id"        = "user1"
+    "name"      = "John Doe"
+    "age"       = 30
     "timestamp" = "2023-04-21T12:00:00Z"
   }
 }

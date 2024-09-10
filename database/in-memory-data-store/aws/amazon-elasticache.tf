@@ -1,14 +1,14 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create an ElastiCache Cluster
 resource "aws_elasticache_cluster" "main" {
-  engine             = "redis"
-  engine_version     = "6.2.6"
-  node_type          = "cache.t2.micro"
+  engine         = "redis"
+  engine_version = "6.2.6"
+  node_type      = "cache.t2.micro"
   # Number of nodes in the cluster (default is 1)
   num_node_groups = 1
   # Define the cluster name
@@ -26,7 +26,7 @@ resource "aws_elasticache_cluster" "main" {
 
 # Create a Security Group
 resource "aws_security_group" "main" {
-  name   = "sg-elasticache"
+  name = "sg-elasticache"
   # Define the ingress and egress rules
   ingress {
     from_port   = 6379

@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -10,14 +10,14 @@ resource "aws_docdb_cluster" "main" {
   engine             = "mongodb"
   engine_version     = "4.0"
   # Specify the instance size and type
-  instance_class     = "db.t2.micro"
+  instance_class = "db.t2.micro"
   # Define the VPC subnet where the cluster will be created
   vpc_security_group_ids = [aws_security_group.main.id]
   # Define the availability zones where the cluster will be deployed
-  availability_zones  = ["us-east-1a", "us-east-1b"]
+  availability_zones = ["us-east-1a", "us-east-1b"]
   # Configure the master user credentials
-  master_username    = "admin"
-  master_password    = "mypassword"
+  master_username = "admin"
+  master_password = "mypassword"
   # Optional: Enable encryption at rest
   #  storage_encrypted    = true
   #  kms_key_id          = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
@@ -25,12 +25,12 @@ resource "aws_docdb_cluster" "main" {
 
 # Create a security group for the DocumentDB cluster
 resource "aws_security_group" "main" {
-  name   = "sg-documentdb"
+  name = "sg-documentdb"
   # Define ingress rules for the security group
   ingress {
-    from_port   = 27017
-    to_port     = 27017
-    protocol    = "tcp"
+    from_port = 27017
+    to_port   = 27017
+    protocol  = "tcp"
     # Allow access from your application's security group
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -50,7 +50,7 @@ resource "aws_docdb_subnet_group" "main" {
 
 # Create a DocumentDB database
 resource "aws_docdb_database" "main" {
-  db_name    = "my-database"
+  db_name     = "my-database"
   cluster_arn = aws_docdb_cluster.main.arn
 }
 

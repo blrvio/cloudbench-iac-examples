@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -54,7 +54,7 @@ resource "aws_vpc" "main" {
 # Create a security group for the mount target
 resource "aws_security_group" "main" {
   # Name of the security group
-  name   = "sg-efs"
+  name = "sg-efs"
   # VPC ID
   vpc_id = aws_vpc.main.id
   # Define ingress and egress rules

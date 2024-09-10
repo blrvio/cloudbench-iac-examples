@@ -1,15 +1,15 @@
 
-    # Configure the AWS provider
+# Configure the AWS provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
 
 # Create a Snowmobile job
 resource "aws_snowmobile_job" "main" {
-  address  = "your_address" # Replace with your address
-  contact  = "your_contact" # Replace with your contact information
+  address     = "your_address"      # Replace with your address
+  contact     = "your_contact"      # Replace with your contact information
   description = "My Snowmobile job" # Replace with a description
-  job_size = "10TB" # Replace with the desired job size
+  job_size    = "10TB"              # Replace with the desired job size
   # Optional parameters
   # delivery_manifest_file = "path/to/your/manifest.json"
   # kms_key_id = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"

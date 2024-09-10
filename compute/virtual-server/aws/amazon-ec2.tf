@@ -1,5 +1,5 @@
 
-    # Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1" # Replace with your desired region
 }
@@ -7,7 +7,7 @@ provider "aws" {
 # Create an EC2 instance
 resource "aws_instance" "main" {
   ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "t2.micro" # Instance type
+  instance_type = "t2.micro"              # Instance type
   # Define the SSH key that will be used to access the instance
   key_name = "my-ssh-key"
   # Define tags for the instance
@@ -22,7 +22,7 @@ resource "aws_instance" "main" {
 
 # Create a security group
 resource "aws_security_group" "main" {
-  name   = "sg-ec2"
+  name = "sg-ec2"
   # Define inbound and outbound rules
   ingress {
     from_port   = 22
@@ -41,8 +41,8 @@ resource "aws_security_group" "main" {
 # Create an EBS volume
 resource "aws_ebs_volume" "main" {
   availability_zone = "us-east-1a" # Select an availability zone
-  size              = 10 # Volume size in GB
-  type              = "gp2" # Volume type (GP2)
+  size              = 10           # Volume size in GB
+  type              = "gp2"        # Volume type (GP2)
   # Add tags to the volume
   tags = {
     Name = "My EBS Volume"
