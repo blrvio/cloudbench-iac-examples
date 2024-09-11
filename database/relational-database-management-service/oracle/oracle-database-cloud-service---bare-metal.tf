@@ -1,70 +1,52 @@
 
     # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  # Replace with your OCI tenancy OCID
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with your OCI user OCID
-  user_ocid = "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with your OCI region
-  region = "us-ashburn-1"
-  # Replace with your OCI fingerprint
-  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxx"
-  # Replace with your OCI private key
-  private_key_path = "~/.oci/oci_api_key.pem"
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
+  user    = "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
+  key     = "<YOUR_API_KEY>"
 }
 
-# Define the Bare Metal database instance
-resource "oci_database_bare_metal_instance" "example" {
-  # Replace with the compartment OCID
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with the database name
-  database_name = "mydb"
-  # Replace with the database edition
-  edition = "ENTERPRISE_EDITION"
-  # Replace with the database version
-  version = "19c"
-  # Replace with the shape name
-  shape = "BM.Standard.2.8"
-  # Replace with the subnet OCID
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with the hostname
-  hostname = "mydatabase"
-  # Set the storage size
-  storage_size_in_tbs = 100
-  # Set the backup configuration
-  backup_config {
-    # Set the backup frequency
-    frequency = "DAILY"
-    # Set the backup retention policy
-    retention_policy = "RETENTION_POLICY_KEEP_LAST_N_BACKUPS"
-    # Set the number of backups to retain
-    retention_count = 7
-  }
-  # Set the network configuration
-  network_config {
-    # Set the private IP address
-    private_ip = "10.0.0.4"
-    # Set the public IP address
-    public_ip = "192.168.0.1"
-    # Set the subnet OCID
-    subnet_id = "ocid1.subnet.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  }
+# Create a Virtual Cloud Network (VCN)
+resource "oci_core_vcn" "main" {
+  cidr_block = "10.0.0.0/16"
+  display_name = "My VCN"
 }
 
-# Define the listener for the database
-resource "oci_database_listener" "example" {
-  # Replace with the compartment OCID
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with the database connection string
-  connection_string = "tcp://mydatabase:1521/mydb"
-  # Replace with the listener name
-  display_name = "mylistener"
-  # Replace with the subnet OCID
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Replace with the TCP port
-  tcp_port = 1521
-  # Replace with the database OCID
-  database_id = oci_database_bare_metal_instance.example.id
+# Create a subnet within the VCN
+resource "oci_core_subnet" "main" {
+  vcn_id       = oci_core_vcn.main.id
+  cidr_block    = "10.0.1.0/24"
+  display_name = "My Subnet"
 }
 
+# Create a database instance
+resource "oci_database_db_system" "main" {
+  availability_domain = "AD-1"
+  admin_password     = "<YOUR_PASSWORD>"
+  db_home           = "<YOUR_DB_HOME_PATH>"
+  db_version         = "19.0.0.0.0"
+  shape             = "BM.Standard.E2.2"
+  subnet_id          = oci_core_subnet.main.id
+  # Create a database user
+  admin_user         = "<YOUR_USERNAME>"
+  display_name       = "My Database"
+}
+
+# Create a database user
+resource "oci_database_db_user" "main" {
+  admin_password     = "<YOUR_PASSWORD>"
+  db_home           = "<YOUR_DB_HOME_PATH>"
+  db_system_id       = oci_database_db_system.main.id
+  display_name       = "My Database User"
+  username           = "<YOUR_USERNAME>"
+}
+
+# Create a database schema
+resource "oci_database_db_schema" "main" {
+  db_home           = "<YOUR_DB_HOME_PATH>"
+  db_system_id       = oci_database_db_system.main.id
+  display_name       = "My Database Schema"
+  username           = "<YOUR_USERNAME>"
+}
   

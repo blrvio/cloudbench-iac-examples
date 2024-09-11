@@ -1,68 +1,47 @@
 
     # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  # Configure your OCI credentials here
-  # Refer to OCI documentation for detailed configuration instructions.
-}
-
-# Create a compartment
-resource "oci_core_compartment" "main" {
-  name        = "example-compartment"
-  description = "Example compartment for Burstable Instances"
-  # Specify the parent compartment ID
-  compartment_id = "ocid1.compartment.oc1..."
+  region = "us-ashburn-1"
+  # Replace with your own region
+  # Set the compartment ID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
 # Create a Burstable Instance
 resource "oci_core_instance" "main" {
-  availability_domain = "UOC1..."
-  compartment_id      = oci_core_compartment.main.id
-  shape               = "BM.Standard.2.1"
-  display_name        = "Example Burstable Instance"
+  availability_domain = "US-ASHBURN-1A"
+  # Replace with your desired Availability Domain
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx"
+  display_name = "burstable-instance"
+  # Choose a suitable shape for your needs
+  shape = "VM.Standard.E2.1"
+  # Set the number of instances to create
+  count = 1
+  # Set the instance source details
   source_details {
-    source_type      = "image"
-    image_id          = "ocid1.image.oc1..."
-    boot_volume_size = 100
+    # Use the latest Oracle Linux image
+    image_id = "ocid1.image.oc1.iad.aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx"
   }
-  # Configure the network details
-  # Replace with your subnet ID
-  subnet_id = "ocid1.subnet.oc1..."
-  # Assign a public IP address
-  assign_public_ip = true
-  # Configure SSH access
-  # Replace with your SSH key information
-  ssh_authorized_keys = ["ssh-rsa ..."]
-}
-
-# Create a network security group
-resource "oci_network_security_group" "main" {
-  compartment_id = oci_core_compartment.main.id
-  name           = "example-nsg"
-  description    = "Example network security group for Burstable Instances"
-  # Configure ingress rules
-  ingress_security_rules {
-    # Allow SSH access from any source
-    protocol = "tcp"
-    source      = "0.0.0.0/0"
-    direction = "ingress"
-    tcp_options {
-      max = 22
-      min = 22
-    }
+  # Define the network configuration
+  network_interfaces {
+    subnet_id = "ocid1.subnet.oc1.iad.aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx"
+    # Replace with the subnet ID for your network
+    # You can optionally configure more network details here
   }
-  # Configure egress rules
-  egress_security_rules {
-    protocol = "all"
-    source    = "0.0.0.0/0"
-    direction = "egress"
+  # Set the boot volume size
+  boot_volume_size_in_gbs = 50
+  # Choose a suitable boot volume type for your needs
+  boot_volume_type = "standard"
+  # Enable or disable the public IP address for the instance
+  create_vnic_details {
+    assign_public_ip = false
   }
-}
-
-# Associate the network security group with the instance
-resource "oci_core_instance_network_security_group_attachment" "main" {
-  compartment_id = oci_core_compartment.main.id
-  instance_id    = oci_core_instance.main.id
-  nsg_id         = oci_network_security_group.main.id
+  # Set the availability configuration
+  availability_config {
+    # Choose a suitable availability configuration for your needs
+    # Set the availability domain for the instance
+    availability_domain = "US-ASHBURN-1A"
+  }
 }
 
   

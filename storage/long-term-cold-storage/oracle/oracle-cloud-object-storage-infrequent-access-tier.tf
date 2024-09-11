@@ -1,29 +1,31 @@
 
-    # Configure the Oracle Cloud provider
+    # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
+  # Replace with your tenancy OCID
+tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  # Replace with your user OCID
+  user_ocid = "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  # Replace with your region
   region = "us-ashburn-1"
-  # Replace with your actual OCI configuration
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaw776i65765775546464464464"
-  user_ocid = "ocid1.user.oc1..aaaaaaaaw776i65765775546464464464"
-  fingerprint = ""
-  # Add your private key to the "~/.oci/config" file or specify the location here
-  # private_key_file = "~/.oci/oci_api_key.pem"
+  # Replace with your private key file path
+  private_key_file = "./path/to/private_key_file"
+  # Replace with your fingerprint
+  fingerprint = "12:34:56:78:90:ab:cd:ef:01:23:45:67:89:0a:bc:de"
 }
 
-# Create a bucket
-resource "oci_objectstorage_bucket" "main" {
-  name = "my-bucket"
-  namespace = "my-namespace"
-  # Optional: Specify the storage tier
-  # storage_tier = "INFREQUENT_ACCESS"
+# Create a bucket in Oracle Cloud Object Storage
+resource "oci_objectstorage_bucket" "example" {
+  namespace   = "example"
+  name        = "my-bucket"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  storage_tier  = "INFREQUENT_ACCESS"
 }
 
-# Upload an object
-resource "oci_objectstorage_object" "main" {
-  bucket = oci_objectstorage_bucket.main.name
-  namespace = oci_objectstorage_bucket.main.namespace
-  name = "my-object.txt"
-  source = "path/to/local/file"
+# Create a namespace in Oracle Cloud Object Storage
+resource "oci_objectstorage_namespace" "example" {
+  name = "example"
+  # Replace with your compartment OCID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
   

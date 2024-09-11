@@ -1,64 +1,37 @@
 
-    # Configure the Oracle Cloud provider
+    # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  # Replace with your Oracle Cloud credentials
-  config_file = "~/.oci/config"
-  profile = "default"
+  region = "us-ashburn-1"
+  # Replace with your Oracle Cloud Infrastructure tenancy OCID
+  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
 }
 
-# Create a NoSQL Database Cloud Service table
+# Create a NoSQL database
+resource "oci_nosql_database" "main" {
+  # The compartment where you want to create the database
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  # Unique identifier of the NoSQL database
+  database_name = "my-nosql-database"
+  # The NoSQL database version
+  version = "2.2.1"
+  # Enable or disable encryption at rest
+  is_encryption_at_rest_enabled = true
+  # The NoSQL database security group
+  security_list_id = "ocid1.securitylist.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+}
+
+# Create a NoSQL table
 resource "oci_nosql_table" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  table_name     = "my-nosql-table"
+  # The compartment where you want to create the table
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  # The NoSQL database where you want to create the table
+  database_id = oci_nosql_database.main.id
+  # Unique identifier of the NoSQL table
+  table_name = "my-nosql-table"
+  # The NoSQL table key schema
   key_schema = <<EOF
-{"type": "struct", "fields": [
-{"name": "id", "type": "string", "constraints": [{"type": "primaryKey"}]},
-{"name": "name", "type": "string"}
-]}
+{"name": "id", "type": "STRING", "is_primary_key": true}
 EOF
-
-  # Optional: Define the index schema
-  # index_schema = <<EOF
-  # {"type": "index", "indexName": "nameIndex", "indexKeys": [{
-  # "name": "name", "type": "string", "constraints": [{"type": "unique"}]
-  # }]
-  # }
-  # EOF
-
-  # Optional: Define the storage configuration
-  # storage_configuration {
-  #   capacity_unit = "1"
-  #   storage_type   = "STANDARD"
-  # }
 }
-
-# Create a NoSQL Database Cloud Service index
-# resource "oci_nosql_index" "main" {
-#  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-#  table_name     = oci_nosql_table.main.table_name
-#  index_name     = "nameIndex"
-#  index_keys = [{
-#    name = "name"
-#    type = "string"
-#    # Optional: Define unique constraint for the index
-#    # constraints = [{"type": "unique"}]
-#  }]
-#}
-
-# Create a NoSQL Database Cloud Service user
-resource "oci_nosql_user" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  user_name     = "my-nosql-user"
-  # Optional: Define the password for the user
-  # password      = "MyStrongPassword"
-}
-
-# Create a NoSQL Database Cloud Service table permission
-# resource "oci_nosql_table_permission" "main" {
-#  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-#  table_name     = oci_nosql_table.main.table_name
-#  user_name     = oci_nosql_user.main.user_name
-#  permission     = "READ"
-#}
 
   

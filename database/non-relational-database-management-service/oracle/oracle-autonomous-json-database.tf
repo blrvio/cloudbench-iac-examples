@@ -1,35 +1,37 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+    # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..."
-  user    = "ocid1.user.oc1..."
-  fingerprint = "..."
-  private_key_path = "~/.oci/oci_api_key.pem"
+  # Set the region and tenancy OCID
+  region = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1…"
 }
 
 # Create an Autonomous JSON Database
-resource "oci_database_autonomous_database" "example" {
-  admin_password   = "MySecurePassword"
-  availability_domain = "AD-1"
-  compartment_id   = "ocid1.compartment.oc1..."
-  cpu_core_count = 1
-  db_name          = "my_json_db"
-  db_version       = "19.0"
-  license_model      = "LICENSE_INCLUDED"
-  name              = "my-autonomous-json-database"
-  shape             = "VM.Standard.E2.1"
-  subnet_id         = "ocid1.subnet.oc1..."
-  wait_for_state = "AVAILABLE"
-}
-
-# Create a user for the database
-resource "oci_database_db_user" "example" {
-  admin_password = "MySecurePassword"
-  compartment_id = "ocid1.compartment.oc1..."
-  db_name         = oci_database_autonomous_database.example.db_name
-  name            = "my_json_user"
-  password        = "MySecurePassword"
+resource "oci_database_autonomous_database" "main" {
+  # Specify a unique name for the database
+  display_name = "example-json-database"
+  # Choose the desired database edition
+  edition         = "ENTERPRISE_EDITION"
+  # Select the desired database version
+  database_version = "19.0.0.0.0"
+  # Choose the desired shape
+  db_shape = "VM.Standard.E2.1"
+  # Specify the compartment OCID
+  compartment_id = "ocid1.compartment.oc1…"
+  # Configure the database network
+  # Select the desired subnet OCID
+  subnet_id = "ocid1.subnet.oc1…"
+  # Configure the database access
+  # Specify the desired admin user
+  admin_user = "admin"
+  # Configure the database security
+  # Specify the desired security policy OCID
+  security_policy_id = "ocid1.securitypolicy.oc1…"
+  # Specify the desired encryption key OCID
+  encryption_key_id = "ocid1.enckey.oc1…"
+  # Configure the database maintenance
+  # Specify the desired maintenance window
+  maintenance_window = "2023-04-10T08:00:00Z/2023-04-10T10:00:00Z"
 }
 
   

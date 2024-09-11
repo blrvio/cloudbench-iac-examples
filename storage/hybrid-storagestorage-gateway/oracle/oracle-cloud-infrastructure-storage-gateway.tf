@@ -1,32 +1,50 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+    # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
   region = "us-ashburn-1"
-  # Replace with your OCI tenancy OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Replace with your OCI user OCID
-  user_ocid = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Replace with your OCI API key
-  api_key_file = "~/.oci/config"
+  # Add your credentials here
 }
 
 # Create a storage gateway
-resource "oci_core_storage_gateway" "main" {
-  availability_domain = "AD-1"
-  compartment_id     = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Replace with your desired gateway name
-  display_name = "my-storage-gateway"
-  # Replace with your desired gateway shape
-  shape = "OCI_STORAGE_GATEWAY_SHAPE_1"
+resource "oci_storage_gateway" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
+  display_name  = "my-storage-gateway"
+  # Optional: Configure the storage gateway network
+  network_config {
+    subnet_id  = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
+    security_list_ids = ["ocid1.securitylist.oc1..aaaaaaaaz7y724q7"]
+  }
+  # Optional: Configure the storage gateway storage
+  storage_config {
+    storage_type = "file"
+  }
+  # Optional: Configure the storage gateway file system
+  file_system_config {
+    file_system_name = "my-file-system"
+    # Optional: Configure the storage gateway file system mount target
+    mount_target {
+      mount_target_name = "my-mount-target"
+      # Optional: Configure the storage gateway file system mount target subnet
+      subnet_id = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
+    }
+  }
 }
 
-# Create a volume attachment
-resource "oci_core_volume_attachment" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Replace with your volume OCID
-  volume_id = "ocid1.volume.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Replace with your storage gateway OCID
-  storage_gateway_id = oci_core_storage_gateway.main.id
+# Create a storage gateway file system
+resource "oci_storage_gateway_file_system" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
+  storage_gateway_id = oci_storage_gateway.main.id
+  display_name = "my-file-system"
+}
+
+# Create a storage gateway mount target
+resource "oci_storage_gateway_mount_target" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
+  storage_gateway_id = oci_storage_gateway.main.id
+  file_system_id = oci_storage_gateway_file_system.main.id
+  display_name = "my-mount-target"
+  # Optional: Configure the storage gateway mount target subnet
+  subnet_id = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
 }
 
   

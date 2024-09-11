@@ -1,64 +1,46 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+    # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  region = "us-ashburn-1" # Replace with your desired region
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  user_ocid = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  private_key_path = "~/.oci/oci_api_key.pem" # Path to your private key
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxx"
+  user    = "ocid1.user.oc1..aaaaaaaaxxxxxxxxx"
+  fingerprint = "xxxxxxxxxxxxxxxx"
+  private_key = "<your_private_key>"
 }
 
 # Create an Application Container Cloud Service
 resource "oci_containerengine_cluster" "main" {
-  name = "my-container-cluster"
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Define the Kubernetes version
-  kubernetes_version = "1.20.11"
-  # Set the size and shape of the cluster nodes
-  node_config {
-    size = "VM.Standard.A1.Flex"
+  display_name  = "my-container-cluster"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
+  # Create a Kubernetes cluster
+  kubernetes_config {
+    version = "1.20.7"
   }
-  # Define the service discovery configuration
-  service_discovery_config {
-    type = "ONS"
-    # Configure the ONS service discovery settings
-    ons {
-      # Enable or disable service discovery
-      enabled = true
-    }
+  # Configure the cluster network
+  network_config {
+    subnet_ids = ["ocid1.subnet.oc1..aaaaaaaaxxxxxxxxx"]
+  }
+  # Add a node pool
+  node_pools {
+    name          = "my-node-pool"
+    size          = 2
+    node_shape    = "VM.Standard.E2.1.Micro"
+    node_image_id = "ocid1.image.oc1..aaaaaaaaxxxxxxxxx"
   }
 }
 
-# Create an Application Container Cloud Service Namespace
-resource "oci_containerengine_namespace" "main" {
-  cluster_id = oci_containerengine_cluster.main.id
-  name = "my-namespace"
-}
-
-# Create an Application Container Cloud Service Deployment
-resource "oci_containerengine_deployment" "main" {
-  namespace_id = oci_containerengine_namespace.main.id
-  name = "my-deployment"
-  # Define the Docker image to be deployed
-  image_config {
+# Deploy a container application
+resource "oci_containerengine_manifest" "main" {
+  display_name   = "my-container-app"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
+  cluster_id     = oci_containerengine_cluster.main.id
+  # Define the container image
+  image_details {
     image_uri = "docker.io/library/nginx:latest"
   }
-  # Define the number of replicas for the deployment
-  replicas = 3
-  # Define the deployment strategy
-  strategy {
-    type = "RECREATE"
-  }
-  # Define the deployment resource requirements
-  resource_requirements {
-    limits {
-      cpu = "1"
-      memory = "1Gi"
-    }
-    requests {
-      cpu = "0.5"
-      memory = "512Mi"
-    }
+  # Define the deployment configuration
+  deploy_config {
+    replicas = 2
   }
 }
 

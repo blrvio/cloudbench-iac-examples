@@ -1,49 +1,36 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
-provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your tenancy OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
+    # Configure the Oracle provider
+provider "oracle" {
+  # Set the connection details for your Oracle Cloud Infrastructure (OCI)
+  # You can find these in your OCI console
+  # https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm
+  # Ensure you've configured the 'OCI_CONFIG_FILE' environment variable
+  # or set the 'config_file' and 'profile' values accordingly
 }
 
 # Create an Autonomous Transaction Processing database
 resource "oci_database_autonomous_database" "main" {
-  # Database name
-  display_name = "my-autonomous-db"
-  # Database edition
+  # Set a unique name for the database
+  display_name = "my-atp-database"
+  # Select the desired compartment ID from OCI
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  # Choose the appropriate database edition
   edition = "ENTERPRISE"
-  # Database version
-  version = "19c"
-  # Database storage size
-  storage_size_in_tbs = 100
-  # Database subnet ID
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaxxxxxx"
-  # Database network access type
-  network_access_type = "PRIVATE"
-  # Database connection string
-  connection_string = "example.com:1521/example"
-  # Database user credentials
-  # Remove the following lines if you're using a different authentication method
-  #admin_username = "admin"
-  #admin_password = "password"
+  # Specify the desired version of the database
+  version = "19.0.0.0"
+  # Set the desired size of the database
+  db_size = 20
+  # Set the desired number of CPU cores
+  cpu_core_count = 2
+  # Select the desired network subnet ID
+  subnet_id = "ocid1.subnet.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  # Configure the database with the appropriate security settings
+  # For production environments, consider creating a dedicated subnet
+  # and configure firewall rules accordingly
 }
 
-# Create a database user
-resource "oci_database_user" "main" {
-  # Database user name
-  username = "my-user"
-  # Database user password
-  password = "password"
-  # Database ID
-  autonomous_database_id = oci_database_autonomous_database.main.id
+# Output the database connection string
+output "database_connection_string" {
+  value = oci_database_autonomous_database.main.connection_string
 }
-
-# Create a database schema
-resource "oci_database_schema" "main" {
-  # Database schema name
-  schema_name = "my-schema"
-  # Database user ID
-  user_id = oci_database_user.main.id
-}
-
   

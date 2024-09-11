@@ -1,54 +1,48 @@
 
-    # Configure the Oracle provider
-provider "oracle" {
-  # Replace with your Oracle Cloud credentials
-  user = "your_user"
-  password = "your_password"
-  tenancy = "your_tenancy"
-  # Replace with your Oracle Cloud region
-  region = "us-ashburn-1"
+    # Configure the Oracle Cloud Infrastructure provider
+provider "oci" {
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaw7654321"
 }
 
 # Create an Exadata Cloud Service instance
-resource "oracle_exadata_cloud_service" "main" {
-  # Replace with your desired name for the Exadata Cloud Service instance
-  display_name = "my-exadata-instance"
-  # Replace with the desired Exadata Cloud Service shape
-  shape = "Exadata_X8_8C"
-  # Replace with the desired Exadata Cloud Service version
-  version = "21.1.0"
-  # Replace with the desired Exadata Cloud Service network
-  network = "your_network_name"
-  # Replace with the desired Exadata Cloud Service subnet
-  subnet = "your_subnet_name"
-  # Replace with the desired Exadata Cloud Service storage size
-  storage_size = 100
-  # Replace with the desired Exadata Cloud Service storage type
-  storage_type = "SSD"
-  # Replace with the desired Exadata Cloud Service license type
-  license_type = "BYOL"
+resource "oci_exadata_cloud_service_instance" "main" {
+  compartment_id       = "ocid1.compartment.oc1..aaaaaaaaw7654321"
+  display_name        = "my-exadata-instance"
+  shape                = "Exadata_X8_2448_M"
+  subnet_id             = "ocid1.subnet.oc1..aaaaaaaaw7654321"
+  exadata_cloud_service = "ocid1.exadata-cloud-service.oc1..aaaaaaaaw7654321"
+
+  # Define the storage configuration
+  storage_config {
+    capacity_gb = 1000
+    storage_type = "Standard"
+  }
 }
 
-# Create a database on the Exadata Cloud Service instance
-resource "oracle_database" "main" {
-  # Replace with the desired name for the database
-  display_name = "my-database"
-  # Replace with the desired database version
-  version = "19.0.0"
-  # Replace with the desired database edition
-  edition = "Enterprise"
-  # Replace with the desired database character set
-  character_set = "AL32UTF8"
-  # Replace with the desired database national character set
-  national_character_set = "AL16UTF16"
-  # Replace with the desired database storage size
-  storage_size = 100
-  # Replace with the desired database storage type
-  storage_type = "SSD"
-  # Replace with the desired database license type
-  license_type = "BYOL"
-  # Replace with the Exadata Cloud Service instance ID
-  exadata_cloud_service_id = oracle_exadata_cloud_service.main.id
+# Create a security list
+resource "oci_network_security_list" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw7654321"
+  display_name    = "my-security-list"
+  ingress {
+    source    = "0.0.0.0/0"
+    protocol  = "tcp"
+    tcp_options {
+      max = 80
+      min = 80
+    }
+  }
+  egress {
+    destination = "0.0.0.0/0"
+    protocol  = "all"
+  }
+}
+
+# Attach the security list to the Exadata Cloud Service instance
+resource "oci_exadata_cloud_service_instance_network_configuration" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw7654321"
+  exadata_cloud_service_instance_id = oci_exadata_cloud_service_instance.main.id
+  security_list_id = oci_network_security_list.main.id
 }
 
   

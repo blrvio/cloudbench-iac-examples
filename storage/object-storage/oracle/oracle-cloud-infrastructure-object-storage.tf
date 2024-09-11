@@ -1,31 +1,32 @@
 
     # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  region = "us-ashburn-1"
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  user_ocid = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  region     = "us-ashburn-1"
+  tenancy    = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
+  user       = "ocid1.user.oc1..aaaaaaaayyyyyy"
   fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxx"
-  private_key_path = "~/.oci/oci_api_key.pem"
+  # Use your real credentials
+  # Make sure you have set up the OCI CLI and have credentials configured.
+  # See: https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm
 }
 
 # Create an Object Storage Bucket
 resource "oci_objectstorage_bucket" "example" {
-  namespace = "example-namespace"
-  name     = "example-bucket"
-
-  # Optional configurations
-  # storage_tier = "STANDARD"
-  # public_access_type = "ObjectRead"
+  name       = "my-bucket"
+  namespace  = "example"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaa"
+  # Set an optional storage tier
+  storage_tier = "Standard"
 }
 
 # Create an Object in the Bucket
 resource "oci_objectstorage_object" "example" {
-  namespace = "example-namespace"
-  bucket    = oci_objectstorage_bucket.example.name
-  name     = "example-object"
-
-  # Define the object content
-  content  = "This is an example object"
+  name       = "my-object.txt"
+  bucket     = oci_objectstorage_bucket.example.name
+  namespace  = oci_objectstorage_bucket.example.namespace
+  content    = "This is my object content."
+  # Set an optional Content-Type
+  content_type = "text/plain"
 }
 
   

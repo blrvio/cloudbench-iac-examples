@@ -1,32 +1,46 @@
 
     # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your Oracle Cloud Infrastructure region
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaab777777777777777777777777"
-  # Replace with your Oracle Cloud Infrastructure tenancy ID
-  user_ocid = "ocid1.user.oc1..aaaaaaaab777777777777777777777777"
-  # Replace with your Oracle Cloud Infrastructure user OCID
-  fingerprint = "" # Replace with your Oracle Cloud Infrastructure fingerprint
-  # Set your private key file path
-  private_key_path = "~/.oci/oci_api_key.pem"
+  region     = "us-ashburn-1"
+  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxx"
+  # Set the compartment ID for resources
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
 }
 
-# Create a new OCI Registry
-resource "oci_container_registry" "main" {
-  name = "my-registry"
-  # Replace with your desired registry name
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaab777777777777777777777777"
-  # Replace with your Oracle Cloud Infrastructure compartment ID
+# Create a registry resource
+resource "oci_container_registry" "example" {
+  name     = "my-registry"
+  # Set the compartment ID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
+  # Create a unique name
+  display_name = "My Registry"
+  # Set the description
+  description = "My Registry Description"
+  # Set the resource's tags
+  freeform_tags = {
+    Owner = "My Team"
+  }
 }
 
-# Create a new repository within the OCI registry
-resource "oci_container_repository" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaab777777777777777777777777"
-  # Replace with your Oracle Cloud Infrastructure compartment ID
-  registry_id = oci_container_registry.main.id
-  name = "my-repository"
-  # Replace with your desired repository name
+# Create an image resource
+resource "oci_container_image" "example" {
+  # Set the registry namespace
+  registry_namespace = oci_container_registry.example.name
+  name     = "my-image"
+  # Set the compartment ID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
+  # Create a unique name
+  display_name = "My Image"
+  # Set the description
+  description = "My Image Description"
+  # Set the resource's tags
+  freeform_tags = {
+    Owner = "My Team"
+  }
+  # Create the manifest and push the image
+  source  = "docker-registry:1.0.0"
+  # Set the image's source URI
+  source_uri = "docker.io/library/nginx"
 }
 
   

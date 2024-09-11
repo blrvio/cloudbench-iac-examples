@@ -1,45 +1,51 @@
 
     # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  # Replace with your OCI tenancy OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaam777777777777777777777777777"
-  # Replace with your OCI user OCID
-  user_ocid    = "ocid1.user.oc1..aaaaaaaam777777777777777777777777777"
-  # Replace with your OCI private key
-  private_key  = "-----BEGIN PRIVATE KEY-----
-...
------END PRIVATE KEY-----"
-  region       = "us-ashburn-1"
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
+  user    = "ocid1.user.oc1..aaaaaaaayyyyyy"
+  key     = "<your_api_key>"
+  fingerprint = "<your_fingerprint>"
 }
 
-# Create a compartment
-resource "oci_core_compartment" "example" {
-  name    = "my-compartment"
-  defined_tags = {
-    "Environment" = "Development"
+# Create an Oracle Functions application
+resource "oci_functions_application" "main" {
+  display_name = "my-functions-app"
+  # Optional: Set the compartment ID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaazzzzz"
+}
+
+# Create an Oracle Functions function
+resource "oci_functions_function" "main" {
+  display_name = "my-function"
+  application_id = oci_functions_application.main.id
+  runtime = "nodejs16.x"
+  # Optional: Define the function's source code
+  source_code = <<EOF
+const http = require('http');
+
+const handler = (req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello from Oracle Functions!');
+};
+
+const server = http.createServer(handler);
+
+server.listen(8080, () => {
+  console.log('Server running on port 8080');
+});
+EOF
+}
+
+# Create an Oracle Functions trigger
+resource "oci_functions_trigger" "main" {
+  display_name = "my-trigger"
+  function_id = oci_functions_function.main.id
+  trigger_type = "http"
+  # Optional: Define the trigger's configuration
+  http_configuration {
+    method = "GET"
   }
-  freeform_tags = {
-    "Owner" = "Example User"
-  }
-}
-
-# Create a function
-resource "oci_functions_function" "example" {
-  compartment_id = oci_core_compartment.example.id
-  name           = "my-function"
-  display_name  = "My Function"
-  runtime        = "nodejs16"
-  source_location = "oci://bucket/path/to/my-function.zip"
-  description    = "This is my function"
-}
-
-# Create a function invocation
-resource "oci_functions_function_invocation" "example" {
-  function_id    = oci_functions_function.example.id
-  payload        = "{\"message\": \"Hello, world!\"}"
-  invoke_mode     = "sync"
-  wait_for_completion = true
-  timeout_in_seconds = 10
 }
 
   

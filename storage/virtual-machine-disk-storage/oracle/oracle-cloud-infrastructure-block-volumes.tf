@@ -1,53 +1,32 @@
 
     # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your region
-  tenancy_id = "ocid1.tenancy.oc1..."
-  # Replace with your tenancy ID
-  user_ocid = "ocid1.user.oc1..."
-  # Replace with your user OCID
-  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  # Replace with your API key fingerprint
-  private_key_path = "~/.oci/api_key.pem"
-  # Path to your private key
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
+  user    = "ocid1.user.oc1..aaaaaaaaxxxxxx"
+  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxx"
+  # Replace with your actual values.
 }
 
 # Create a Block Volume
-resource "oci_core_volume" "main" {
+resource "oci_core_volume" "example" {
   availability_domain = "us-ashburn-1a"
-  # Choose an availability domain
-  compartment_id = "ocid1.compartment.oc1..."
-  # Replace with your compartment ID
-  display_name = "my-block-volume"
-  # Choose a display name
-  size_in_gbs = 100
-  # Specify the volume size in GB
-  # Choose a volume type
-  volume_type = "standard_tier" # Other options: 'high_performance', 'all_flash', 'gp2'
+  compartment_id      = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
+  display_name        = "example-volume"
+  size_in_gbs         = 100
+  # Optionally define the volume type.
+  # volume_type = "standard"
+  # volume_type = "premium"
+  # volume_type = "high_performance"
+  # volume_type = "all_flash"
 }
 
-# Create an Instance to attach the volume
-resource "oci_core_instance" "main" {
-  availability_domain = "us-ashburn-1a"
-  # Choose an availability domain
-  compartment_id = "ocid1.compartment.oc1..."
-  # Replace with your compartment ID
-  display_name = "my-instance"
-  # Choose a display name
-  shape = "VM.Standard.E2.1"
-  # Choose a shape
-  source_details {
-    image {
-      id = "ocid1.image.oc1..."
-      # Replace with the image OCID
-    }
-  }
-  # Attach the block volume
-  volume_attachments {
-    device = "/dev/sdb"
-    volume_id = oci_core_volume.main.id
-  }
+# Create a Volume Attachment
+resource "oci_core_volume_attachment" "example" {
+  compartment_id      = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
+  instance_id        = "ocid1.instance.oc1..aaaaaaaaxxxxxx"
+  volume_id          = oci_core_volume.example.id
+  device              = "/dev/sdb"
 }
 
   

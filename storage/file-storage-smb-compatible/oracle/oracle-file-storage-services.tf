@@ -1,29 +1,41 @@
 
     # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..."
-  user     = "ocid1.user.oc1..."
-  key_file = "~/.oci/config"
+  # Provide your OCI tenancy ID
+tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  # Provide your OCI user OCID
+  user_ocid  = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  # Provide your OCI region
+  region = "us-ashburn-1"
+  # Provide your OCI compartment OCID
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
 }
 
-# Create a File Storage Service
-resource "oci_file_storage_file_system" "main" {
-  compartment_id = "ocid1.compartment.oc1..."
-  display_name  = "my-file-system"
-  
-  # Set the storage tier
-  storage_tier = "STANDARD_IA"
+# Create a File Storage Namespace
+resource "oci_file_storage_namespace" "main" {
+  name  = "my-file-storage-namespace"
+  # Provide a description for the namespace
+  description = "My file storage namespace"
 }
 
-# Create a mount target for the file system
+# Create a File Storage System
+resource "oci_file_storage_system" "main" {
+  # Provide the file storage namespace ID
+  namespace_id = oci_file_storage_namespace.main.id
+  name          = "my-file-storage-system"
+  # Provide a description for the system
+  description = "My file storage system"
+  # Select the storage tier
+  storage_tier = "STANDARD"
+}
+
+# Create a File Storage Mount Target
 resource "oci_file_storage_mount_target" "main" {
-  compartment_id = "ocid1.compartment.oc1..."
-  display_name  = "my-mount-target"
-  file_system_id = oci_file_storage_file_system.main.id
-  
-  # Set the subnet to use for the mount target
-  subnet_id = "ocid1.subnet.oc1..."
+  # Provide the file storage system ID
+  system_id = oci_file_storage_system.main.id
+  name      = "my-file-storage-mount-target"
+  # Select the subnet ID for the mount target
+  subnet_id = "ocid1.subnet.oc1..aaaaaaaaxxxxxxxxxxxxxx"
 }
 
   

@@ -1,31 +1,26 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+    # Configure the Oracle Cloud provider
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxx"
-  # Add your credentials
-  user    = "your_user"
-  password = "your_password"
+  region = "us-ashburn-1" # Replace with your desired region
+  # Add your credentials using the OCI provider documentation
 }
 
-# Create a Java Cloud Service Instance
-resource "oci_java_cloud_service" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
-  display_name   = "MyJavaCloudService"
-  # Add your desired shape, version, etc.
+# Create a Java Cloud Service instance
+resource "oci_java_instance" "main" {
+  # Add your configuration here
+  # Refer to the OCI Terraform provider documentation for available options
+  # Example for minimal configuration:
+  # instance_name = "my-java-instance"
+  # instance_shape = "VM.Standard.E2.1"
 }
 
-# (Optional) Create a Java Cloud Service Application
-resource "oci_java_cloud_service_application" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
-  # Add your application details
-  java_cloud_service_id = oci_java_cloud_service.example.id
-}
+# Optional: Create a Java Cloud Service deployment
+# resource "oci_java_deployment" "main" {
+#   # Add your deployment configuration here
+#   # Refer to the OCI Terraform provider documentation for available options
+#   # Example for minimal configuration:
+#   instance_id = oci_java_instance.main.id
+#   # Optional attributes for deployment
+# }
 
-# (Optional) Create a Java Cloud Service Database
-resource "oci_java_cloud_service_database" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
-  # Add your database details
-  java_cloud_service_id = oci_java_cloud_service.example.id
-}
   

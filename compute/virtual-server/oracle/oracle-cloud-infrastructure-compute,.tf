@@ -1,61 +1,64 @@
 
     # Configure the Oracle Cloud Infrastructure Provider
 provider "oci" {
-  region = "us-ashburn-1"
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaatw3q7y77n5b7m4v73q5n5w23225b6f"
-  user_ocid = "ocid1.user.oc1..aaaaaaaaz44r5u4f6m6q2t5v55w26b64b3s54"
-  fingerprint = "..."
-  # Replace with your own values
-}
-
-# Create a Virtual Cloud Network (VCN)
-resource "oci_core_vcn" "main" {
-  cidr_block = "10.0.0.0/16"
-  display_name = "my-vcn"
-}
-
-# Create a Subnet within the VCN
-resource "oci_core_subnet" "main" {
-  compartment_id = oci_core_vcn.main.compartment_id
-  vcn_id = oci_core_vcn.main.id
-  cidr_block = "10.0.1.0/24"
-  display_name = "my-subnet"
-}
-
-# Create a Security List
-resource "oci_core_security_list" "main" {
-  compartment_id = oci_core_vcn.main.compartment_id
-  vcn_id = oci_core_vcn.main.id
-  display_name = "my-security-list"
-  egress {
-    protocol = "all"
-    destination = "0.0.0.0/0"
-  }
-  ingress {
-    protocol = "tcp"
-    source = "0.0.0.0/0"
-    destination = "22"
-  }
+  # Provide your tenancy OCID, user OCID, and private key
+  tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  user_ocid        = "ocid1.user.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  private_key_path = "~/.oci/oci_api_key.pem"
+  region           = "us-ashburn-1"
 }
 
 # Create a Compute Instance
 resource "oci_core_instance" "main" {
-  compartment_id = oci_core_vcn.main.compartment_id
   availability_domain = "us-ashburn-1a"
-  shape = "VM.Standard.E2.1"
+  compartment_id      = "ocid1.compartment.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  display_name       = "my-instance"
+  shape              = "VM.Standard.E2.1"
   source_details {
     source_type = "image"
-    image_id = "ocid1.image.oc1.us-ashburn-1.aaaaaaaaj7n36e74e3d35565n63x24e5z2p535y7"
+    image_id   = "ocid1.image.oc1.us-ashburn-1.aaaaaaaa60j3w7s22q3q47u7r6q4256l5g42v5a26k57o6e3z2777p72t"
   }
-  display_name = "my-instance"
-  subnet_id = oci_core_subnet.main.id
-  # Assign a public IP address
-  create_vnic_details {
-    subnet_id = oci_core_subnet.main.id
-    assign_public_ip = true
+}
+
+# Create a Network Security Group
+resource "oci_network_security_group" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  display_name   = "my-nsg"
+  egress {
+    source_type = "CIDR_BLOCK"
+    destination    = "0.0.0.0/0"
+    protocol       = "all"
   }
-  # Attach the Security List
-  security_lists = [oci_core_security_list.main.id]
+  ingress {
+    source_type = "CIDR_BLOCK"
+    source       = "0.0.0.0/0"
+    protocol     = "tcp"
+    destination   = 22
+  }
+}
+
+# Create a Virtual Network (VCN)
+resource "oci_core_vcn" "main" {
+  cidr_block      = "10.0.0.0/16"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  display_name   = "my-vcn"
+}
+
+# Create a Subnet within the VCN
+resource "oci_core_subnet" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  display_name   = "my-subnet"
+  vcn_id         = oci_core_vcn.main.id
+  cidr_block      = "10.0.1.0/24"
+}
+
+# Attach the Security Group to the Instance
+resource "oci_core_instance_network_interface" "main" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7g7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454g7q7q5rk7g4k3g5h454"
+  instance_id    = oci_core_instance.main.id
+  subnet_id      = oci_core_subnet.main.id
+  # Specify the Security Group
+  security_lists = [oci_network_security_group.main.id]
 }
 
   
