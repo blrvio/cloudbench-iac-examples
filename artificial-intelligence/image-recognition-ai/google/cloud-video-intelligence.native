@@ -1,0 +1,10 @@
+
+      // Crie um bucket do Google Cloud Storage
+gsutil mb gs://bucket-name
+
+// Carregue o vídeo para o bucket
+gsutil cp video.mp4 gs://bucket-name/
+
+// Execute o job de análise de vídeo
+gcloud video-intelligence analyze-objects --input-uri gs://bucket-name/video.mp4 --features LABEL_DETECTION,OBJECT_TRACKING --output-uri gs://bucket-name/output --location us-central1
+    

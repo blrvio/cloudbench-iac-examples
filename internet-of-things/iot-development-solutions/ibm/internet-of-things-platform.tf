@@ -1,66 +1,52 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  org_id  = "YOUR_IBM_CLOUD_ORG_ID"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create an IBM IoT Platform service
-resource "ibm_iot_service" "main" {
-  name = "my-iot-service"
-  description = "My IoT service"
-  # Optional fields:
-  # tags = { /* tags */ }
-  # billing_plan = "pay-as-you-go"
-  # shared_secret = true
+# Crie um endpoint de coisas
+resource "aws_iot_endpoint" "my_endpoint" {
+  endpoint_type = "iot:Data"
 }
 
-# Create a device type in your service
-resource "ibm_iot_device_type" "main" {
-  service_id = ibm_iot_service.main.id
-  name = "my-device-type"
-  # Optional fields:
-  # description = "My device type"
-  # tags = { /* tags */ }
+# Crie uma política de coisas
+resource "aws_iot_policy" "my_policy" {
+  name = "my_policy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "iot:Connect",
+          "iot:Publish",
+          "iot:Subscribe"
+        ],
+        "Resource": "*"
+      }
+    ]
+  })
 }
 
-# Create a device in your service
-resource "ibm_iot_device" "main" {
-  service_id = ibm_iot_service.main.id
-  device_type = ibm_iot_device_type.main.name
-  auth_type = "PSK"
-  # Optional fields:
-  # authentication_token = "YOUR_AUTH_TOKEN"
-  # status = "active"
-  # tags = { /* tags */ }
+# Crie um certificado de coisa
+resource "aws_iot_certificate" "my_certificate" {
+  active = true
 }
 
-# Create a rule to process data from the device
-resource "ibm_iot_rule" "main" {
-  service_id = ibm_iot_service.main.id
-  name = "my-rule"
-  # Define the rule's trigger and action
-  # The `trigger` must be a `device-event`
-  trigger {
-    type = "device-event"
-    # Define the device type and event
-    device_type = ibm_iot_device_type.main.name
-    event_type = "temperature"
-  }
-  # The `action` can be a variety of types, including:
-  # - `http-send`: send data to an HTTP endpoint
-  # - `cloud-function`: trigger a Cloud Function
-  # - `mqtt-send`: send data to an MQTT topic
-  # - `cloudant-send`: send data to a Cloudant database
-  action {
-    type = "http-send"
-    # Define the HTTP endpoint URL
-    url = "https://www.example.com"
-    # Optional fields:
-    # headers = { /* headers */ }
-    # body = "{"temperature": ${payload.temperature}}"
-  }
+# Crie uma coisa
+resource "aws_iot_thing" "my_thing" {
+  name = "my_thing"
 }
 
-  
+# Adicione a coisa à política
+resource "aws_iot_thing_principal_attachment" "my_thing_policy_attachment" {
+  principal = aws_iot_certificate.my_certificate.arn
+  thing     = aws_iot_thing.my_thing.name
+}
+
+# Adicione a coisa ao endpoint
+resource "aws_iot_thing_endpoint" "my_thing_endpoint" {
+  thing_name   = aws_iot_thing.my_thing.name
+  endpoint_type = aws_iot_endpoint.my_endpoint.endpoint_type
+}
+    

@@ -1,0 +1,12 @@
+
+      az ad b2c tenant create --name b2c-tenant-example --location westus2
+
+# Crie uma política de inscrição de usuário
+az ad b2c user-flow create --tenant-id b2c-tenant-example --name signup_signin --display-name "Sign Up/Sign In" --type SignUpSignIn
+
+# Crie uma política de redefinição de senha
+az ad b2c user-flow create --tenant-id b2c-tenant-example --name password_reset --display-name "Password Reset" --type PasswordReset
+
+# Crie uma política de perfil de usuário
+az ad b2c user-flow create --tenant-id b2c-tenant-example --name profile_editing --display-name "Profile Editing" --type ProfileEditing
+    

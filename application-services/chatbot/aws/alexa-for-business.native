@@ -1,0 +1,16 @@
+
+      // Create a new Alexa for Business skill
+aws alexaforbusiness create-skill --skill-name "My Skill"
+
+// Create a new room
+aws alexaforbusiness create-room --room-name "Conference Room"
+
+// Associate a skill to a room
+aws alexaforbusiness associate-skill-to-room --skill-id "amzn1.ask.skill.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --room-arn "arn:aws:alexaforbusiness:us-east-1:123456789012:room:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+// Configure the skill's settings for the room
+aws alexaforbusiness update-skill-group --skill-group-arn "arn:aws:alexaforbusiness:us-east-1:123456789012:skillgroup:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --skill-id "amzn1.ask.skill.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --room-arn "arn:aws:alexaforbusiness:us-east-1:123456789012:room:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --enablementType ENABLED
+
+// Enable the skill for the room
+aws alexaforbusiness enable-skill --skill-id "amzn1.ask.skill.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --room-arn "arn:aws:alexaforbusiness:us-east-1:123456789012:room:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --enablementType ENABLED
+    

@@ -1,33 +1,19 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
+  project = "gcp-project-id"
   region  = "us-central1"
 }
 
-# Create a Cloud Video Intelligence Job
-resource "google_video_intelligence_job" "default" {
-  input_uri = "gs://your-bucket/your-video.mp4"
-  output_uri = "gs://your-bucket/output"
-  features  = ["LABEL_DETECTION"] # Possible values: [
-    "LABEL_DETECTION",
-    "SHOT_CHANGE_DETECTION",
-    "EXPLICIT_CONTENT_DETECTION",
-    "OBJECT_TRACKING",
-    "FACE_DETECTION",
-    "SPEECH_TRANSCRIPTION",
-    "TEXT_DETECTION"
-  ]
-  label_detection_config {
-    model = "builtin/stable"
-  }
+# Crie um job de análise de vídeo
+resource "google_video_intelligence_job" "video_analysis" {
+  input_uri = "gs://bucket-name/video.mp4"
+  features  = ["LABEL_DETECTION", "OBJECT_TRACKING"]
+  output_uri = "gs://bucket-name/output"
 }
 
-# Create a Google Cloud Storage Bucket
-resource "google_storage_bucket" "default" {
-  name    = "your-bucket"
-  location = "US"
-  force_destroy = true
-  project  = "your-project-id"
+# Acesse os resultados da análise
+output "analysis_results" {
+  value = google_video_intelligence_job.video_analysis.output_uri
 }
-  
+    

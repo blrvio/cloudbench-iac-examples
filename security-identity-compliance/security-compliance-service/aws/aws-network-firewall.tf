@@ -1,110 +1,82 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1"
 }
 
-# Create a Network Firewall Endpoint
-resource "aws_networkfirewall_endpoint" "main" {
-  name             = "my-network-firewall-endpoint"
-  firewall_policy_arn = aws_networkfirewall_firewall_policy.main.arn
-  subnet_mappings = {
-    subnet_id = aws_subnet.main.id
+# Crie um firewall de rede
+resource "aws_network_firewall_firewall" "example" {
+  firewall_policy_arn = aws_network_firewall_firewall_policy.example.arn
+  subnet_mappings = [{"subnet_id" = aws_subnet.example.id}]
+  firewall_name = "example"
+}
+
+# Crie uma política de firewall de rede
+resource "aws_network_firewall_firewall_policy" "example" {
+  firewall_policy_name = "example"
+  firewall_policy_id = "example"
+  description          = "Exemplo de política de firewall de rede"
+  stateless_default_action = "DROP"
+
+  stateless_rule_group_references {
+    priority = 1
+    resource_arn = aws_network_firewall_stateless_rule_group.example.arn
   }
 }
 
-# Create a Network Firewall Firewall Policy
-resource "aws_networkfirewall_firewall_policy" "main" {
-  name    = "my-firewall-policy"
-  firewall_policy {
-    # Define the firewall policy
-    stateless_custom_actions = {
-      "" = {
-        "" = {
-          # Define a custom action
-          action_name = "my-custom-action"
-          action_type = "DENY"
+# Crie um grupo de regras sem estado para o firewall de rede
+resource "aws_network_firewall_stateless_rule_group" "example" {
+  stateless_rule_group_name = "example"
+  stateless_rule_group_id = "example"
+  description = "Exemplo de grupo de regras sem estado para o firewall de rede"
+
+  stateless_rules {
+    rule_order = 1
+    match_attributes {
+      sources {
+        port_ranges {
+          from_port = 80
+          to_port   = 80
+        }
+        address_groups {
+          address_group_id = aws_network_firewall_address_group.example.id
+        }
+      }
+      destinations {
+        port_ranges {
+          from_port = 80
+          to_port   = 80
+        }
+        address_groups {
+          address_group_id = aws_network_firewall_address_group.example.id
         }
       }
     }
-    stateless_default_actions = {
-      "" = {
-        # Define the default action
-        action_type = "ALLOW"
-      }
-    }
-    stateless_rule_group_references = {
-      "" = {
-        # Define the rule group reference
-        resource_arn = aws_networkfirewall_rule_group.main.arn
-        priority = 100
-      }
-    }
+    rule_action = "PASS"
   }
 }
 
-# Create a Network Firewall Rule Group
-resource "aws_networkfirewall_rule_group" "main" {
-  name    = "my-rule-group"
-  type    = "STATELESS"
-  rule_group {
-    "" = {
-      # Define the rule group
-      stateless_rules = {
-        "" = {
-          # Define a stateless rule
-          rule_options {
-            # Define rule options
-            action = "ALLOW"
-            rule_type = "STATELESS"
-          }
-          match_attributes {
-            # Define match attributes
-            sources {
-              "" = {
-                # Define a source
-                address_definition {
-                  # Define the source address
-                  address_type = "CIDR"
-                  address = "0.0.0.0/0"
-                }
-              }
-            }
-            destinations {
-              "" = {
-                # Define a destination
-                address_definition {
-                  # Define the destination address
-                  address_type = "CIDR"
-                  address = "0.0.0.0/0"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+# Crie um grupo de endereços para o firewall de rede
+resource "aws_network_firewall_address_group" "example" {
+  address_group_name = "example"
+  address_group_id = "example"
+  description = "Exemplo de grupo de endereços para o firewall de rede"
+
+  addresses {
+    address_type = "CIDR"
+    address = "10.0.0.0/16"
   }
 }
 
-# Create a Subnet for the Network Firewall Endpoint
-resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id # Replace with your VPC ID
-  cidr_block = "10.0.0.0/24"
+# Crie uma sub-rede para o firewall de rede
+resource "aws_subnet" "example" {
+  vpc_id = aws_vpc.example.id
+  cidr_block = "10.0.1.0/24"
   availability_zone = "us-east-1a"
-  # Optional: assign tags
-  tags = {
-    Name = "My Subnet"
-  }
 }
 
-# Create a VPC for the Network Firewall
-resource "aws_vpc" "main" {
+# Crie uma VPC para o firewall de rede
+resource "aws_vpc" "example" {
   cidr_block = "10.0.0.0/16"
-  # Optional: assign tags
-  tags = {
-    Name = "My VPC"
-  }
 }
-
-  
+    

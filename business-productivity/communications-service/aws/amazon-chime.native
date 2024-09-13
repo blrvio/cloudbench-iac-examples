@@ -1,0 +1,13 @@
+
+      // Crie um usuário do Amazon Chime
+aws chime create-user --account-id account-id --user-id user-id --email user@example.com --name "User Name"
+
+// Crie uma sala de reunião do Amazon Chime
+aws chime create-meeting --meeting-id meeting-id --external-meeting-id external-meeting-id
+
+// Crie um convite para uma sala de reunião
+aws chime create-meeting-invitation --meeting-id meeting-id --attendee-email attendee@example.com
+
+// Crie um registro de chamada para um usuário
+aws chime create-call-record --account-id account-id --user-id user-id --call-type inbound --call-id call-id
+    

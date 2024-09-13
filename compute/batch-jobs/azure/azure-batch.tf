@@ -1,76 +1,55 @@
 
-    # Configure the Azure provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilita recursos em pré-visualização
 }
 
-# Create a Batch account
+# Crie um grupo de recursos do Azure
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
+  location = "westus"
+}
+
+# Crie uma conta de Batch
 resource "azurerm_batch_account" "example" {
-  name                = "mybatchaccount"
-  resource_group_name = "myresourcegroup"
-  location            = "westus2"
-
-  # Optional settings
-  auto_pool_specification {
-    pool_lifetime_option = "job
-    keep_alive {
-      duration  = 3600 # Keep pool alive for 1 hour (in seconds)
-    }
+  name                = "example-batch-account"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.example.location
+  storage_account_type = "Standard_LRS"
+  key_vault_reference {
+    id = "keyvault-id"
   }
 }
 
-# Create a Batch pool
+# Crie uma pool de computação
 resource "azurerm_batch_pool" "example" {
-  name                 = "mybatchpool"
-  batch_account_name   = azurerm_batch_account.example.name
-  resource_group_name = azurerm_batch_account.example.resource_group_name
-  vm_size             = "Standard_A2_v2"
-  # Optional settings
-  start_task {
-    command_line = "echo 'Start task running'" # Specify a start task command
-  }
-  resize_operation {
-    target_dedicated_nodes      = 10 # Specify a target number of dedicated nodes
-    target_low_priority_nodes = 10 # Specify a target number of low priority nodes
-    timeout_duration          = 600 # Set a timeout for the resize operation (in seconds)
+  name                = "example-pool"
+  account_name        = azurerm_batch_account.example.name
+  resource_group_name = azurerm_resource_group.example.name
+  vm_size              = "Standard_A2_v2"
+  target_dedicated_nodes = 2
+  allocation_mode      = "BatchService"
+  user_account {
+    name     = "admin"
+    password = "password"
   }
 }
 
-# Create a Batch job
+# Crie um trabalho de Batch
 resource "azurerm_batch_job" "example" {
-  name                 = "mybatchjob"
-  batch_account_name   = azurerm_batch_account.example.name
-  resource_group_name = azurerm_batch_account.example.resource_group_name
-  pool_id             = azurerm_batch_pool.example.id
-  # Optional settings
-  on_all_tasks_complete = "terminatejob"
-  # Define the job's tasks
-  job_preparation_task {
-    command_line = "echo 'Job preparation task running'" # Specify a job preparation task command
-  }
-  job_release_task {
-    command_line = "echo 'Job release task running'" # Specify a job release task command
-  }
-  task {
-    command_line = "echo 'Task running'" # Specify a task command
-  }
+  name                = "example-job"
+  account_name        = azurerm_batch_account.example.name
+  resource_group_name = azurerm_resource_group.example.name
+  pool_id            = azurerm_batch_pool.example.id
 }
 
-# Create a Batch task
+# Crie uma tarefa de Batch
 resource "azurerm_batch_task" "example" {
-  name                 = "mybatchtask"
-  batch_account_name   = azurerm_batch_account.example.name
-  resource_group_name = azurerm_batch_account.example.resource_group_name
-  pool_id             = azurerm_batch_pool.example.id
+  name                = "example-task"
+  account_name        = azurerm_batch_account.example.name
+  resource_group_name = azurerm_resource_group.example.name
   job_id              = azurerm_batch_job.example.id
-  # Optional settings
-  command_line      = "echo 'Task running'" # Specify a task command
-  constraints        = "maximumretrycount=3" # Set task constraints
-  user_identity      = "autoUser"
-  affinity_id       = "myaffinity"
-  affinity_group_name = "myaffinitygroup"
-  # Define task dependencies
-  depends_on = [azurerm_batch_task.example]
+  command_line        = "echo Hello from Azure Batch"
 }
 
-  
+    

@@ -1,0 +1,10 @@
+
+      # Crie um ambiente do Azure Time Series Insights
+azurerm time-series-insights environment create -g example-rg -n example-env -l westus2 -s S1 -d 365
+
+# Crie uma fonte de dados
+azurerm time-series-insights gen2-data-source create -g example-rg -n example-datasource -l westus2 -e example-env -k EventHub -eh example-eventhub.servicebus.windows.net -en example-eventhub -cg example-consumergroup -sk example-key
+
+# Crie uma referência de modelo de dados
+azurerm time-series-insights gen2-reference-dataset create -g example-rg -n example-reference-dataset -l westus2 -e example-env -ds example-datasource -kp Id,name -tp timestamp -df Avro -ib 1000 -ii 60
+    

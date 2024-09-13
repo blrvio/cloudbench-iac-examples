@@ -1,0 +1,7 @@
+
+      // Criar uma tag de custo
+aws cost-explorer create-tag --tag-name MyCostTag --tag-value Development
+
+// Criar um relatório de custos
+aws cost-explorer create-report --report-name MyCostReport --time-unit MONTHLY --report-type COST_AND_USAGE --delivery-frequency DAILY --s3-bucket my-cost-reports-bucket --s3-prefix reports/ --tag-filter Name=TagKey,Values=MyCostTag
+    

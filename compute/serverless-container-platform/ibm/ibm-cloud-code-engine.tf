@@ -1,45 +1,31 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"  # Replace with your actual API key
-  region   = "us-south"               # Replace with your desired region
+      # Configure o provedor IBM Cloud
+provider "ibm" {
+  api_key = "your_api_key" # Substitua pela sua API Key
+  region  = "us-south" # Substitua pela sua região desejada
 }
 
-# Define the Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name = "my-code-engine-service"
+# Crie um serviço Code Engine
+resource "ibm_codeengine_service" "my_service" {
+  name     = "my-service"
   location = "us-south"
-  # Define the Git repository containing your application
-  git_source {
-    url = "https://github.com/your-username/your-repo.git"
-  }
-  # Define the container image to be used
-  image {
-    name = "your-docker-image-name:latest"
-  }
-  # Set up the service configuration
-  runtime {
-    runtime_type = "nodejs18"
-    memory = "256"
-    cpu = "1"
-    # Optionally set up scaling
-    scale {
-      min_replicas = 1
-      max_replicas = 3
-    }
-  }
-  # Optional: Set up routes to access your service
-  routes {
-    rules {
-      name = "my-route"
-      path = "/"
-      # Map the route to a specific container
-      target {
-        name = "my-container"
-        port = 8080
-      }
-    }
-  }
 }
 
-  
+# Crie um aplicativo Code Engine
+resource "ibm_codeengine_application" "my_app" {
+  name           = "my-app"
+  service_name   = ibm_codeengine_service.my_service.id
+  runtime        = "nodejs-16"
+  build_command  = "npm install"
+  start_command  = "npm start"
+  source_location = "https://github.com/your-username/your-repo.git"
+}
+
+# Crie um roteamento para o aplicativo Code Engine
+resource "ibm_codeengine_route" "my_route" {
+  name        = "my-route"
+  service_name = ibm_codeengine_service.my_service.id
+  application_name = ibm_codeengine_application.my_app.id
+  rules = [{path: "/*", application: ibm_codeengine_application.my_app.id}]
+}
+    

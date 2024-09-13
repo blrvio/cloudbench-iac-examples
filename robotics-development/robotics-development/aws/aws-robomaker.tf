@@ -1,42 +1,48 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a robot application
-resource "aws_robomaker_application" "main" {
-  name = "my-robomaker-app" # Name of the application
-  # Optional parameters
-  #  -  source_config:  Configure the source code for the application
-  #  -  robot_software_suite:  Specifies the robot software suite used by the application
-  #  -  simulation_software_suite: Specifies the simulation software suite used by the application
+# Crie um espaço de trabalho do RoboMaker
+resource "aws_robomaker_workspaces" "default" {
+  name = "my-robomaker-workspace"
+  # Substitua pelo nome do workspace desejado
 }
 
-# Create a robot simulation job
-resource "aws_robomaker_simulation_job" "main" {
-  application = aws_robomaker_application.main.arn # ARN of the application
-  #  -  output_location: Specifies the Amazon S3 location for output files
-  #  -  compute: Specifies the compute resource for the simulation job
-  #  -  simulation_software_suite: Specifies the simulation software suite used by the simulation job
-  #  -  robot_application_sources: Specifies the source code for the application
-  #  -  data_sources:  Specifies the datasets for the simulation job
-  #  -  max_job_duration_in_seconds:  Specifies the maximum duration for the simulation job
+# Crie um aplicativo de simulação do RoboMaker
+resource "aws_robomaker_simulation_application" "default" {
+  name = "my-simulation-application"
+  # Substitua pelo nome do aplicativo de simulação desejado
+  source_code = "s3://my-bucket/my-simulation-application.zip"
+  # Substitua pelo caminho do código fonte do aplicativo de simulação no S3
+  workspace_id = aws_robomaker_workspaces.default.id
 }
 
-# Create a robot deployment job
-resource "aws_robomaker_deployment_job" "main" {
-  application = aws_robomaker_application.main.arn # ARN of the application
-  #  -  deployment_config:  Specifies the deployment configuration
-  #  -  robot_application_sources:  Specifies the source code for the application
-  #  -  robot_software_suite:  Specifies the robot software suite used by the deployment job
+# Crie uma definição de simulação do RoboMaker
+resource "aws_robomaker_simulation_job" "default" {
+  name = "my-simulation-job"
+  # Substitua pelo nome da definição de simulação desejado
+  simulation_application_name = aws_robomaker_simulation_application.default.name
+  # Substitua pelo nome do aplicativo de simulação desejado
+  output_location = "s3://my-bucket/my-simulation-job-output"
+  # Substitua pelo caminho de saída no S3 para o resultado da simulação
 }
 
-# Create a fleet
-resource "aws_robomaker_fleet" "main" {
-  name = "my-robot-fleet"
-  #  -  description: Description of the fleet
-  #  -  robots:  Specifies the robots in the fleet
+# Crie uma definição de mundo do RoboMaker
+resource "aws_robomaker_world" "default" {
+  name = "my-world"
+  # Substitua pelo nome da definição de mundo desejado
+  workspace_id = aws_robomaker_workspaces.default.id
 }
 
-  
+# Crie um robô do RoboMaker
+resource "aws_robomaker_robot" "default" {
+  name = "my-robot"
+  # Substitua pelo nome do robô desejado
+  greengrass_group_id = "my-greengrass-group"
+  # Substitua pelo ID do grupo Greengrass desejado
+  workspace_id = aws_robomaker_workspaces.default.id
+}
+
+    

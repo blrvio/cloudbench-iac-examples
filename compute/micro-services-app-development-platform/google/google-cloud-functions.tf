@@ -1,36 +1,18 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
+  project = "my-project-id"
   region  = "us-central1"
 }
 
-# Create a Cloud Function
-resource "google_cloudfunctions2_function" "main" {
-  name     = "my-cloud-function"
+# Crie uma função do Cloud Functions
+resource "google_cloudfunctions2_function" "hello_world" {
+  name     = "hello-world"
   runtime  = "nodejs16"
   entry_point = "helloWorld"
-  source_archive_bucket = "your-bucket-name"
-  source_archive_object = "your-function-code.zip"
-
-  # Trigger the function on HTTP requests
-  trigger_http {
-    # Optional: Specify the URL path
-    # url_path = "my-path"
-  }
-
-  # Optional: Set environment variables
-  # environment {
-  #   variables = {
-  #     MY_VAR = "my-value"
-  #   }
-  # }
+  source_archive_bucket = "my-bucket"
+  source_archive_object = "hello-world.zip"
+  trigger_http = true
 }
 
-# Create a bucket for function code
-resource "google_storage_bucket" "main" {
-  name    = "your-bucket-name"
-  location = "US"
-  force_destroy = true
-}
-  
+    

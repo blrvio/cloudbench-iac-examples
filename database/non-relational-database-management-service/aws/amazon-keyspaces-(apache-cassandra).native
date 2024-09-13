@@ -1,0 +1,10 @@
+
+      // Crie um Keyspace
+aws keyspaces create-keyspace --keyspace main
+
+// Crie uma tabela
+aws keyspaces create-table --keyspace main --table users --partition-key user_id:uuid --clustering-key username:text
+
+// Crie um índice
+aws keyspaces create-index --keyspace main --table users --index-name username_index --index-type COMPOSITE --keys username --projection KEYS_ONLY --storage-mode KEYS_ONLY
+    

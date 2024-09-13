@@ -1,0 +1,22 @@
+
+      # Crie um grupo de recursos
+az group create --name example-rg --location westus2
+
+# Crie uma rede virtual
+az network create --resource-group example-rg --name example-vnet --location westus2 --address-prefix 10.0.0.0/16
+
+# Crie uma sub-rede
+az network vnet subnet create --resource-group example-rg --vnet-name example-vnet --name example-subnet --address-prefix 10.0.1.0/24
+
+# Crie um grupo de segurança de rede
+az network nsg create --resource-group example-rg --name example-nsg --location westus2
+
+# Adicione uma regra de segurança ao grupo de segurança de rede
+az network nsg rule create --resource-group example-rg --nsg-name example-nsg --name allow_ssh --priority 100 --direction Inbound --access Allow --protocol Tcp --source-port-range '*' --destination-port-range 22 --source-address-prefix '*' --destination-address-prefix '*'
+
+# Crie uma interface de rede
+az network nic create --resource-group example-rg --name example-nic --location westus2 --vnet-name example-vnet --subnet example-subnet --network-security-group example-nsg
+
+# Crie uma máquina virtual
+az vm create --resource-group example-rg --name example-vm --location westus2 --size Standard_B2s --image UbuntuServer:18.04-LTS:Latest --network-interface example-nic
+    

@@ -1,33 +1,29 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1" # Replace with your desired region
+  project = "gcp-project-id"
 }
 
-# Create a service account for the Translation API
-resource "google_service_account" "translation_api" {
-  account_id   = "translation-api"
-  display_name = "Translation API Service Account"
-  disabled     = false
-
-  # Define the roles for the service account
-  role = ["roles/translate.translator"]
+# Crie uma chave de API
+resource "google_project_service" "translate_api" {
+  service = "translate.googleapis.com"
+  disable_on_destroy = false
 }
 
-# Create a key for the service account
-resource "google_service_account_key" "translation_api" {
-  service_account_id = google_service_account.translation_api.account_id
-  # Suppress long key content for this example.
-  #  key_algorithm = "RSA_2048"
-  #  key_type = "TYPE_SERVICE_ACCOUNT"
+# Crie uma chave de API para o serviço de tradução
+resource "google_project_service" "translate_api_key" {
+  service = "translate.googleapis.com"
+  disable_on_destroy = false
 }
 
-# Define the Translation API project
-resource "google_project_service" "translation_api" {
-  service  = "translate.googleapis.com"
-  disabled = false
-  project  = "your-project-id"
+# Traduza um texto
+output "translation" {
+  value = google_translate_text.translate.translated_text
 }
 
-  
+resource "google_translate_text" "translate" {
+  target_language = "es"
+  text = "Hello World"
+  project = "gcp-project-id"
+}
+    

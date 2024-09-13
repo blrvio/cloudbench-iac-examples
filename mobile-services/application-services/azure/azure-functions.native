@@ -1,0 +1,7 @@
+
+      // Crie um grupo de recursos
+az group create -n example-resource-group -l westus2
+
+// Crie uma função do Azure
+az functionapp create --resource-group example-resource-group --name example-function-app --storage-account example-storage-account --plan example-app-service-plan-id --location westus2
+    

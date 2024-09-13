@@ -1,0 +1,22 @@
+
+      # Crie um grupo de recursos
+azurerm group create --name example-resources --location West Europe
+
+# Crie um Gateway VPN
+azurerm network vpn-gateway create --resource-group example-resources --name example-vpn-gw --location West Europe --vpn-type RouteBased --sku Standard
+
+# Crie uma VPN Connection
+azurerm network vpn-connection create --resource-group example-resources --name example-vpn-connection --vpn-gateway-name example-vpn-gw --local-network-gateway-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.network/localnetworkgateways/example-local-network-gateway --use-policy-based-traffic-selectors false --vpn-type RouteBased
+
+# Crie um Local Network Gateway
+azurerm network local-network-gateway create --resource-group example-resources --name example-local-network-gateway --location West Europe --address-space 10.0.1.0/24 --bgp-asn 65000
+
+# Crie um Virtual Network Gateway Connection
+azurerm network virtual-network-gateway-connection create --resource-group example-resources --name example-vnet-gateway-connection --virtual-network-gateway-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.network/virtualnetworkgateways/example-vnet-gw --local-network-gateway-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.network/localnetworkgateways/example-local-network-gateway --connection-type IPsec --use-policy-based-traffic-selectors false
+
+# Crie um Virtual Network Gateway
+azurerm network virtual-network-gateway create --resource-group example-resources --name example-vnet-gw --location West Europe --vpn-type RouteBased --sku Standard --virtual-network-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.network/virtualnetworks/example-vnet
+
+# Crie um Virtual Network
+azurerm network vnet create --resource-group example-resources --name example-vnet --location West Europe --address-space 10.0.0.0/16
+    

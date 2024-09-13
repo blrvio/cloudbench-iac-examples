@@ -1,0 +1,7 @@
+
+      // Crie um peering de VPC
+aws ec2 create-vpc-peering-connection --vpc-id vpc-xxxxxxxx --peer-vpc-id vpc-yyyyyyyy
+
+// Ative o peering
+aws ec2 accept-vpc-peering-connection --vpc-peering-connection-id pcx-xxxxxxxx
+    

@@ -1,0 +1,31 @@
+
+      // Crie uma conta gerenciada pelo Control Tower
+aws controltower create-account --email example@example.com --account-name managed-account
+
+// Ative o serviço GuardDuty na conta
+aws controltower enable-service --service GuardDuty
+
+// Crie uma Organizational Unit
+aws controltower create-organizational-unit --name Development --parent-id ou-xxxxxxxx
+
+// Crie uma política IAM
+aws controltower create-policy --name iam-policy --content '# Exemplo de política IAM
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::xxxxxxxx:root"
+        },
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::my-bucket/*"
+        ]
+      }
+    ]
+  }'
+    

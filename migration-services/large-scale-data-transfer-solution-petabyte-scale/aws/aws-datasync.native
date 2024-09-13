@@ -1,0 +1,16 @@
+
+      // Crie um agente DataSync
+aws datasync create-agent --activation-key xxxxxxxxxxxxxxxxxxxxxxxx --name example-agent --region us-east-1
+
+// Crie uma localização de origem S3
+aws datasync create-location-s3 --s3-bucket-name example-bucket --s3-subdirectory path/to/source/directory --region us-east-1
+
+// Crie uma localização de destino EFS
+aws datasync create-location-efs --efs-file-system-arn arn:aws:elasticfilesystem:us-east-1:123456789012:file-system/fs-xxxxxxxx --efs-subdirectory path/to/destination/directory --region us-east-1
+
+// Crie uma tarefa de transferência de dados
+aws datasync create-task --name example-task --source-location-arn arn:aws:datasync:us-east-1:123456789012:location:s3:xxxxxxxx --destination-location-arn arn:aws:datasync:us-east-1:123456789012:location:efs:xxxxxxxx --schedule cron(0 0 * * ? *) --region us-east-1
+
+// Inicie a tarefa de transferência de dados
+aws datasync start-task-execution --task-arn arn:aws:datasync:us-east-1:123456789012:task:xxxxxxxx --region us-east-1
+    

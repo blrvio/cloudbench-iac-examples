@@ -1,26 +1,46 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+  project = "project-id"
 }
 
-# Create a Cloud Source Repository
-resource "google_source_repository" "main" {
-  name    = "my-repository"
-  project = "your-project-id"
+# Crie um repositório de código-fonte
+resource "google_sourcerepo_repository" "main" {
+  name     = "my-repo"
+  project  = "project-id"
 }
 
-# Create a Cloud Source Repository webhook
-resource "google_source_repository_webhook" "main" {
+# Crie um usuário com permissão para acessar o repositório
+resource "google_service_account" "repo_user" {
+  account_id   = "repo-user"
+  display_name = "Cloud Source Repositories User"
+}
+
+resource "google_project_iam_member" "repo_user_access" {
+  project  = "project-id"
+  role     = "roles/source.repo.reader"
+  member   = "serviceAccount:${google_service_account.repo_user.email}"
+}
+
+# Crie um webhook para integrar o repositório a um sistema externo
+resource "google_sourcerepo_repo_webhook" "my_webhook" {
   name     = "my-webhook"
-  repository = google_source_repository.main.name
-  project     = "your-project-id"
-  config {
-    url   = "https://your-webhook-endpoint"
-    secret = "your-webhook-secret"
-  }
-  event_type = "PUSH"
+  repo_id  = google_sourcerepo_repository.main.id
+  project  = "project-id"
+  url      = "https://example.com/webhook"
+  event    = "PULL_REQUEST"
+  config   = <<EOF
+{
+  "secret": "my-secret"
+}
+EOF
 }
 
-  
+# Crie um branch dentro do repositório
+resource "google_sourcerepo_branch" "main_branch" {
+  name     = "main"
+  repo_id  = google_sourcerepo_repository.main.id
+  project  = "project-id"
+}
+
+    

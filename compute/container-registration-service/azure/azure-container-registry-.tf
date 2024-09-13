@@ -1,41 +1,37 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Optional: enable specific features
+  features {} # Adicionar recursos avançados
 }
 
-# Create a Resource Group
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "example" {
   name     = "example-rg"
-  location = "westus2"
+  location = "West Europe"
 }
 
-# Create an Azure Container Registry
+# Crie um registro de contêiner
 resource "azurerm_container_registry" "example" {
   name                = "example-acr"
   resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+  location             = azurerm_resource_group.example.location
   sku                  = "Basic"
-  # Optional settings
-  admin_user_enabled = false
-  # ... more settings
+  admin_user_enabled  = false
 }
 
-# Create a Container Registry Task
-# (This is an example, adjust based on your needs)
-resource "azurerm_container_registry_task" "example" {
-  name                = "example-task"
+# Crie um repositório de contêiner
+resource "azurerm_container_registry_repository" "example" {
+  name                = "example-repo"
+  registry_name       = azurerm_container_registry.example.name
   resource_group_name = azurerm_resource_group.example.name
-  registry_name      = azurerm_container_registry.example.name
-  # ... more settings
 }
 
-# Create a Container Registry Webhook
-# (This is an example, adjust based on your needs)
-resource "azurerm_container_registry_webhook" "example" {
-  name                = "example-webhook"
+# Crie um segredo para armazenar a senha do repositório de contêiner
+resource "azurerm_key_vault_secret" "example" {
+  name         = "example-secret"
+  value        = "example-password"
   resource_group_name = azurerm_resource_group.example.name
-  registry_name      = azurerm_container_registry.example.name
-  # ... more settings
+  key_vault_name  = "example-kv"
 }
-  
+
+    

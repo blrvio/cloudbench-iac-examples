@@ -1,0 +1,7 @@
+
+      // Exemplo para visualizar os custos dos últimos 3 meses
+aws cost-explorer get-cost-and-usage --time-period Start=2023-10-01,End=2023-12-31 --granularity MONTHLY --metrics BlendedCost
+
+// Exemplo para visualizar os custos por serviço
+aws cost-explorer get-cost-and-usage --time-period Start=2023-10-01,End=2023-12-31 --granularity MONTHLY --metrics BlendedCost --groupby Type=DIMENSION,Key=SERVICE
+    

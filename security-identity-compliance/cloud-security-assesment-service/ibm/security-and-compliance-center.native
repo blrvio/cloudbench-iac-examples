@@ -1,0 +1,11 @@
+
+      // Crie um Security Hub padrão
+aws securityhub enable-security-hub
+
+// Crie uma regra de avaliação personalizada
+aws securityhub create-insight --insight-arn arn:aws:securityhub:us-east-1:123456789012:insight/example_insight --filters '{"key": "aws:securityhub:ProductName", "values": ["Amazon S3"]},{"key": "aws:securityhub:Severity", "values": ["High"]}' 
+
+// Crie uma regra de avaliação personalizada
+aws securityhub create-standards-subscription --standards-subscription-arns arn:aws:securityhub:us-east-1:123456789012:standards/pci_dss_v3_2
+
+    

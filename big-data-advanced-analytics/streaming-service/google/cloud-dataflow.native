@@ -1,0 +1,5 @@
+
+      // Criar um pipeline Dataflow
+gcloud dataflow jobs create my-pipeline --template gs://dataflow-templates/latest/WordCount --region us-central1
+// ... outras configurações
+    

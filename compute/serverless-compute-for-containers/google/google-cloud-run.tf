@@ -1,24 +1,32 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
-}
-
-# Create a Cloud Run service
-resource "google_cloud_run_v2_service" "main" {
-  name     = "my-cloud-run-service"
-  location = google_cloud_run_v2_service.main.location
-  template {
-    containers {
-      image = "us-docker.pkg.dev/cloudrun/container/hello"
-    }
-    # Use a default traffic split
-    traffic {
-      percent  = 100
-      latest_revision = true
+      terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
     }
   }
 }
 
-  
+provider "google" {
+  project = "gcp-project-id"
+  region  = "us-central1"
+}
+
+# Create a Cloud Run service
+resource "google_cloud_run_v2_service" "default" {
+  location = google_cloud_run_v2_location.default.name
+  name     = "cloud-run-service"
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+  }
+}
+
+# Create a location
+resource "google_cloud_run_v2_location" "default" {
+  location = "us-central1"
+}
+
+    

@@ -1,48 +1,33 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {}  # Optional: Enable specific Azure features
+  features {} # Ativar recursos experimentais
 }
 
-# Create a Bot Service
+# Crie um recurso de serviço de bot
 resource "azurerm_bot_service" "example" {
-  name                = "example-bot"
-  location            = "westus2"
+  location          = "westus2"
+  name              = "example-bot"
   resource_group_name = "example-resources"
   sku {
-    name = "F0"
+    name     = "F0"
+    tier     = "Free"
+  }
+
+  # Define os canais para o bot
+  channels {
+    # Adicione canais como WebChat, DirectLine, etc.
   }
 }
 
-# Create a Channel Connection
-resource "azurerm_bot_channel" "example" {
-  name                = "example-channel"
-  location            = "westus2"
+# Crie uma chave de canal DirectLine
+resource "azurerm_bot_channel_direct_line" "example" {
+  location          = "westus2"
+  name              = "example-direct-line"
+  bot_service_name = azurerm_bot_service.example.name
   resource_group_name = "example-resources"
-  bot_service_name    = azurerm_bot_service.example.name
-  channel_type        = "emulator"
-}
 
-# Create a Bot Connection
-resource "azurerm_bot_connection" "example" {
-  name                = "example-connection"
-  location            = "westus2"
-  resource_group_name = "example-resources"
-  bot_service_name    = azurerm_bot_service.example.name
-  connection_type     = "luis"
-  properties {
-    luis_app_id = "your-luis-app-id"
-    luis_key     = "your-luis-app-key"
-  }
+  # Configuração de canal DirectLine (opcional)
+  # ...
 }
-
-# Create a Bot Endpoint
-resource "azurerm_bot_endpoint" "example" {
-  name                = "example-endpoint"
-  location            = "westus2"
-  resource_group_name = "example-resources"
-  bot_service_name    = azurerm_bot_service.example.name
-  endpoint_type        = "production"
-}
-
-  
+    

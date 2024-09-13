@@ -1,0 +1,7 @@
+
+      // Crie um volume de bloco
+oci volume create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxx --availability-domain AD-1 --display-name example_volume --size 100GB
+
+// Crie um grupo de anexação de volumes
+oci volume-attachment create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxx --instance-id ocid1.instance.oc1..aaaaaaaaxxxxxxxxxx --volume-id ocid1.volume.oc1..aaaaaaaaxxxxxxxxxx
+    

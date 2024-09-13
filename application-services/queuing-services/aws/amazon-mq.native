@@ -1,0 +1,16 @@
+
+      // Crie um broker Amazon MQ
+aws mq create-broker --broker-name my-mq-broker --engine ActiveMQ --engine-version 5.15.10 --host-instance-type mq.t2.medium --publicly-accessible true --security-groups sg-xxxxxxxx --user admin --password my-password --deployment-mode SINGLE_INSTANCE
+
+// Crie uma senha para o usuário do broker
+aws mq create-user --broker-id my-mq-broker --username admin --password my-password
+
+// Crie uma configuração de segurança
+aws mq create-configuration --broker-id my-mq-broker --name my-mq-configuration --description "Configuração de segurança do broker" --engine ActiveMQ --engine-version 5.15.10
+
+// Crie um acesso de usuário
+aws mq create-user --broker-id my-mq-broker --username my-user --password my-password
+
+// Crie uma política de acesso para o usuário
+aws mq create-user-policy --broker-id my-mq-broker --user-name my-user --policy "{}"
+    

@@ -1,0 +1,16 @@
+
+      # Crie um stream do Kinesis
+aws kinesis create-stream --stream-name example --shard-count 1 --retention-period-hours 24
+
+# Crie uma função Lambda para processar os dados do stream
+aws lambda create-function --function-name example --runtime python3.9 --handler main.handler --role arn:aws:iam::123456789012:role/lambda_role --zip-file fileb://example.zip --timeout 10 --memory-size 128
+
+# Crie uma role IAM para a função Lambda
+aws iam create-role --role-name lambda_role --assume-role-policy file://assume_role_policy.json
+
+# Adicione uma política IAM para a role da função Lambda
+aws iam put-role-policy --role-name lambda_role --policy-name lambda_policy --policy file://lambda_policy.json
+
+# Configure um evento do Lambda para processar os dados do stream
+aws lambda create-event-source-mapping --event-source-arn arn:aws:kinesis:*:*:stream/example --function-name example --batch-size 100 --starting-position LATEST
+    

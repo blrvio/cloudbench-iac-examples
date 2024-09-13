@@ -1,0 +1,11 @@
+
+      gcloud compute vpn-tunnels create my-vpn-tunnel --region us-central1 --target-vpn-gateway my-vpn-gateway --peer-ip 10.128.0.2 --shared-secret secret
+
+gcloud compute vpn-gateways create my-vpn-gateway --region us-central1 --network my-network --interface nic0 --peer-ip 10.128.0.1
+
+gcloud compute networks create my-network --auto-create-subnetworks false
+
+gcloud compute addresses create my-vpn-address --address-type EXTERNAL
+
+gcloud compute routes create my-vpn-route --network my-network --dest-range 10.128.0.0/20 --next-hop-ip 10.128.0.1 --priority 100
+    

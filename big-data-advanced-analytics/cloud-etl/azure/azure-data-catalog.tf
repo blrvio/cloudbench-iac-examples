@@ -1,49 +1,41 @@
 
-    # Configure the Azure provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use para ativar recursos beta
 }
 
-# Create an Azure Data Catalog
+# Crie um catálogo de dados
 resource "azurerm_data_catalog" "example" {
-  name                 = "example-data-catalog"
+  name     = "example-data-catalog"
+  location = "West Europe" # Substitua pela região desejada
   resource_group_name = "example-resource-group"
-  location             = "westus2"
-  # Optional settings
-  # tags = {
-  #   Name = "example-data-catalog"
-  # }
 }
 
-# Create an Azure Data Catalog principal
-resource "azurerm_data_catalog_principal" "example" {
-  name                 = "example-data-catalog-principal"
+# Crie um banco de dados no catálogo de dados
+resource "azurerm_data_catalog_database" "example" {
+  name     = "example-database"
+  location = "West Europe" # Substitua pela região desejada
+  data_catalog_name = azurerm_data_catalog.example.name
   resource_group_name = "example-resource-group"
-  data_catalog_name  = azurerm_data_catalog.example.name
-  # Optional settings
-  # type = "ServicePrincipal"
-  # identity_type = "ServicePrincipal"
-  # service_principal_id = "example-sp-id"
 }
 
-# Create an Azure Data Catalog glossary
-resource "azurerm_data_catalog_glossary" "example" {
-  name                 = "example-glossary"
+# Crie uma tabela no banco de dados
+resource "azurerm_data_catalog_table" "example" {
+  name     = "example-table"
+  location = "West Europe" # Substitua pela região desejada
+  data_catalog_name = azurerm_data_catalog.example.name
   resource_group_name = "example-resource-group"
-  data_catalog_name  = azurerm_data_catalog.example.name
-  # Optional settings
-  # description = "example-description"
+  database_name = azurerm_data_catalog_database.example.name
 }
 
-# Create an Azure Data Catalog glossary term
-resource "azurerm_data_catalog_glossary_term" "example" {
-  name                 = "example-glossary-term"
+# Crie uma coluna na tabela
+resource "azurerm_data_catalog_column" "example" {
+  name     = "example-column"
+  location = "West Europe" # Substitua pela região desejada
+  data_catalog_name = azurerm_data_catalog.example.name
   resource_group_name = "example-resource-group"
-  data_catalog_name  = azurerm_data_catalog.example.name
-  glossary_name        = azurerm_data_catalog_glossary.example.name
-  # Optional settings
-  # definition = "example-definition"
-  # description = "example-description"
+  database_name = azurerm_data_catalog_database.example.name
+  table_name = azurerm_data_catalog_table.example.name
 }
 
-  
+    

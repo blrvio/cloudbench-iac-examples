@@ -1,0 +1,10 @@
+
+      // Crie um banco de dados ApsaraDB for RDS PostgreSQL
+rds create-instance --engine PostgreSQL --engine-version 12 --instance-type rds.pg.s1.small --instance-charge-type PostPaid --database-name my_database --database-password password123 --vpc-id vpc-xxxxxxxx --vswitch-id vswitch-xxxxxxxx --security-group-ids sg-xxxxxxxx --tag-name "Name" --tag-value "My PostgreSQL Database"
+
+// Crie um usuário do banco de dados
+rds create-account --db-instance-id db-xxxxxxxx --account-name postgres_user --account-password password123 --account-type Normal
+
+// Conceda permissões ao usuário do banco de dados
+rds grant-privilege --db-instance-id db-xxxxxxxx --account-name postgres_user --db-name my_database --privilege SUPER --host "%"
+    

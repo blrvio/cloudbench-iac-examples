@@ -1,36 +1,12 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Lambda Function
-resource "aws_lambda_function" "main" {
-  function_name = "my-lambda-function"         # Name of your Lambda function
-  runtime       = "nodejs16.x"                 # Runtime environment for the function
-  handler       = "index.handler"              # Entry point for the function
-  role          = aws_iam_role.lambda_role.arn # IAM role for the function
-  memory_size   = 128                          # Memory allocated to the function (MB)
-  timeout       = 30                           # Timeout for the function (seconds)
-
-  # Define the code for the function
-  # You can either provide the code directly in the code attribute, or
-  # reference a file in the local file system.
-  # In this example, we are using a file from the local file system.
-  filename = "lambda_function.zip" # Path to your Lambda function code
-  # Optional: You can configure the function's environment variables here
-  environment {
-    variables = {
-      MY_ENV_VAR = "my-env-value"
-    }
-  }
-}
-
-# Create an IAM role for the Lambda function
+# Crie um papel IAM para a função Lambda
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_role"
-
-  # Assign the necessary permissions to the role
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -47,10 +23,9 @@ resource "aws_iam_role" "lambda_role" {
 EOF
 }
 
-# Attach the necessary permissions to the IAM role
-resource "aws_iam_role_policy" "lambda_policy" {
-  name   = "lambda_policy"
-  role   = aws_iam_role.lambda_role.id
+# Crie uma política IAM para a função Lambda
+resource "aws_iam_policy" "lambda_policy" {
+  name = "lambda_policy"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -60,8 +35,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
       "Action": [
         "logs:CreateLogStream",
         "logs:CreateLogGroup",
-        "logs:PutLogEvents",
-        "logs:DescribeLogStreams"
+        "logs:PutLogEvents"
       ],
       "Resource": "arn:aws:logs:*:*:*"
     }
@@ -70,4 +44,21 @@ resource "aws_iam_role_policy" "lambda_policy" {
 EOF
 }
 
-  
+# Anexa a política ao papel IAM
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
+  role = aws_iam_role.lambda_role.id
+  policy_arn = aws_iam_policy.lambda_policy.arn
+}
+
+# Crie a função Lambda
+resource "aws_lambda_function" "my_lambda_function" {
+  function_name = "my_lambda_function"
+  runtime       = "nodejs16.x"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "index.handler"
+  code = {
+    zip_file = "# Código da função Lambda"
+  }
+}
+
+    

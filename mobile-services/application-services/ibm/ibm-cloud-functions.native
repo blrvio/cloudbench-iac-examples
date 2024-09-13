@@ -1,0 +1,10 @@
+
+      // Crie um namespace para as funções
+ibmcloud fn namespace create my-namespace
+
+// Crie uma função
+ibmcloud fn action create hello-world --namespace my-namespace --runtime nodejs:16 --code "// Coloque o código da função aqui" --kind http
+
+// Crie um gatilho para a função
+ibmcloud fn trigger create hello-world-trigger --namespace my-namespace --action hello-world --kind http
+    

@@ -1,0 +1,13 @@
+
+      // Crie um grupo de recursos
+az group create --name example-rg --location westus2
+
+// Crie um dispositivo Azure Sphere
+az sphere device create --resource-group example-rg --name example-device --device-id device-id --device-secret device-secret
+
+// Crie um aplicativo Azure Sphere
+az sphere application create --resource-group example-rg --name example-application --application-id application-id --application-key application-key
+
+// Crie um certificado Azure Sphere
+az sphere certificate create --resource-group example-rg --name example-certificate --certificate-data certificate-data
+    

@@ -1,30 +1,19 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  api_key = "YOUR_IBM_API_KEY" # Replace with your IBM Cloud API key
-  region  = "us-south"
+  api_key = "YOUR_IBM_API_KEY"
+  region   = "us-south"
 }
 
-# Create a Watson Studio project
-resource "ibm_watson_studio_project" "main" {
-  name        = "my-watson-studio-project"
-  description = "My Watson Studio Project"
+# Crie um projeto no Watson Studio
+resource "ibm_watson_studio_project" "my_project" {
+  name = "My Project"
+  description = "My first Watson Studio project"
 }
 
-# Create a Watson Studio Notebook
-resource "ibm_watson_studio_notebook" "main" {
-  project_id = ibm_watson_studio_project.main.id
-  name        = "my-notebook"
+# Crie um espaço de trabalho no Watson Studio
+resource "ibm_watson_studio_workspace" "my_workspace" {
+  name = "My Workspace"
+  project_id = ibm_watson_studio_project.my_project.id
 }
-
-# Create a Watson Studio Deployment
-resource "ibm_watson_studio_deployment" "main" {
-  project_id = ibm_watson_studio_project.main.id
-  name        = "my-deployment"
-  runtime     = "python-3.6"
-  code        = <<EOF
-print("Hello from Watson Studio!")
-EOF
-}
-
-  
+    

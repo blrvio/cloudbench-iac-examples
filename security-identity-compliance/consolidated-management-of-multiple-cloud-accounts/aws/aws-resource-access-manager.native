@@ -1,0 +1,13 @@
+
+      // Crie um compartilhamento de recursos
+aws ram create-resource-share --name example --resource-type aws:ec2:instance --allow-external-principals --description "Compartilhamento de recursos de exemplo"
+
+// Adicione uma conta à lista de destinatários do compartilhamento
+aws ram attach-permission --resource-share-name example --principal 123456789012
+
+// Desconecte uma conta do compartilhamento de recursos
+aws ram detach-permission --resource-share-name example --principal 123456789012 --force
+
+// Exclua um compartilhamento de recursos
+aws ram delete-resource-share --resource-share-name example --force
+    

@@ -1,0 +1,4 @@
+
+      // Crie uma máquina de estado do Step Functions
+aws stepfunctions create-state-machine --name my-state-machine --definition file://state-machine.json
+    

@@ -1,0 +1,10 @@
+
+      // Define a imagem do container
+az container create -g aci-rg -n aci-example --image mcr.microsoft.com/azuredocs/aci-helloworld:v1 --location westus2 --resource-group aci-rg --os-type Linux
+
+// Define a rede para o grupo de contêineres
+az container create -g aci-rg -n aci-example --location westus2 --resource-group aci-rg --os-type Linux --network-profile "aci-network" --dns-servers dns.google.com
+
+// Define os recursos do grupo de contêineres
+az container create -g aci-rg -n aci-example --location westus2 --resource-group aci-rg --os-type Linux --network-profile "aci-network" --dns-servers dns.google.com --cpu 1 --memory 1
+    

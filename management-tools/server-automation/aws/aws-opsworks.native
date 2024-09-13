@@ -1,0 +1,13 @@
+
+      // Crie um stack OpsWorks
+aws opsworks create-stack --name "main-stack" --service-role-arn arn:aws:iam::xxxxxxxx:role/opsworks_service_role --default-instance-profile-arn arn:aws:iam::xxxxxxxx:role/opsworks_instance_profile --default-os "Amazon Linux 2" --default-ssh-key-name key_name --default-root-device-type ebs --default-availability-zone us-east-1a --custom-cookbooks-source "Type=git,Url=git@github.com:your-organization/cookbooks.git,Revision=master" --custom-json '{\"MyCustomOption\":\"MyCustomValue\"}'
+
+// Crie um layer OpsWorks
+aws opsworks create-layer --stack-id stack-xxxxxxxx --name "Custom Layer" --shortname custom --type custom --auto-assign-elastic-ips false --auto-assign-public-ips false --use-ebs-optimized-instances false --custom-recipes "Setup=[recipe1.rb,recipe2.rb],Configure=[configure1.rb,configure2.rb],Deploy=[deploy1.rb,deploy2.rb],Undeploy=[undeploy1.rb,undeploy2.rb]" --custom-json '{\"MyCustomOption\":\"MyCustomValue\"}'
+
+// Crie uma instância OpsWorks
+aws opsworks create-instance --stack-id stack-xxxxxxxx --layer-ids layer-xxxxxxxx --instance-type t2.micro --# ... other options ...
+
+// Crie um aplicativo OpsWorks
+aws opsworks create-app --stack-id stack-xxxxxxxx --name "My App" --type rails --shortname myapp --app-source "Type=git,Url=git@github.com:your-organization/myapp.git,Revision=master" --# ... other options ...
+    

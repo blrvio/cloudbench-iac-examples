@@ -1,0 +1,10 @@
+
+      // Crie uma fila de conversão
+aws mediaconvert create-queue --name my-media-convert-queue
+
+// Crie um endpoint de MediaConvert
+aws mediaconvert create-endpoint --name my-media-convert-endpoint
+
+// Crie uma tarefa de conversão
+aws mediaconvert create-job --role arn:aws:iam::123456789012:role/mediaconvert-role --queue my-media-convert-queue --input "{"input":{"audioSelectors":[{"audioPid":1,"selectorType":"pid","selectorSettings":{"pid":1}}],"fileSourceSettings":{"s3Settings":{"bucketName":"my-bucket","objectKey":"my-file.mp4"}}}}" --output "{"outputGroups":[{"name":"HLS Output","outputGroupSettings":{"hlsGroupSettings":{"adMarkers":"none","segmentLength":5,"streamInfResolution":"include","destinationSettings":{"s3Settings":{"bucketName":"my-bucket","cannedAcl":"bucket-owner-full-control"}},"hlsManifestSettings":{"manifestNameModifier":"my-hls","adMarkers":"none","playlistType":"event","playlistDurationConstraint":"max"}}},"outputs":[{"audioDescription":[{"audioTypeControl":"follow_input","codecSettings":{"aacSettings":{"bitrate":128,"codingMode":"stereo","profile":"lc","rateControlMode":"cbr"}},"languageCode":"en","languageCodeControl":"follow_input","samplingRate":48000}],"captionDescriptions":[{"captionSelectorSettings":{"languageCode":"en"},"destinationSettings":{"s3Settings":{"bucketName":"my-bucket"}},"languageCode":"en"}],"containerSettings":{"fmp4Settings":{"audioDuration":0}},"videoDescription":[{"scalingBehavior":"default","width":1280,"height":720,"codecSettings":{"h264Settings":{"bitrate":2000,"framerate":24,"par":"16:9","rateControlMode":"cbr","interlaceMode":"progressive","scanType":"progressive","profile":"high","level":"auto","adaptiveQuantization":"auto"}},"heightControl":"specify_resolution","widthControl":"specify_resolution","resolutionMode":"fixed_resolution","aspectRatioMode":"fixed_aspect_ratio","frameRateMode":"follow_input","afvMode":"none","colorMetadata":"bt709"}]}]}]}" --status start
+    

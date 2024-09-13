@@ -1,0 +1,10 @@
+
+      # Crie uma regra de balanceamento de carga
+oci load-balancer rule create --load-balancer-id <load-balancer-id> --name example-rule --backend-set-id <backend-set-id> --http-path / --http-method GET
+
+# Crie um conjunto de backends
+oci load-balancer backend-set create --load-balancer-id <load-balancer-id> --name example-backend-set --backend-subnet-id <subnet-id> --backend-ip-address 10.0.0.10
+
+# Crie um balanceador de carga
+oci load-balancer create --name example-lb --# ... outras configurações
+    

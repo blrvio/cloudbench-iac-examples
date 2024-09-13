@@ -1,0 +1,13 @@
+
+      // Crie um data warehouse
+oci data-warehouse create-datawarehouse --compartment-id ocid1.compartment.oc1..aaaaaaaab4v4y4 --display-name my-datawarehouse --shape VM.Standard2.1 --source BIGDATA_SQL --source-type DATA_WAREHOUSE
+
+// Crie um usuário do banco de dados
+oci data-warehouse create-user --compartment-id ocid1.compartment.oc1..aaaaaaaab4v4y4 --display-name my-user --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaab4v4y4 --password my-password
+
+// Crie uma tabela no data warehouse
+oci data-warehouse create-table --compartment-id ocid1.compartment.oc1..aaaaaaaab4v4y4 --display-name my_table --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaab4v4y4 --columns '[{"name": "id", "dataType": "NUMBER", "nullable": false}, {"name": "name", "dataType": "VARCHAR", "nullable": false}]'
+
+// Crie um esquema no data warehouse
+oci data-warehouse create-schema --compartment-id ocid1.compartment.oc1..aaaaaaaab4v4y4 --display-name my_schema --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaab4v4y4
+    

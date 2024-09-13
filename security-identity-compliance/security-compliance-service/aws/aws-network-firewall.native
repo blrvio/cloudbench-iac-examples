@@ -1,0 +1,19 @@
+
+      // Crie uma política de firewall de rede
+aws network-firewall create-firewall-policy --firewall-policy-name example --stateless-default-action DROP --description "Exemplo de política de firewall de rede"
+
+// Crie um grupo de regras sem estado para o firewall de rede
+aws network-firewall create-stateless-rule-group --stateless-rule-group-name example --description "Exemplo de grupo de regras sem estado para o firewall de rede"
+
+// Adicione uma regra sem estado ao grupo de regras sem estado
+aws network-firewall put-stateless-rules --stateless-rule-group-name example --stateless-rules '[{"rule_order": 1, "match_attributes": {"sources": [{"port_ranges": [{"from_port": 80, "to_port": 80}], "address_groups": [{"address_group_id": "example"}]}], "destinations": [{"port_ranges": [{"from_port": 80, "to_port": 80}], "address_groups": [{"address_group_id": "example"}]}]}, "rule_action": "PASS"}]'
+
+// Crie um grupo de endereços para o firewall de rede
+aws network-firewall create-address-group --address-group-name example --description "Exemplo de grupo de endereços para o firewall de rede"
+
+// Adicione um endereço ao grupo de endereços
+aws network-firewall put-addresses --address-group-name example --addresses '[{"address_type": "CIDR", "address": "10.0.0.0/16"}]'
+
+// Crie um firewall de rede
+aws network-firewall create-firewall --firewall-name example --firewall-policy-arn arn:aws:network-firewall:us-east-1:123456789012:firewall-policy/example --subnet-mappings '[{"subnet_id": "subnet-xxxxxxxx"}]'
+    

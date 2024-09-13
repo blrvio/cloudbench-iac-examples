@@ -1,0 +1,10 @@
+
+      // Crie um tenant do Azure Active Directory B2C
+az ad b2c tenant create --name example --location westus
+
+// Crie um pool de identidade do Azure Active Directory B2C
+az ad b2c identity-provider create --tenant example --name example --identity-provider google --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET --client-credentials true
+
+// Crie uma política de inscrição do Azure Active Directory B2C
+az ad b2c user-flow create --tenant example --name example --display-name 'Nome de Exibição' --attribute displayName --is-optional false --display-name 'Nome' --attribute givenName --is-optional false --display-name 'Sobrenome' --attribute surname --is-optional false --display-name 'Email' --attribute email --is-optional false --display-name 'Senha' --attribute password --is-optional false
+    

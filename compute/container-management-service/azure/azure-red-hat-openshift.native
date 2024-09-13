@@ -1,0 +1,13 @@
+
+      // Criar um grupo de recursos
+az group create --name openshift-rg --location westus2
+
+// Criar um cluster do Azure Red Hat OpenShift
+az openshift create --name openshift-cluster --resource-group openshift-rg --location westus2 --version 4.9
+
+// Criar um namespace
+az openshift project create --name my-namespace --cluster openshift-cluster
+
+// Importar uma imagem para o cluster
+az openshift image import --name my-image --cluster openshift-cluster --from "docker.io/library/nginx:latest" --tag latest
+    

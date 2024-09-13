@@ -1,0 +1,10 @@
+
+      // Create a group
+oci iam group create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7w7q6y --name example-group --description "Example group"
+
+// Create a user
+oci iam user create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7w7q6y --name example-user --description "Example user"
+
+// Add the user to the group
+oci iam group add-user --group-id <group_id> --user-id <user_id>
+    

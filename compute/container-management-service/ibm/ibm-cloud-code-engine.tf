@@ -1,38 +1,30 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
+      # Configure o provedor do IBM Cloud
+provider "ibm" {
   region = "us-south"
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
 }
 
-# Create a Code Engine project
-resource "ibm_codeengine_project" "main" {
-  name = "my-codeengine-project"
-  location = "us-south"
-  runtime = "nodejs-16"
+# Crie um namespace do Code Engine
+resource "ibm_codeengine_namespace" "my_namespace" {
+  name     = "my-namespace"
+  location = ibm_codeengine_namespace.my_namespace.location
 }
 
-# Create a Code Engine application
-resource "ibm_codeengine_application" "main" {
-  name = "my-codeengine-app"
-  project_id = ibm_codeengine_project.main.id
-  runtime = "nodejs-16"
-  image = "us-docker.pkg.dev/cloudrun/container/hello"
-  memory = 512
-  cpu = 1
+# Crie um aplicativo no Code Engine
+resource "ibm_codeengine_application" "my_app" {
+  name       = "my-app"
+  namespace  = ibm_codeengine_namespace.my_namespace.name
+  runtime    = "nodejs-16"
+  build_source {
+    context = "https://github.com/ibm-cloud/code-engine-samples.git"
+    branch  = "main"
+  }
 }
 
-# Create a Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name = "my-codeengine-service"
-  project_id = ibm_codeengine_project.main.id
-  application_name = ibm_codeengine_application.main.name
-  routing_rules = [
-    {
-      path = "/"
-      application_instance = "my-codeengine-app"
-    }
-  ]
+# Crie um serviço no Code Engine
+resource "ibm_codeengine_service" "my_service" {
+  name       = "my-service"
+  namespace  = ibm_codeengine_namespace.my_namespace.name
+  application = ibm_codeengine_application.my_app.name
 }
-
-  
+    

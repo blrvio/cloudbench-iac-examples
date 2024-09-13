@@ -1,34 +1,22 @@
 
-    # Configure the IBM Cloud Provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region  = "us-south"
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "your-project-id"
+  region  = "us-central1"
 }
 
-# Create a Language Translator Service
-resource "ibm_language_translator_service" "main" {
-  name        = "my-language-translator-service"
-  plan        = "lite"
-  instance_id = "YOUR_INSTANCE_ID"
+# Crie um modelo de tradução
+resource "google_translate_model" "default" {
+  name = "my-translation-model"
+  source_language_code = "en"
+  target_language_code = "fr"
 }
 
-# Create a Language Translator Model
-resource "ibm_language_translator_model" "main" {
-  name            = "my-language-translator-model"
-  service_id      = ibm_language_translator_service.main.id
-  base_model_id = "en-es"
-  domain         = "general"
+# Crie um recurso de tradução
+resource "google_translate_translation" "default" {
+  model  = google_translate_model.default.name
+  contents = "Hello world"
+  source_language_code = "en"
+  target_language_code = "fr"
 }
-
-# Translate a text
-output "translation" {
-  value = ibm_language_translator_translate.main.translation
-}
-
-resource "ibm_language_translator_translate" "main" {
-  service_id      = ibm_language_translator_service.main.id
-  model_id        = ibm_language_translator_model.main.id
-  text            = "Hello world!"
-  target_language = "es"
-}
-  
+    

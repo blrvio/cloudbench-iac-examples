@@ -1,0 +1,25 @@
+
+      # Create a compartment
+
+# Create a compartment
+
+oci resource-manager compartment create --compartment-id <compartment-id> --name <compartment-name> --description "This is a test compartment"
+
+# Create a policy
+
+oci resource-manager policy create --compartment-id <compartment-id> --name <policy-name> --description "This is a test policy"
+--statements "[{"effect": "ALLOW", "actions": ["oci_resourcemanager.compartment.create"], "resources": ["*"], "conditions": null}]"
+
+# Create a group
+
+oci resource-manager group create --compartment-id <compartment-id> --name <group-name> --description "This is a test group"
+
+# Add a user to a group
+
+oci resource-manager group-membership add --group-id <group-id> --user-id <user-id>
+
+# Grant a group access to a compartment
+
+oci resource-manager compartment-access-policy add --compartment-id <compartment-id> --group-id <group-id> --access-type "read" --access-level "allow"
+
+    

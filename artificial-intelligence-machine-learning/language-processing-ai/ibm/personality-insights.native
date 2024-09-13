@@ -1,0 +1,19 @@
+
+      // Importar a biblioteca de Python para usar a API do Personality Insights
+import ibm_watson
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+# Criar uma instância do serviço
+authenticator = IAMAuthenticator(apikey="<sua-api-key>") # Substituir pela sua API Key
+personality_insights = ibm_watson.PersonalityInsightsV3(version="2017-10-13", authenticator=authenticator)
+personality_insights.set_service_url('https://api.us-south.personality-insights.watson.cloud.ibm.com')
+
+# Configurar as opções de solicitação
+profile_options = {'content_type': 'text/plain'}
+
+# Enviar uma solicitação à API com o texto de entrada
+response = personality_insights.profile(profile_options, text="<texto de entrada>").get_result()
+
+# Imprimir os resultados da análise de personalidade
+print(response)
+    

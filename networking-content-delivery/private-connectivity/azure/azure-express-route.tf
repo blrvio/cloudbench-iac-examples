@@ -1,54 +1,93 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Para usar as últimas funcionalidades
 }
 
-# Define the Express Route Circuit
+# Crie um circuito Express Route
 resource "azurerm_express_route_circuit" "example" {
-  name                = "example-express-route-circuit"
-  location            = "westus"
-  resource_group_name = "example-resource-group"
-  service_provider_name = "ExampleServiceProvder"
-  bandwidth_in_mbps     = 100
+  name                = "example-circuit"
+  location            = "West Europe"
+  resource_group_name = "example-resources"
+  bandwidth_in_mbps   = 100
+  service_provider    = "Equinix"
+  peering_location    = "London"
 }
 
-# Define the Express Route Connection
-resource "azurerm_express_route_connection" "example" {
-  name                = "example-express-route-connection"
-  resource_group_name = "example-resource-group"
-  express_route_circuit_name = azurerm_express_route_circuit.example.name
-  bandwidth_in_mbps     = 100
-  routing_config {
+# Crie um peering de roteamento
+resource "azurerm_express_route_circuit_peering" "example" {
+  name                = "example-peering"
+  express_route_circuit_id = azurerm_express_route_circuit.example.id
+  peer_type             = "AzurePrivatePeering"
+  microsoft_peering_config {
     advertised_public_prefixes = ["10.0.0.0/16"]
+  }
+  routing_policy {
+    as_path_segments = ["10.0.0.0/16"]
   }
 }
 
-# Define the Express Route Peering
-resource "azurerm_express_route_peering" "example" {
-  name                = "example-express-route-peering"
-  resource_group_name = "example-resource-group"
-  express_route_circuit_name = azurerm_express_route_circuit.example.name
-  peer_type           = "microsoft_peering"
+# Crie um circuito virtual
+resource "azurerm_express_route_circuit_virtual_network_peering" "example" {
+  name                = "example-peering"
+  express_route_circuit_id = azurerm_express_route_circuit.example.id
+  virtual_network_id = azurerm_virtual_network.example.id
+  route_filter_id    = azurerm_route_filter.example.id
 }
 
-# Define the Express Route Gateway
-resource "azurerm_express_route_gateway" "example" {
-  name                = "example-express-route-gateway"
-  resource_group_name = "example-resource-group"
-  location            = "westus"
-  virtual_network_name = "example-virtual-network"
+# Crie uma rota na tabela de roteamento
+resource "azurerm_route_table" "example" {
+  name                = "example-route-table"
+  location            = "West Europe"
+  resource_group_name = "example-resources"
 }
 
-# Define the Express Route Gateway Connection
-resource "azurerm_express_route_gateway_connection" "example" {
-  name                = "example-express-route-gateway-connection"
-  resource_group_name = "example-resource-group"
-  express_route_gateway_name = azurerm_express_route_gateway.example.name
-  express_route_circuit_peering_id = azurerm_express_route_peering.example.id
-  routing_config {
-    advertised_public_prefixes = ["10.0.0.0/16"]
-  }
+# Crie uma rota na tabela de roteamento
+resource "azurerm_route_table_route" "example" {
+  name                = "example-route"
+  route_table_id      = azurerm_route_table.example.id
+  address_prefix      = "10.0.0.0/16"
+  next_hop_type       = "VirtualAppliance"
+  next_hop_in_ip_address = azurerm_virtual_network_gateway.example.ip_address
 }
 
-  
+# Crie um gateway de rede virtual
+resource "azurerm_virtual_network_gateway" "example" {
+  location                 = "West Europe"
+  name                     = "example-gateway"
+  resource_group_name    = "example-resources"
+  virtual_network_id      = azurerm_virtual_network.example.id
+  location                 = "West Europe"
+  type                     = "ExpressRoute"
+  vpn_type                 = "RouteBased"
+  sku                     = "Standard"
+  active_active             = true
+  express_route_circuit_id = azurerm_express_route_circuit.example.id
+}
+
+# Crie uma rede virtual
+resource "azurerm_virtual_network" "example" {
+  name                = "example-network"
+  location            = "West Europe"
+  resource_group_name = "example-resources"
+  address_space       = ["10.0.0.0/16"]
+}
+
+# Crie um filtro de rota
+resource "azurerm_route_filter" "example" {
+  name                = "example-route-filter"
+  location            = "West Europe"
+  resource_group_name = "example-resources"
+}
+
+# Crie uma regra de roteamento
+resource "azurerm_route_filter_rule" "example" {
+  name                = "example-rule"
+  route_filter_id    = azurerm_route_filter.example.id
+  access             = "Allow"
+  route_filter_rule_type = "Community"
+  community          = "100:1"
+  address_prefix      = "10.0.0.0/16"
+}
+
+    

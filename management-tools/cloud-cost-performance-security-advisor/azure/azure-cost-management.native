@@ -1,0 +1,8 @@
+
+      // Crie um grupo de custos
+# az cost create --name "example-cost-group" --display-name "Example Cost Group" --scope "subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+// Crie uma regra de alerta de custos
+# az cost alert create --name "example-alert" --display-name "Example Alert" --scope "subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --enabled true --time-period MonthToDate --threshold 100 --operator GreaterThan --filter "type=Dimension,name=ResourceGroup,values=example-resource-group"
+
+    

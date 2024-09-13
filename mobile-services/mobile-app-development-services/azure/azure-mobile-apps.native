@@ -1,0 +1,19 @@
+
+      # Crie um recurso de aplicativo móvel
+azurerm mobileapp create -n example-mobile-app -g example-resource-group -l westus2
+
+# Crie um banco de dados para o aplicativo móvel
+azurerm sql-database create -n example-mobile-db -g example-resource-group -s example-sql-server -l westus2
+
+# Crie uma tabela no banco de dados
+azurerm sql-table create -n example-table -g example-resource-group -s example-sql-server -d example-mobile-db -k dbo
+
+# Configure o serviço de notificação
+azurerm notificationhub create -n example-notification-hub -g example-resource-group -l westus2
+
+# Crie uma conexão entre o aplicativo móvel e o serviço de notificação
+azurerm mobileapp notificationhub-connection create -n example-notification-hub-connection -g example-resource-group -m example-mobile-app -n example-notification-hub
+
+# Crie uma política de acesso para o aplicativo móvel
+azurerm mobileapp access-policy create -n example-access-policy -g example-resource-group -m example-mobile-app
+    

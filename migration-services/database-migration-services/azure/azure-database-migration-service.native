@@ -1,0 +1,7 @@
+
+      // Crie um serviço de migração de banco de dados
+azurerm dms create -g example-resources -n example-dms -l eastus --sku Standard
+
+// Crie uma tarefa de migração
+azurerm dms task create -g example-resources -n example-task -i example-dms --source-connection example-source-connection --target-connection example-target-connection --task-type FullMigrationTask --sql-server-migration source-server-version=SQL Server 2019 target-server-version=Azure SQL Database v12 target-server-edition=General Purpose target-server-compute-units=2
+    

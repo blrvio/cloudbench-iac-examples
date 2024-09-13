@@ -1,0 +1,16 @@
+
+      # Criar um usuário no Azure Active Directory
+# Crie um objeto de usuário no Azure Active Directory
+$user = New-AzureADUser -DisplayName "example user" -FirstName "example" -LastName "user" -Password "P@$$wOrd" -UserPrincipalName "exampleuser@example.onmicrosoft.com"
+
+# Adicione o usuário a um grupo
+$group = Get-AzureADGroup -DisplayName "example-group"
+Add-AzureADGroupMember -ObjectId $group.ObjectId -RefObjectId $user.ObjectId
+
+# Atribui um aplicativo ao grupo
+# Pegar o ID do serviço principal do aplicativo
+$appId = Get-AzureADApplication -DisplayName "your application name" | Select-Object -ExpandProperty ObjectId
+
+# Adicionar o serviço principal do aplicativo ao grupo
+Add-AzureADGroupMember -ObjectId $group.ObjectId -RefObjectId $appId
+    

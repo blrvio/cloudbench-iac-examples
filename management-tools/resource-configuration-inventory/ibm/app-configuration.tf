@@ -1,39 +1,72 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  api_key = "your_ibm_cloud_api_key"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an App Configuration service instance
-resource "ibm_appconfiguration_service" "main" {
-  name     = "my-app-config-service"
-  location = "us-south"
-  plan     = "lite"
+# Crie um aplicativo App Configuration
+resource "aws_appconfig_application" "example" {
+  name = "example"
 }
 
-# Create an App Configuration configuration
-resource "ibm_appconfiguration_configuration" "main" {
-  name         = "my-app-config"
-  service_name = ibm_appconfiguration_service.main.id
-  description = "My application configuration"
+# Crie um ambiente App Configuration
+resource "aws_appconfig_environment" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
 }
 
-# Create an App Configuration feature flag
-resource "ibm_appconfiguration_feature_flag" "main" {
-  name         = "my-feature-flag"
-  service_name = ibm_appconfiguration_service.main.id
-  description = "My feature flag"
-  configuration = ibm_appconfiguration_configuration.main.id
+# Crie um perfil de configuração App Configuration
+resource "aws_appconfig_configuration_profile" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
+  location_uri  = "s3://bucket-name/key/" # Substitua pelo URI do S3
 }
 
-# Create an App Configuration secret
-resource "ibm_appconfiguration_secret" "main" {
-  name         = "my-secret"
-  service_name = ibm_appconfiguration_service.main.id
-  description = "My secret"
-  configuration = ibm_appconfiguration_configuration.main.id
-  # Set the secret value
-  value = "my-secret-value"
+# Crie um recurso de versão App Configuration
+resource "aws_appconfig_deployment_strategy" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
+  deployment_config {
+    canary_interval    = 10
+    canary_percentage  = 10
+    deployment_duration_in_minutes = 10
+    final_bake_time_in_minutes   = 10
+  }
 }
-  
+
+# Crie um recurso de versão App Configuration
+resource "aws_appconfig_deployment_strategy" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
+  deployment_config {
+    canary_interval    = 10
+    canary_percentage  = 10
+    deployment_duration_in_minutes = 10
+    final_bake_time_in_minutes   = 10
+  }
+}
+
+# Crie um recurso de versão App Configuration
+resource "aws_appconfig_deployment_strategy" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
+  deployment_config {
+    canary_interval    = 10
+    canary_percentage  = 10
+    deployment_duration_in_minutes = 10
+    final_bake_time_in_minutes   = 10
+  }
+}
+
+# Crie um recurso de versão App Configuration
+resource "aws_appconfig_deployment_strategy" "example" {
+  application_id = aws_appconfig_application.example.id
+  name          = "example"
+  deployment_config {
+    canary_interval    = 10
+    canary_percentage  = 10
+    deployment_duration_in_minutes = 10
+    final_bake_time_in_minutes   = 10
+  }
+}
+    

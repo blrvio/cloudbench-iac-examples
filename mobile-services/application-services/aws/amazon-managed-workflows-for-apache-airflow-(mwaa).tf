@@ -1,219 +1,83 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an MWAA Environment
+# Crie um ambiente MWAA
 resource "aws_mwaa_environment" "main" {
-  name = "my-mwaa-environment" # Name of your MWAA environment
-  airflow_version = "2.2.2" # Version of Apache Airflow
+  name                       = "my-mwaa-env"
+  airflow_version             = "2.2.2"
   airflow_configuration_options = {
-    # Configure Airflow webserver
-    "webserver.base_url" = "https://my-mwaa-environment.example.com"
-    # Configure Airflow webserver access control
-    "webserver.enable_auth" = true
-    # Configure Airflow webserver admin password
-    "webserver.password" = "MyStrongPassword"
+    "core.scheduler_interval" = "30"
   }
-  # Define the environment's networking configuration
-  # Note: This uses a default subnet in your selected VPC
-  # and requires a default security group
-  # You should consider defining your own security groups and subnets
-  # for a more secure deployment
-  # See the AWS documentation for more details
-  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/mwaa_environment
-  network_configuration {
-    subnet_id = "subnet-xxxxxxxxxxxxx" # Replace with your subnet ID
-    # security_group_id = "sg-xxxxxxxxxxxxx" # Replace with your security group ID
-  }
-  # Configure logging
-  logging_configuration {
-    # Configure cloudwatch logs
-    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/mwaa_environment#logging_configuration
-    cloudwatch_logs_configuration {
-      enabled = true
-    }
-  }
-  # Set tags for the MWAA environment
-  tags = {
-    Name = "My MWAA Environment"
-  }
+  # ... outras configurações ...
 }
 
-# Create an S3 bucket for DAGs
-resource "aws_s3_bucket" "dag_bucket" {
-  bucket = "my-mwaa-dag-bucket" # Replace with your bucket name
-  acl = "private"
-  force_destroy = true
+# Crie uma função Lambda para o webhook do MWAA
+resource "aws_lambda_function" "mwaa_webhook" {
+  function_name = "mwaa-webhook"
+  runtime       = "python3.9"
+  handler       = "main.handler"
+  role          = aws_iam_role.mwaa_webhook_role.arn
+  # ... outras configurações ...
 }
 
-# Create an IAM role for MWAA
-resource "aws_iam_role" "mwaa_role" {
-  name = "mwaa-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [{
+# Crie um papel IAM para a função Lambda
+resource "aws_iam_role" "mwaa_webhook_role" {
+  name               = "mwaa-webhook-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
       "Effect": "Allow",
       "Principal": {
-        "Service": "mwaa.amazonaws.com"
+        "Service": "lambda.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
-    }]
-  })
-}
-
-# Attach policies to the MWAA role
-resource "aws_iam_role_policy" "mwaa_policy" {
-  name = "mwaa-policy"
-  role = aws_iam_role.mwaa_role.id
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket"
-        ],
-        "Resource": [
-          "arn:aws:s3:::my-mwaa-dag-bucket/*",
-          "arn:aws:s3:::my-mwaa-dag-bucket"
-        ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "logs:DescribeLogStreams"
-        ],
-        "Resource": [
-          "arn:aws:logs:*:*:log-group:/aws/mwaa/*"
-        ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "ec2:DescribeInstances",
-          "ec2:DescribeSubnets",
-          "ec2:DescribeSecurityGroups"
-        ],
-        "Resource": "*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "secretsmanager:GetSecretValue"
-        ],
-        "Resource": "arn:aws:secretsmanager:*:*:secret:*"
-      }
-    ]
-  })
-}
-
-# Create an IAM policy for DAG access
-resource "aws_iam_policy" "dag_access" {
-  name = "dag-access-policy"
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket"
-        ],
-        "Resource": [
-          "arn:aws:s3:::my-mwaa-dag-bucket/*",
-          "arn:aws:s3:::my-mwaa-dag-bucket"
-        ]
-      }
-    ]
-  })
-}
-
-# Create an IAM role for DAG access
-resource "aws_iam_role" "dag_access_role" {
-  name = "dag-access-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [{
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "mwaa.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }]
-  })
-}
-
-# Attach the DAG access policy to the DAG access role
-resource "aws_iam_role_policy_attachment" "dag_access_role_attachment" {
-  role = aws_iam_role.dag_access_role.id
-  policy_arn = aws_iam_policy.dag_access.arn
-}
-
-# Create an S3 bucket policy for DAG access
-resource "aws_s3_bucket_policy" "dag_access_policy" {
-  bucket = aws_s3_bucket.dag_bucket.id
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Sid": "AllowAccessToMWAA",
-        "Effect": "Allow",
-        "Principal": {
-          "AWS": "arn:aws:iam::${aws_account_id}:role/dag-access-role"
-        },
-        "Action": [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket"
-        ],
-        "Resource": [
-          "arn:aws:s3:::${aws_s3_bucket.dag_bucket.bucket}/*",
-          "arn:aws:s3:::${aws_s3_bucket.dag_bucket.bucket}"
-        ]
-      }
-    ]
-  })
-}
-
-# Configure the MWAA Environment to use the DAG access role
-resource "aws_mwaa_environment" "mwaa_environment" {
-  name = "my-mwaa-environment"
-  airflow_version = "2.2.2"
-  airflow_configuration_options = {
-    "webserver.base_url" = "https://my-mwaa-environment.example.com",
-    "webserver.enable_auth" = true,
-    "webserver.password" = "MyStrongPassword"
-  }
-  network_configuration {
-    subnet_id = "subnet-xxxxxxxxxxxxx"
-    # security_group_id = "sg-xxxxxxxxxxxxx"
-  }
-  logging_configuration {
-    cloudwatch_logs_configuration {
-      enabled = true
     }
-  }
-  # Configure the DAG access role
-  dag_access_role_arn = aws_iam_role.dag_access_role.arn
-  # Use the S3 bucket for DAGs
-  source_bucket_name = aws_s3_bucket.dag_bucket.bucket
-  # Define the environment's networking configuration
-  # Note: This uses a default subnet in your selected VPC
-  # and requires a default security group
-  # You should consider defining your own security groups and subnets
-  # for a more secure deployment
-  # See the AWS documentation for more details
-  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/mwaa_environment
-  tags = {
-    Name = "My MWAA Environment"
-  }
+  ]
+}
+EOF
 }
 
-  
+# Adicione uma política IAM à função Lambda para permitir o acesso ao ambiente MWAA
+resource "aws_iam_role_policy" "mwaa_webhook_policy" {
+  name   = "mwaa-webhook-policy"
+  role   = aws_iam_role.mwaa_webhook_role.id
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "mwaa:GetEnvironment",
+          "mwaa:UpdateEnvironment",
+          "mwaa:DeleteEnvironment"
+        ],
+        "Resource": "arn:aws:mwaa:*:123456789012:environment/my-mwaa-env"
+      }
+    ]
+  })
+}
+
+# Adicione uma política IAM à função Lambda para permitir o acesso ao S3
+resource "aws_iam_role_policy" "mwaa_webhook_s3_policy" {
+  name   = "mwaa-webhook-s3-policy"
+  role   = aws_iam_role.mwaa_webhook_role.id
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject"
+        ],
+        "Resource": "arn:aws:s3:::my-bucket/*"
+      }
+    ]
+  })
+}
+    

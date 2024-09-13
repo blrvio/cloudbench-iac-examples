@@ -1,25 +1,41 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region  = "us-south"
+      # Configure o provedor IBM Cloud
+provider "ibm" {
+  region = "us-south"
+  api_key = "YOUR_API_KEY"
 }
 
-# Create a Code Engine project
-resource "ibm_codeengine_project" "main" {
-  name    = "my-codeengine-project"
-  location = "us-south"
+# Crie um serviço Code Engine
+resource "ibm_codeengine_service" "my_service" {
+  name        = "my-service"
+  location    = "us-south"
+  runtime     = "nodejs-16"
+  git_source  = "https://github.com/your-username/your-repo.git"
 }
 
-# Create a Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name = "my-codeengine-service"
-  project_id = ibm_codeengine_project.main.id
-  runtime = "nodejs-16"
-  # Define the container image to use
-  image = "us-docker.pkg.dev/cloud/containerregistry/nodejs-sample"
-  # Define the port for the service
-  port = 3000
+# Crie uma versão do serviço
+resource "ibm_codeengine_version" "my_version" {
+  service_name = ibm_codeengine_service.my_service.name
+  version      = "1.0.0"
+  image        = "us-south.icr.io/your-namespace/your-image:latest"
 }
 
-  
+# Crie uma rota para o serviço
+resource "ibm_codeengine_route" "my_route" {
+  service_name = ibm_codeengine_service.my_service.name
+  domain       = "my-domain.com"
+  path         = "/"
+}
+
+# Crie um recurso para o serviço
+resource "ibm_codeengine_resource" "my_resource" {
+  service_name = ibm_codeengine_service.my_service.name
+  name         = "my-resource"
+  type         = "deployment"
+  limits       = {
+    cpu   = 1
+    memory = 1024
+  }
+}
+
+    

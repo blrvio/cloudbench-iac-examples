@@ -1,0 +1,16 @@
+
+      // Crie um Job para o Snowball Edge
+aws snowball create-job --description "Job para Snowball Edge Compute Optimized" --resources s3://bucket-name/file.txt --job-type IMPORT --address "123 Main Street, Anytown, CA 91234" --region us-east-1
+
+// Crie um dispositivo Snowball Edge
+aws snowball create-device --job-id job-xxxxxxxx
+
+// Crie um volume para o Snowball Edge
+aws snowball create-volume --job-id job-xxxxxxxx
+
+// Acesse os dados no Snowball Edge
+aws snowball create-access --job-id job-xxxxxxxx
+
+// Crie um aplicativo para executar no Snowball Edge
+aws snowball create-application --job-id job-xxxxxxxx
+    

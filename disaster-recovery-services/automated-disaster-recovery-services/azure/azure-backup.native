@@ -1,0 +1,10 @@
+
+      // Crie um cofre de backup
+az backup vault create -g example-resource-group -n example-vault -l westus
+
+// Crie uma política de backup
+az backup policy create -g example-resource-group -v example-vault -n example-policy
+
+// Crie um backup para um recurso Azure
+az backup protection enable -g example-resource-group -v example-vault -n example-protection --policy example-policy --source-vm example-vm
+    

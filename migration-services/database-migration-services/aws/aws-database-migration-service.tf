@@ -1,55 +1,59 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a DMS Replication Task
-resource "aws_dms_replication_task" "main" {
-  replication_task_identifier = "my-replication-task"
-  source_endpoint_arn         = aws_dms_endpoint.source.arn
-  target_endpoint_arn         = aws_dms_endpoint.target.arn
-  migration_type              = "full-load"
-  # Optional configurations
-  replication_task_settings = <<EOF
-# Customize your replication settings
+# Crie uma instância do AWS DMS
+resource "aws_dms_replication_instance" "dms_instance" {
+  replication_instance_identifier = "dms-instance-example"
+  engine_version = "3.5.1"
+  allocated_storage = 100
+  publicly_accessible = false
+  replication_task_count = 1
+  vpc_security_group_ids = ["sg-xxxxxxxx"] # Substitua pelo ID do grupo de segurança da VPC
+  multi_az = false
+  engine_name = "postgresql"
+
+  tags = {
+    Name = "DMS Instance"
+  }
+}
+
+# Crie uma tarefa de replicação para migrar dados do PostgreSQL para o MySQL
+resource "aws_dms_replication_task" "postgre_to_mysql" {
+  replication_task_identifier = "postgre_to_mysql"
+  migration_type = "full"
+  replication_instance_arn = aws_dms_replication_instance.dms_instance.replication_instance_arn
+  source_endpoint_arn = aws_dms_endpoint.postgre_endpoint.endpoint_arn
+  target_endpoint_arn = aws_dms_endpoint.mysql_endpoint.endpoint_arn
+  table_mappings = <<EOF
+{"rules": [{"rule-type": "selection", "rule-id": "1", "rule-name": "all", "object-locator": {"schema-name": "public", "table-name": "*"}, "rule-action": "include"}], "rule-groups": []}
 EOF
 }
 
-# Create a DMS Source Endpoint
-resource "aws_dms_endpoint" "source" {
-  endpoint_id   = "source-endpoint"
-  endpoint_type = "mysql"
-  # Configure the MySQL source endpoint
-  mysql_settings {
-    server_name   = "source-db-instance.example.com"
-    port          = 3306
-    database_name = "source-database"
-    username      = "source-username"
-    password      = "source-password"
-  }
+# Crie um endpoint de origem (PostgreSQL)
+resource "aws_dms_endpoint" "postgre_endpoint" {
+  endpoint_id = "postgre_endpoint"
+  endpoint_type = "source"
+  engine_name = "postgresql"
+  server_name = "postgre_server_address"
+  port = 5432
+  username = "postgre_user"
+  password = "postgre_password"
+  database_name = "postgre_database"
 }
 
-# Create a DMS Target Endpoint
-resource "aws_dms_endpoint" "target" {
-  endpoint_id   = "target-endpoint"
-  endpoint_type = "postgresql"
-  # Configure the PostgreSQL target endpoint
-  postgresql_settings {
-    server_name   = "target-db-instance.example.com"
-    port          = 5432
-    database_name = "target-database"
-    username      = "target-username"
-    password      = "target-password"
-  }
+# Crie um endpoint de destino (MySQL)
+resource "aws_dms_endpoint" "mysql_endpoint" {
+  endpoint_id = "mysql_endpoint"
+  endpoint_type = "target"
+  engine_name = "mysql"
+  server_name = "mysql_server_address"
+  port = 3306
+  username = "mysql_user"
+  password = "mysql_password"
+  database_name = "mysql_database"
 }
 
-# Start the DMS Replication Task
-resource "aws_dms_replication_task_assessment_run" "main" {
-  replication_task_arn = aws_dms_replication_task.main.arn
-  # Optional configurations
-  assessment_run_name = "my-assessment-run"
-  assessment_run_mode = "validation"
-}
-
-  
+    

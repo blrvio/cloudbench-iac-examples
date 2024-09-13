@@ -1,0 +1,10 @@
+
+      // Crie um serviço Proton
+aws proton create-service --name my-service --service-instance-name my-service-instance --template '{ "template": { ... } }'
+
+// Crie um ambiente Proton
+aws proton create-environment --name my-environment --environment-config '{ "environmentConfig": { ... } }'
+
+// Crie uma pipeline Proton
+aws proton create-pipeline --name my-pipeline --service my-service --environment my-environment --pipeline-config '{ "pipelineConfig": { ... } }'
+    

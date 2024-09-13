@@ -1,0 +1,10 @@
+
+      // Crie um banco de dados do Glue
+aws glue create-database --database-input "{"DatabaseName":"my_database"}"
+
+// Crie uma tabela do Glue
+aws glue create-table --database-name my_database --table-input "{"Name":"my_table","Description":"Example table","Parameters":{"classification":"my_classification"},"StorageDescriptor":{"Columns":[{"Name":"column1","Type":"string"},{"Name":"column2","Type":"int"}],"Location":"s3://my-bucket/data","InputFormat":"org.apache.hadoop.mapred.TextInputFormat","OutputFormat":"org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat","Compressed":false}}"
+
+// Crie um crawler do Glue
+aws glue create-crawler --name my_crawler --role arn:aws:iam::xxxxxxxxxxxx:role/glue-service-role --database-name my_database --schedule "cron(0 0 * * ? *)" --s3-targets "{"Path":"s3://my-bucket/data"}"
+    

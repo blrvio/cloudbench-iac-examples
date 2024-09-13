@@ -1,0 +1,17 @@
+
+      // Crie um stack OpsWorks
+aws opsworks create-stack --name my-opsworks-stack --region us-east-1 --service-role-arn arn:aws:iam::123456789012:role/opsworks_service_role
+# ... (outras configurações, como VPC, subredes, etc.)
+
+// Crie um layer OpsWorks
+aws opsworks create-layer --stack-id stack-xxxxxxxx --name Custom Layer --shortname custom --type custom
+# ... (outras configurações, como receita, volume, etc.)
+
+// Crie uma instância OpsWorks
+aws opsworks create-instance --stack-id stack-xxxxxxxx --layer-ids layer-xxxxxxxx --instance-type t2.micro
+# ... (outras configurações, como AMI, segurança, etc.)
+
+// Crie um aplicativo OpsWorks
+aws opsworks create-app --stack-id stack-xxxxxxxx --name my-opsworks-app --shortname my-app --type rails
+# ... (outras configurações, como repositório, etc.)
+    

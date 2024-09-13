@@ -1,0 +1,4 @@
+
+      // Create an AWS Marketplace product
+aws marketplace create-product --product-id prod-xxxxxxxx --# ... other attributes ...
+    

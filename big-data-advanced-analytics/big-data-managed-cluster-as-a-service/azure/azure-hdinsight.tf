@@ -1,43 +1,35 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all AzureRM provider features
+  features {} # Para habilitar as funcionalidades mais recentes
 }
 
-# Create a new Azure HDInsight cluster
-resource "azurerm_hdinsight_cluster" "main" {
-  name                 = "my-hdinsight-cluster"
-  location              = "westus2"
-  resource_group_name   = "my-resource-group"
-  cluster_version      = "3.6"
-  tier                 = "Standard"
-  storage_account_name = "mystorageaccount"
-  storage_account_key  = "mystoragekey" # You will need to replace this with your actual storage account key
-  # Configure the HDInsight cluster with the desired worker nodes
-  worker_nodes {
-    node_count = 3
-    vm_size     = "Standard_D2_v2"
+# Crie um cluster HDInsight
+resource "azurerm_hdinsight_cluster" "example" {
+  name                = "hdinsightcluster"
+  resource_group_name = "example-resources"
+  location            = "westus2"
+
+  cluster_properties {
+    cluster_version = "4.0"
+    storage_accounts = ["storage-account-name"] # Substitua pelo nome da conta de armazenamento
+    http_password      = "password" # Substitua pela senha HTTP
   }
-  # Configure the cluster with the desired head nodes
-  head_node {
-    vm_size = "Standard_D2_v2"
+
+  # Crie um grupo de recursos
+  resource "azurerm_resource_group" "example" {
+    name     = "example-resources"
+    location = "westus2"
+  }
+
+  # Crie uma conta de armazenamento
+  resource "azurerm_storage_account" "example" {
+    name                     = "storage-account-name"
+    resource_group_name = "example-resources"
+    location                 = "westus2"
+    account_tier           = "Standard"
+    account_replication_type = "LRS"
   }
 }
 
-# Create a new Azure Storage Account
-resource "azurerm_storage_account" "main" {
-  name                     = "mystorageaccount"
-  resource_group_name        = "my-resource-group"
-  location                  = "westus2"
-  account_tier              = "Standard"
-  account_replication_type = "LRS"
-  # You can configure the storage account with additional options, such as enabling Azure Active Directory integration
-  # Azure Active Directory integration is not necessary for HDInsight to work
-}
-
-# Create a new Azure Resource Group
-resource "azurerm_resource_group" "main" {
-  name     = "my-resource-group"
-  location = "westus2"
-}
-  
+    

@@ -1,0 +1,7 @@
+
+      // Crie um grupo de Auto Scaling
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name web-server-group --launch-configuration-name web-server-launch-config --min-size 1 --max-size 3 --desired-capacity 2 --vpc-zone-identifier subnet-xxxxxxxx,subnet-xxxxxxxx
+
+// Crie uma configuração de lançamento
+aws autoscaling create-launch-configuration --launch-configuration-name web-server-launch-config --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups sg-xxxxxxxx
+    

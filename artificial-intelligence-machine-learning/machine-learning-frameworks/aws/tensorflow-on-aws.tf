@@ -1,151 +1,112 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Amazon EC2 instance for TensorFlow
-resource "aws_instance" "tensorflow_instance" {
-  ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "t2.medium" # Adjust instance type as needed
-  key_name      = "your_ssh_key_pair_name" # Replace with your SSH key pair name
-  # Define tags for the instance
-  tags = {
-    Name = "TensorFlow Instance"
-  }
-  # Define the network settings for the instance
-  # The instance will be created in the default subnet
-  vpc_security_group_ids = [aws_security_group.tensorflow_sg.id]
+# Crie um cluster do EKS
+resource "aws_eks_cluster" "tf_eks_cluster" {
+  name     = "tf-eks-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  # ...
 }
 
-# Create a Security Group for TensorFlow
-resource "aws_security_group" "tensorflow_sg" {
-  name = "sg-tensorflow"
-  # Define ingress and egress rules
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie um role IAM para o cluster do EKS
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "eks_cluster_role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "eks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+  # ...
 }
 
-# Configure an EBS volume for TensorFlow
-resource "aws_ebs_volume" "tensorflow_volume" {
-  availability_zone = "us-east-1a" # Select an availability zone
-  size              = 100 # Volume size in GB
-  type              = "gp2" # Volume type (GP2)
-  # Add tags to the volume
-  tags = {
-    Name = "TensorFlow Volume"
-  }
-}
-
-# Attach the EBS volume to the instance
-resource "aws_instance_volume_attachment" "tensorflow_volume_attachment" {
-  device_name = "/dev/sdf"
-  instance_id = aws_instance.tensorflow_instance.id
-  volume_id   = aws_ebs_volume.tensorflow_volume.id
-}
-
-# Configure a role for the EC2 instance to access AWS resources
+# Crie um role IAM para o serviço TensorFlow
 resource "aws_iam_role" "tensorflow_role" {
-  name = "tensorflow-ec2-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-# Add permissions to the role for accessing S3 and other required services
-resource "aws_iam_role_policy" "tensorflow_policy" {
-  name = "tensorflow-ec2-policy"
-  role = aws_iam_role.tensorflow_role.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:*"
-        # Add other necessary actions for your use case
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+  name = "tensorflow_role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+  # ...
 }
 
-# Attach the role to the EC2 instance
-resource "aws_instance" "tensorflow_instance_with_role" {
-  ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "t2.medium" # Adjust instance type as needed
-  key_name      = "your_ssh_key_pair_name" # Replace with your SSH key pair name
-  # Define tags for the instance
-  tags = {
-    Name = "TensorFlow Instance"
-  }
-  # Define the network settings for the instance
-  # The instance will be created in the default subnet
-  vpc_security_group_ids = [aws_security_group.tensorflow_sg.id]
-  # Attach the IAM role to the instance
-  iam_instance_profile = aws_iam_instance_profile.tensorflow_profile.id
-}
-
-# Create an IAM instance profile to associate the role with the instance
+# Crie um perfil IAM para o serviço TensorFlow
 resource "aws_iam_instance_profile" "tensorflow_profile" {
-  name = "tensorflow-ec2-profile"
-  role = aws_iam_role.tensorflow_role.id
+  name = "tensorflow_profile"
+  role = aws_iam_role.tensorflow_role.name
 }
 
-# Configure a user data script for the instance to install TensorFlow and dependencies
-resource "aws_instance" "tensorflow_instance_with_user_data" {
-  ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "t2.medium" # Adjust instance type as needed
-  key_name      = "your_ssh_key_pair_name" # Replace with your SSH key pair name
-  # Define tags for the instance
-  tags = {
-    Name = "TensorFlow Instance"
-  }
-  # Define the network settings for the instance
-  # The instance will be created in the default subnet
-  vpc_security_group_ids = [aws_security_group.tensorflow_sg.id]
-  # Attach the IAM role to the instance
-  iam_instance_profile = aws_iam_instance_profile.tensorflow_profile.id
-  # User data script for installing TensorFlow
-  user_data = <<EOF
-#!/bin/bash
-# Update package lists
-  sudo apt update
-  # Install Python and pip
-  sudo apt install python3 python3-pip -y
-  # Upgrade pip
-  sudo pip install --upgrade pip
-  # Install TensorFlow
-  sudo pip install tensorflow
-  # Start TensorFlow
-  python3
-  import tensorflow as tf
-  print(tf.version.VERSION)
+# Crie uma instância EC2 para executar o TensorFlow
+resource "aws_instance" "tensorflow_instance" {
+  ami           = "ami-xxxxxxxx" # Substitua pela AMI desejada
+  instance_type = "t2.micro" # Substitua pelo tipo de instância desejado
+  key_name     = "key_name" # Substitua pelo nome da chave SSH
+  # ...
+  iam_instance_profile = aws_iam_instance_profile.tensorflow_profile.name
+  # ...
+}
+
+# Crie um serviço Kubernetes para executar o TensorFlow
+resource "kubernetes_manifest" "tensorflow_service" {
+  # ...
+  manifest = <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: tensorflow-service
+  namespace: default
+spec:
+  selector: 
+    app: tensorflow
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
 EOF
 }
 
-  
+# Crie um deployment Kubernetes para executar o TensorFlow
+resource "kubernetes_manifest" "tensorflow_deployment" {
+  # ...
+  manifest = <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tensorflow-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: tensorflow
+  template:
+    metadata:
+      labels: 
+        app: tensorflow
+    spec:
+      containers:
+      - name: tensorflow
+        image: tensorflow/tensorflow:latest
+        ports:
+        - containerPort: 80
+EOF
+}
+    

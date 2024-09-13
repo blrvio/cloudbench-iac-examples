@@ -1,0 +1,7 @@
+
+      // Crie um grupo de recursos
+azurerm resource-group create -n example-rg -l westus2
+
+// Crie uma instância de contêiner
+azurerm container create -g example-rg -n example-aci --image nginx:latest --restart-policy Always --port 80 --location westus2
+    

@@ -1,31 +1,28 @@
 
-    terraform { required_providers {
-  google = {
-    source  = "hashicorp/google"
-    version = "~> 4.0"
-  }
-}
+      # Configure o provedor do Firebase
+provider "firebase" {
+  project = "my-firebase-project"
 }
 
-# Configure the Google provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+# Crie um provedor de autenticação de email/senha
+resource "firebase_auth_provider" "email_password" {
+  project = firebase.project
+  provider = "email"
 }
 
-# Create a Firebase project
-resource "google_firebase_project" "main" {
-  project_id = "your-firebase-project-id"
-  # Optional: set the project display name
-  display_name = "My Firebase Project"
+# Crie um provedor de autenticação do Google
+resource "firebase_auth_provider" "google" {
+  project = firebase.project
+  provider = "google.com"
+  enabled = true
 }
 
-# Create a Firebase Authentication provider
-resource "google_firebase_auth_provider" "main" {
-  project = google_firebase_project.main.project_id
-  provider_id = "google.com"
-  # Optional: Set the display name for the provider
-  display_name = "Google"
+# Crie um provedor de autenticação do Facebook
+resource "firebase_auth_provider" "facebook" {
+  project = firebase.project
+  provider = "facebook.com"
+  enabled = true
+  client_id = "YOUR_FACEBOOK_APP_ID"
+  client_secret = "YOUR_FACEBOOK_APP_SECRET"
 }
-
-  
+    

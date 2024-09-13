@@ -1,26 +1,26 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region = "us-ashburn-1"
-  # Add your Oracle Cloud Infrastructure credentials here
-  # You can also use environment variables
-  # See: https://www.terraform.io/docs/providers/oci/index.html
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  user    = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  key     = "your_api_key"
+  fingerprint = "your_fingerprint"
 }
 
-# Create an Archive Storage Bucket
-resource "oci_objectstorage_bucket" "archive_bucket" {
-  namespace_name = "your-namespace"
-  bucket_name    = "your-archive-bucket"
+# Crie um bucket de armazenamento de arquivos
+resource "oci_archive_bucket" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  name           = "example-bucket"
   storage_tier   = "ARCHIVE"
 }
 
-# Create an Archive Storage Object
-resource "oci_objectstorage_object" "archive_object" {
-  namespace_name = oci_objectstorage_bucket.archive_bucket.namespace_name
-  bucket_name    = oci_objectstorage_bucket.archive_bucket.bucket_name
-  object_name    = "your-archive-object"
-  # The content of the object
-  content        = "This is an archive object"
+# Crie um objeto de armazenamento de arquivos
+resource "oci_archive_object" "example" {
+  bucket          = oci_archive_bucket.example.name
+  compartment_id  = oci_archive_bucket.example.compartment_id
+  name           = "example-object"
+  source         = "path/to/your/object"
 }
 
-  
+    

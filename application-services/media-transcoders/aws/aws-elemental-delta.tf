@@ -1,48 +1,38 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Elemental Delta Channel
+# Crie uma instância do AWS Elemental Delta
 resource "aws_elemental_delta_channel" "main" {
-  name               = "my-channel" # Name of your Elemental Delta Channel
-  input_sources     = [aws_elemental_delta_input_source.main.id]
-  channel_class      = "BASIC" # Channel class, 'BASIC' or 'PREMIUM'
-  output_formats    = ["HLS"] # Output formats, e.g. ['HLS']
-  ingest_endpoint    = "your-endpoint" # Ingest endpoint
-  playback_endpoint = "your-endpoint" # Playback endpoint
-  # Optional settings
-  tags               = {
-    Name = "My Elemental Delta Channel"
-  }
-  # Output options
-  output_options {
-    # HLS options
-    hls_options {
-      # Optional HLS settings
-      # segment_duration = 10
-      # manifest_duration = 30
-    }
-  }
+  name = "my-channel"
+  description = "My Elemental Delta channel"
+  # Configure a pipeline para o canal, se necessário
+  # pipeline_id = aws_elemental_delta_pipeline.main.id
 }
 
-# Create an Elemental Delta Input Source
-resource "aws_elemental_delta_input_source" "main" {
-  name = "my-input-source" # Name of your Elemental Delta Input Source
-  # Ingest settings
-  ingest_settings {
-    # Ingest endpoint
-    ingest_endpoint = "your-endpoint"
-    # Input protocol
-    input_protocol = "RTMP"
-    # Input type
-    input_type = "STREAM"
-  }
-  # Optional settings
-  tags = {
-    Name = "My Elemental Delta Input Source"
-  }
+# Crie uma pipeline para o AWS Elemental Delta
+resource "aws_elemental_delta_pipeline" "main" {
+  name = "my-pipeline"
+  description = "My Elemental Delta pipeline"
+  # Configure a localização de armazenamento para a pipeline, se necessário
+  # storage_location_id = aws_elemental_delta_storage_location.main.id
 }
 
-  
+# Crie uma localização de armazenamento para o AWS Elemental Delta
+resource "aws_elemental_delta_storage_location" "main" {
+  name = "my-storage-location"
+  # Configure a URL do bucket S3, se necessário
+  # s3_bucket_url = "s3://my-bucket"
+  # Configure o caminho do bucket S3, se necessário
+  # s3_bucket_path = "path/to/my/files"
+}
+
+# Crie um endpoint para o AWS Elemental Delta
+resource "aws_elemental_delta_endpoint" "main" {
+  name = "my-endpoint"
+  # Configure a URL do endpoint, se necessário
+  # url = "https://my-endpoint.com"
+}
+    

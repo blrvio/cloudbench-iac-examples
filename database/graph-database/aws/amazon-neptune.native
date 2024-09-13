@@ -1,0 +1,10 @@
+
+      // Crie um cluster do Neptune
+aws neptune create-db-cluster --db-cluster-identifier neptune-cluster --engine neptune --engine-version 1.2.0.0 --db-subnet-group-name default --db-cluster-parameter-group-name default.neptune1.2
+
+// Crie um endpoint de leitura para o cluster do Neptune
+aws neptune create-db-instance --db-instance-identifier reader --db-cluster-identifier neptune-cluster --engine neptune --engine-version 1.2.0.0 --db-instance-class db.t3.small --db-subnet-group-name default --apply-immediately
+
+// Crie um endpoint de gravação para o cluster do Neptune
+aws neptune create-db-instance --db-instance-identifier writer --db-cluster-identifier neptune-cluster --engine neptune --engine-version 1.2.0.0 --db-instance-class db.t3.medium --db-subnet-group-name default --apply-immediately
+    

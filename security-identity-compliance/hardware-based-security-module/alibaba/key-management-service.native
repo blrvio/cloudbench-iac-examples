@@ -1,0 +1,7 @@
+
+      // Crie uma nova chave KMS
+aws kms create-key --description "Chave KMS para exemplo" --enable-key-rotation
+
+// Crie um alias para a chave KMS
+aws kms create-alias --alias-name alias/example --target-key-id xxxxxxxxxxxxxx
+    

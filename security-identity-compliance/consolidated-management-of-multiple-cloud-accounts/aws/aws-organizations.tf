@@ -1,110 +1,33 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS Organization
+# Crie uma conta de organização
 resource "aws_organizations_organization" "main" {
   feature_set = "ALL"
-  # Optional: You can specify a different root account ID if needed
-  # root_id = "123456789012"
 }
 
-# Create an Organizational Unit (OU)
-resource "aws_organizations_organizational_unit" "main" {
-  name        = "my-ou"
-  parent_id   = aws_organizations_organization.main.id
+# Crie uma conta de membro
+resource "aws_organizations_account" "member" {
+  email         = "example@example.com" # Substitua pelo email da conta de membro
+  name          = "Member Account"
+  parent_id     = aws_organizations_organization.main.id
+  account_status = "ACTIVE"
 }
 
-# Create a policy for the OU
-resource "aws_organizations_policy" "main" {
-  name     = "my-policy"
-  content  = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::123456789012:root"
-      },
-      "Action": [
-        "ec2:DescribeInstances",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeSecurityGroups"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-  type      = "SERVICE_CONTROL_POLICY"
+# Crie uma política de serviço
+resource "aws_organizations_policy" "service_control_policy" {
+  name          = "service-control-policy"
+  description   = "Policy to control AWS services"
+  content       = "{\"Statement\":[\"\"\",{\"Effect\":\"Allow\",\"Principal\": {\"AWS\": \"arn:aws:iam::123456789012:root\"},\"Action\": [\"ec2:DescribeInstances\"]},\"\"\"}"
+  type          = "SERVICE_CONTROL_POLICY"
 }
 
-# Attach the policy to the OU
-resource "aws_organizations_policy_attachment" "main" {
-  policy_id = aws_organizations_policy.main.id
-  target_id = aws_organizations_organizational_unit.main.id
+# Adicione a política de serviço à conta de membro
+resource "aws_organizations_policy_attachment" "service_control_policy_attachment" {
+  target_id   = aws_organizations_account.member.id
+  policy_id   = aws_organizations_policy.service_control_policy.id
 }
-
-# Create an account in the OU
-resource "aws_organizations_account" "main" {
-  email           = "my-account@example.com"
-  name           = "my-account"
-  parent_id      = aws_organizations_organizational_unit.main.id
-  # Optional: You can configure the account's settings
-  # settings { # See the AWS Organizations API documentation for available settings
-  #   # ...
-  # }
-}
-
-# Create a service control policy (SCP) for the root account
-resource "aws_organizations_policy" "root_scp" {
-  name     = "my-root-scp"
-  content  = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Deny",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": [
-        "ec2:CreateVpc",
-        "ec2:DeleteVpc"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-  type      = "SERVICE_CONTROL_POLICY"
-}
-
-# Attach the SCP to the root account
-resource "aws_organizations_policy_attachment" "root" {
-  policy_id = aws_organizations_policy.root_scp.id
-  target_id = aws_organizations_organization.main.root_id
-}
-
-# Create a delegated administrator for the OU
-resource "aws_organizations_delegated_administrator" "main" {
-  service_principal = "iam.amazonaws.com"
-  target_id         = aws_organizations_organizational_unit.main.id
-}
-
-# Create a hand-off account
-resource "aws_organizations_account" "handoff" {
-  email           = "handoff-account@example.com"
-  name           = "handoff-account"
-  parent_id      = aws_organizations_organizational_unit.main.id
-  # Configure the account for handoff
-  settings { # See the AWS Organizations API documentation for available settings
-    # ...
-  }
-}
-
-# Note: You can also manage accounts and policies using the AWS Organizations API or the AWS Management Console.
-  
+    

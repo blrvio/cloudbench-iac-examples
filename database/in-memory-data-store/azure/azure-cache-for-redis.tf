@@ -1,18 +1,27 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Configure features for the provider
+  features {} # Ativa todos os recursos do provedor
 }
 
-# Create a Redis Cache
+# Crie um cache Redis
 resource "azurerm_redis_cache" "example" {
-  name                 = "example-redis-cache"
-  location             = "westus2"
-  resource_group_name  = "example-resources"
+  name                 = "example-cache"
+  location              = "westus2"
+  resource_group_name = "example-resources"
   sku_name             = "Basic"
   capacity             = 1
-  # Enable the Redis Cache
-  enable_non_ssl_port = false
 }
 
-  
+# Crie uma chave de acesso para o cache
+resource "azurerm_redis_cache_key" "example" {
+  name                 = "example-key"
+  resource_group_name = "example-resources"
+  cache_name          = azurerm_redis_cache.example.name
+}
+
+# (Opcional) Exporte a chave de acesso
+output "redis_access_key" {
+  value = azurerm_redis_cache_key.example.value
+}
+    

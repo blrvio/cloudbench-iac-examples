@@ -1,0 +1,16 @@
+
+      // Create a container cluster
+oci container create-cluster --cluster-name my-cluster --compartment-id ocid1.compartment.oc1..aaaaaaaaw77z7p7g --kubernetes-version 1.23.8 --shape BM.Standard.2
+
+// Create a namespace in the cluster
+oci container create-namespace --cluster-name my-cluster --namespace-name my-namespace --compartment-id ocid1.compartment.oc1..aaaaaaaaw77z7p7g
+
+// Create a container image repository
+oci container create-repository --compartment-id ocid1.compartment.oc1..aaaaaaaaw77z7p7g --repository-name my-repository --registry-name my-registry
+
+// Push a container image to the repository
+oci container push-image --compartment-id ocid1.compartment.oc1..aaaaaaaaw77z7p7g --image-name my-image:latest --repository-name my-repository --registry-name my-registry
+
+// Deploy a container application using the image
+oci container create-deployment --cluster-name my-cluster --namespace-name my-namespace --deployment-name my-deployment --image my-registry/my-repository/my-image:latest --replicas 3
+    

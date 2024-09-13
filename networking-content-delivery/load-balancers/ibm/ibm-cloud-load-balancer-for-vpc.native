@@ -1,0 +1,10 @@
+
+      // Crie um Load Balancer
+ibmcloud lb create -n my-load-balancer -v vpc-xxxxxxxx -s subnet-xxxxxxxx -l 80:http:my-target-group
+
+// Crie um Target Group
+ibmcloud lb target-group create -n my-target-group -v vpc-xxxxxxxx -p tcp:80:5:10:2:2
+
+// Adicione servidores ao Target Group
+ibmcloud lb target add -g my-target-group -i instance-xxxxxxxx -p 80
+    

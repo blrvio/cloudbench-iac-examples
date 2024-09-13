@@ -1,53 +1,26 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  # Set your IBM Cloud API Key as an environment variable
-  api_key = var.ibm_api_key
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "gcp-project-id"
 }
 
-# Create a Text to Speech service instance
-resource "ibm_tts_instance" "default" {
-  name = "my-text-to-speech-instance"
-  # Choose a suitable plan
-  plan = "lite"
+# Crie um arquivo de voz com o conteúdo do TTS
+resource "google_speech_synthesis_voice" "sample_voice" {
+  name        = "voice-name"
+  input_text = "Exemplo de texto para ser convertido em fala"
+  language_code = "pt-BR"
 }
 
-# Create a Text to Speech voice
-resource "ibm_tts_voice" "default" {
-  instance_id = ibm_tts_instance.default.id
-  name = "my-custom-voice"
-  language = "en-US"
-  gender = "male"
-  # Provide a custom voice model
-  custom_voice_model = "path/to/your/voice/model.zip"
+# Baixe o arquivo de voz
+resource "google_storage_bucket_object" "download_audio" {
+  name = "sample-audio"
+  bucket = "bucket-name"
+  source = google_speech_synthesis_voice.sample_voice.audio_content
 }
 
-# Create a Text to Speech custom pronunciation
-resource "ibm_tts_pronunciation" "default" {
-  instance_id = ibm_tts_instance.default.id
-  name = "my-custom-pronunciation"
-  # Define custom pronunciations for specific words
-  pronunciation = [
-    {
-      word = "example"
-      phonetic = "EK-ZAM-PUL"
-    }
-  ]
+# Baixe o arquivo de voz para o diretório local
+resource "local_file" "sample_audio_local" {
+  filename = "sample-audio.mp3"
+  content  = google_storage_bucket_object.download_audio.content
 }
-
-# Create a Text to Speech translation
-resource "ibm_tts_translation" "default" {
-  instance_id = ibm_tts_instance.default.id
-  name = "my-custom-translation"
-  # Define custom translations for specific words
-  translation = [
-    {
-      source_language = "en-US"
-      target_language = "es-ES"
-      word = "hello"
-      translation = "hola"
-    }
-  ]
-}
-  
+    

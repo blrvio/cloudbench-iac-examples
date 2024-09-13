@@ -1,0 +1,7 @@
+
+      // Crie um espaço de trabalho do AppStream 2.0
+aws appstream create-fleet --name example --compute-capacity standard --instance-type stream.standard.small --fleet-type ALWAYS_ON --disconnect-timeout-in-seconds 600 --streaming-experience DEFAULT --image-name "Amazon Linux 2023.03.00 (64-bit)" --vpc-config SubnetIds=subnet-xxxxxxxx,SecurityGroupIds=sg-xxxxxxxx --user-settings EnableDefaultUserExperience=true,UserPortalName=example,DefaultUserPassword=password
+
+// Crie um usuário para o espaço de trabalho
+aws appstream create-user --name example --first-name John --last-name Doe --authentication-type USER_POOL --password password --appstream-user-settings FleetName=example
+    

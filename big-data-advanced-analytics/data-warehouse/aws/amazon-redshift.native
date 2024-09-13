@@ -1,0 +1,10 @@
+
+      # Crie um cluster Redshift
+aws redshift create-cluster --cluster-identifier my-redshift-cluster --cluster-type dc2.large --master-username admin --master-password password --database-name my_database --publicly-accessible false --subnet-group-name my-redshift-subnet-group
+
+# Crie um grupo de subnet Redshift
+aws redshift create-subnet-group --subnet-group-name my-redshift-subnet-group --description "Subnet group for Redshift cluster" --subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx
+
+# Crie uma tabela Redshift
+aws redshift create-table --cluster-identifier my-redshift-cluster --database my_database --table-name my_table --columns 'id INT PRIMARY KEY, name VARCHAR(255), created_at TIMESTAMP'
+    

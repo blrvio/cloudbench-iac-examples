@@ -1,33 +1,21 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an X-Ray sampling rule
-resource "aws_xray_sampling_rule" "main" {
-  name = "my-sampling-rule"
-  # Define the sampling rule configuration
-  rule_config {
-    # Set the default sampling rate
-    default_sampling {
-      # Set the default sampling rate to 10%
-      fixed_rate = 0.1
-    }
-    # Set the sampling rate based on HTTP request headers
-    http_request_method {
-      # Set the sampling rate to 50% for GET requests
-      get_method {
-        fixed_rate = 0.5
-      }
-    }
-    # Set the sampling rate based on URL path
-    url_path {
-      # Set the sampling rate to 100% for requests to /api endpoint
-      service_name = "api"
-      fixed_rate   = 1.0
-    }
+# Crie um perfil de amostragem do X-Ray
+resource "aws_xray_sampling_rule" "default" {
+  name = "default"
+  rule {
+    # Regras de amostragem customizadas
+    # Consulte a documentação do X-Ray para obter mais informações
   }
 }
 
-  
+# Crie uma regra de instrumentação do X-Ray
+resource "aws_xray_encryption_config" "default" {
+  # Configurações de criptografia customizadas
+  # Consulte a documentação do X-Ray para obter mais informações
+}
+    

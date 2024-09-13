@@ -1,41 +1,24 @@
 
-    # Configure the Azure provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Se necessário, configure os recursos aqui
 }
 
-# Create a Key Vault
+# Crie um Key Vault
 resource "azurerm_key_vault" "example" {
-  name                 = "example-key-vault"
-  location             = "westus2"
+  name = "example-key-vault"
+  location = "westus2"
   resource_group_name = "example-resources"
-  # Soft-delete protection prevents accidental deletion
-  enabled_for_soft_delete = true
-  # Enable purge protection to prevent permanent deletion
-  enabled_for_purge_protection = true
+
+  # Aqui pode adicionar configurações adicionais, como tags, enabled_for_deployment, etc.
 }
 
-# Create a Secret in Key Vault
+# Crie um segredo no Key Vault
 resource "azurerm_key_vault_secret" "example" {
-  name                = "my-secret"
-  key_vault_name      = azurerm_key_vault.example.name
-  resource_group_name = azurerm_key_vault.example.resource_group_name
-  value               = "my-secret-value"
-  # Enable secret rotation
-  enabled_for_deployment = true
-  # Set the content type for the secret
-  content_type          = "application/json"
-}
+  name = "example-secret"
+  key_vault_id = azurerm_key_vault.example.id
+  value = "secret-value"
 
-# Access the secret value using the `data` resource
-# This can be used within other resources or in your scripts
-data "azurerm_key_vault_secret" "example" {
-  name                = "my-secret"
-  key_vault_name      = azurerm_key_vault.example.name
-  resource_group_name = azurerm_key_vault.example.resource_group_name
+  # Aqui pode adicionar configurações adicionais, como content_type, enabled, etc.
 }
-
-output "secret_value" {
-  value = data.azurerm_key_vault_secret.example.value
-}
-  
+    

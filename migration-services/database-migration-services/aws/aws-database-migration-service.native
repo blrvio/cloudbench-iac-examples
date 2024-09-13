@@ -1,0 +1,13 @@
+
+      # Crie uma instância do AWS DMS
+aws dms create-replication-instance --replication-instance-identifier dms-instance-example --engine-version 3.5.1 --allocated-storage 100 --publicly-accessible false --replication-task-count 1 --vpc-security-group-ids sg-xxxxxxxx --multi-az false --engine-name postgresql
+
+# Crie um endpoint de origem (PostgreSQL)
+aws dms create-endpoint --endpoint-id postgre_endpoint --endpoint-type source --engine-name postgresql --server-name postgre_server_address --port 5432 --username postgre_user --password postgre_password --database-name postgre_database
+
+# Crie um endpoint de destino (MySQL)
+aws dms create-endpoint --endpoint-id mysql_endpoint --endpoint-type target --engine-name mysql --server-name mysql_server_address --port 3306 --username mysql_user --password mysql_password --database-name mysql_database
+
+# Crie uma tarefa de replicação para migrar dados do PostgreSQL para o MySQL
+aws dms create-replication-task --replication-task-identifier postgre_to_mysql --migration-type full --replication-instance-arn arn:aws:dms:us-east-1:xxxxxxxx:replication-instance:dms-instance-example --source-endpoint-arn arn:aws:dms:us-east-1:xxxxxxxx:endpoint:postgre_endpoint --target-endpoint-arn arn:aws:dms:us-east-1:xxxxxxxx:endpoint:mysql_endpoint --table-mappings "{"rules": [{"rule-type": "selection", "rule-id": "1", "rule-name": "all", "object-locator": {"schema-name": "public", "table-name": "*"}, "rule-action": "include"}], "rule-groups": []}"
+    

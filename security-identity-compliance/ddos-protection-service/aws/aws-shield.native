@@ -1,0 +1,7 @@
+
+      // Crie um recurso do AWS Shield Standard
+aws shield create-protection --name example --resource-arn arn:aws:cloudfront::123456789012:distribution/E1234567890ABC1234567890
+
+// Crie um recurso do AWS Shield Advanced
+aws shield create-advanced-protection --name example --resource-arn arn:aws:cloudfront::123456789012:distribution/E1234567890ABC1234567890
+    

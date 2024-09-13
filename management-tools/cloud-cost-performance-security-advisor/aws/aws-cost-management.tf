@@ -1,61 +1,33 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a cost allocation tag
-resource "aws_cost_allocation_tag" "main" {
-  name     = "MyCostAllocationTag"
-  value    = "Development"
-  tag_type = "user"
+# Crie uma tag de custo para identificar recursos
+resource "aws_cost_explorer_tag" "example_tag" {
+  name = "MyCostTag"
+  value = "Development"
 }
 
-# Create a cost category
-resource "aws_cost_category" "main" {
-  name = "MyCostCategory"
-  rules { # Define rules for cost categorization
-    rule_name = "MyRuleName"
-    dimension_values = [
-      {
-        key   = "SERVICE"
-        value = "AmazonEC2"
-      }
-    ]
-    rule_type = "COST_CATEGORY_RULE_TYPE_MATCHING"
+# Crie um relatório de custos
+resource "aws_cost_explorer_report" "example_report" {
+  name = "MyCostReport"
+  time_unit = "MONTHLY"
+  report_type = "COST_AND_USAGE"
+  delivery_frequency = "DAILY"
+
+  # Configurações de entrega
+  delivery_config {
+    s3_bucket = "my-cost-reports-bucket" # Substitua pelo nome do bucket S3
+    s3_prefix = "reports/"
+  }
+
+  # Filtros de custos
+  cost_filter {
+    name   = "TagKey"
+    values = ["MyCostTag"]
   }
 }
 
-# Create a cost explorer report
-resource "aws_cost_explorer_report" "main" {
-  name                        = "MyCostExplorerReport"
-  report_name                 = "MyReportName"
-  time_unit                   = "MONTHLY"
-  report_generation_frequency = "DAILY"
-  report_schedule { # Define schedule for report generation
-    schedule_frequency = "DAILY"
-    schedule_time      = "00:00"
-    # Define the report delivery configuration
-    delivery_config {
-      s3_bucket = "my-s3-bucket"
-      # Optional: Define the report format
-      # report_format = "CSV"
-      # Optional: Define the report destination
-      # destination_type = "S3"
-      # Optional: Define the report query
-      # query { # Define query criteria for the report
-      #   time_period {
-      #     start  = "2023-01-01"
-      #     end    = "2023-01-31"
-      #   }
-      #   # Define the report dimension
-      #   dimension { # Define the dimension of the report
-      #     key = "SERVICE"
-      #     values = ["AmazonEC2"]
-      #   }
-      # }
-    }
-  }
-}
-
-  
+    

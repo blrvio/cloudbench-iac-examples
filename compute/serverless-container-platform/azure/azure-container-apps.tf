@@ -1,47 +1,39 @@
 
-    # Configure the Azure Provider
-provider "azurerm" {
-  features {} # Enable all Azure features
-}
-
-# Create a container app environment
-resource "azurerm_container_app_environment" "example" {
-  name                = "example-environment"
-  location            = "westus2"
-  resource_group_name = "example-resources"
-  # Optional: Configure the Dapr integration
-  dapr {
-    enabled    = true
-    placement  = "system"
+      terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
   }
 }
 
-# Create a container app
+provider "azurerm" {
+  features {} # Remove this once you start using features
+}
+
 resource "azurerm_container_app" "example" {
-  name                = "example-app"
+  name                = "example-container-app"
   location            = "westus2"
   resource_group_name = "example-resources"
-  environment_name     = azurerm_container_app_environment.example.name
-  # Define the container image
-  image              = "mcr.microsoft.com/azuredocs/containerapps/sample"
-  # Optional: Configure the container app scaling
+  container {
+    image = "mcr.microsoft.com/azuredocs/containerapps/python-sample:v1"
+  }
   scale {
     min_replicas = 1
-    max_replicas = 3
+    max_replicas = 1
   }
-  # Define the container app secrets
-  secrets {
-    name  = "SECRET_KEY"
-    value = "YOUR_SECRET_VALUE"
-  }
-  # Optional: Configure the container app configuration
-  configuration {
-    replicas = 1
-  }
-  # Define the container app ingress
-  ingress {
-    target_port = 80
+  revision_template {
+    containers {
+      name          = "container1"
+      image         = "mcr.microsoft.com/azuredocs/containerapps/python-sample:v1"
+      resources {
+        cpu = "1"
+        memory = "1Gi"
+      }
+    }
   }
 }
 
-  
+
+    

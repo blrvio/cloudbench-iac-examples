@@ -1,0 +1,10 @@
+
+      // Crie um namespace para as funções
+oci functions create-namespace --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa --namespace-name example-namespace
+
+// Crie uma função
+oci functions create-function --namespace-name example-namespace --function-name example-function --function-code "// código da função"
+
+// Crie um endpoint para a função
+oci functions create-function-endpoint --function-id <function-id> --endpoint-name <endpoint-name>
+    

@@ -1,43 +1,17 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1"
 }
 
-# Create an SNS Topic
-resource "aws_sns_topic" "main" {
-  name = "my-sns-topic"
-  # Optional: Add tags to the topic
-  tags = {
-    Name = "My SNS Topic"
-  }
+# Crie um tópico SNS
+resource "aws_sns_topic" "example" {
+  name = "example-topic"
 }
 
-# Create an SNS Subscription
-resource "aws_sns_subscription" "main" {
-  topic_arn = aws_sns_topic.main.arn
-  protocol  = "email"
-  endpoint = "your_email@example.com"
+# Publique uma mensagem no tópico
+resource "aws_sns_topic_publication" "example" {
+  topic_arn = aws_sns_topic.example.arn
+  message   = "Hello from Terraform!"
 }
-
-# Create an SNS Topic Policy
-resource "aws_sns_topic_policy" "main" {
-  topic_arn = aws_sns_topic.main.arn
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "AWS": "arn:aws:iam::123456789012:root"
-        },
-        "Action": [
-          "sns:Publish",
-          "sns:Receive"
-        ],
-        "Resource": aws_sns_topic.main.arn
-      }
-    ]
-  })
-}
-  
+    

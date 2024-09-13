@@ -1,0 +1,4 @@
+
+      // Crie um Traffic Flow
+aws route53 create-traffic-flow --name example --hosted-zone-id Zxxxxxxxx --endpoint-types HTTP --instance endpoint[address=example.com,port=80],conditions[match[http_header[name=User-Agent,value=Chrome]]],target-type=Custom,target[custom_target[type=Forwarding,targets=[xxxxxxxx]]]
+    

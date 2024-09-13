@@ -1,0 +1,7 @@
+
+      // Crie um recurso de compartilhamento de dados
+azurerm data-share create --name example-data-share --resource-group example-resource-group --location westus2
+
+// Crie um assinante para compartilhar dados
+azurerm data-share subscriber create --name example-subscriber --resource-group example-resource-group --data-share-name example-data-share --target-resource-id example-target-resource-id --kind AzureSynapseAnalytics
+    

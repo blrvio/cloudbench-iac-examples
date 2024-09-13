@@ -1,0 +1,12 @@
+
+      // Configure suas credenciais e região
+
+// Crie um domínio CDN
+alicloud cdn:create-domain --domain example.com --sources https://example.com
+
+// Crie uma configuração de cache CDN
+alicloud cdn:set-domain-config --domain example.com --config [json] --source-type [type]
+
+// Crie uma configuração de origem CDN
+alicloud cdn:set-domain-origin --domain example.com --origin [json] --origin-type [type]
+    

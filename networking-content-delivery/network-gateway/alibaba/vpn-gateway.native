@@ -1,0 +1,10 @@
+
+      // Crie um VPN Gateway
+aws ec2 create-vpn-gateway --type ipsec.1 --vpn-gateway-id vgw-xxxxxxxx
+
+// Crie um VPN Connection
+aws ec2 create-vpn-connection --vpn-gateway-id vgw-xxxxxxxx --customer-gateway-id cg-xxxxxxxx --type ipsec.1
+
+// Crie um VPN Connection Route
+aws ec2 create-vpn-connection-route --vpn-connection-id vpn-xxxxxxxx --destination-cidr-block 10.0.0.0/16 --target-subnet-id subnet-xxxxxxxx
+    

@@ -1,0 +1,17 @@
+
+      // Example using the AWS SDK for Python (Boto3)
+import boto3
+
+# Create an S3 client
+s3 = boto3.client('s3')
+
+# Create a bucket
+s3.create_bucket(Bucket='my-bucket')
+
+# Upload a file to the bucket
+s3.upload_file('my-file.txt', 'my-bucket', 'my-file.txt')
+
+// Example using the AWS CLI
+aws s3 mb s3://my-bucket
+aws s3 cp my-file.txt s3://my-bucket/my-file.txt
+    

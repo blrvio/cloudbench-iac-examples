@@ -1,0 +1,23 @@
+
+      // Create a function using the Oracle Cloud Infrastructure CLI
+oci functions create-function \
+  --function-name my-function \
+  --runtime nodejs16.x \
+  --handler index.handler \
+  --memory 128 \
+  --timeout 60 \
+  --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaay4u6q \
+  --source-code "// Sample function code
+console.log('Hello from Oracle Functions!');
+" \
+  --source-type inline
+
+// Create a trigger for the function
+oci functions create-trigger \
+  --trigger-name my-trigger \
+  --function-name my-function \
+  --trigger-type http \
+  --http-method GET \
+  --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaay4u6q
+
+    

@@ -1,0 +1,7 @@
+
+      // Crie um endpoint do Amazon Translate
+aws translate create-endpoint --name my-endpoint --language-code en
+
+// Traduza um texto
+aws translate translate-text --source-language-code en --target-language-code pt --text "Hello, world!" --endpoint-id my-endpoint
+    

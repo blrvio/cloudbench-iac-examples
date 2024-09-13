@@ -1,0 +1,7 @@
+
+      # Crie um tópico do FCM
+firebase messaging topics:create --project my-project-id my-topic
+
+# Envie uma mensagem para um tópico
+firebase messaging topics:publish --project my-project-id my-topic --message "{\"notification\": {\"title\": \"Título da Mensagem\", \"body\": \"Corpo da Mensagem\"}}"
+    

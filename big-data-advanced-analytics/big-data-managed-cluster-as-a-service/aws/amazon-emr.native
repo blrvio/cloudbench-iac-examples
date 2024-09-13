@@ -1,0 +1,4 @@
+
+      // Crie um cluster EMR
+aws emr create-cluster --name example-emr-cluster --release-label emr-5.29.0 --applications Name=Hadoop,Args=[],Name=Hive,Args=[],Name=Spark,Args=[] --service-role arn:aws:iam::xxxxxxxx:role/emr_role --instance-groups InstanceGroupType=MASTER,InstanceType=m5.xlarge,InstanceCount=1,InstanceGroupType=CORE,InstanceType=m5.large,InstanceCount=2 --bootstrap-actions Name=install_python_packages,ScriptBootstrapAction=Path=s3://bucket-name/emr-bootstrap-scripts/install_python.sh --configurations Classification=hadoop-env,Properties=hadoop_env.java_home=/usr/lib/jvm/java-1.8.0-openjdk-amd64/ --tags Name=example-emr-cluster
+    

@@ -1,0 +1,18 @@
+
+      // Habilite a API Natural Language
+gcloud services enable language.googleapis.com --project your-project-id
+
+// Crie uma conta de serviço
+gcloud iam service-accounts create your-service-account-id --display-name "Natural Language API Service Account"
+
+// Adicione a conta de serviço à lista de permissões
+gcloud projects add-iam-member --project your-project-id --role roles/iam.serviceAccountTokenCreator --member "serviceAccount:${your-service-account-id}@appspot.gserviceaccount.com"
+
+// Gere uma chave para a conta de serviço
+gcloud iam service-accounts keys create service-account-key.json --iam-account ${your-service-account-id}@appspot.gserviceaccount.com
+
+# Implemente a análise de sentimento
+// Utilize o SDK do Google Cloud para Python ou outras linguagens
+// Consulte a documentação oficial para obter mais informações.
+# https://cloud.google.com/natural-language/docs/
+    

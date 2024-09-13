@@ -1,0 +1,4 @@
+
+      // Crie um chatbot
+aws chatbot create-channel --name MyChatbot --type Slack --role-arn arn:aws:iam::123456789012:role/chatbot-role --configuration '{"Slack":{"Channel":"#general","Token":"xoxb-xxxxxxxxxxxxxxxxxxxxxxxx"}}'
+    

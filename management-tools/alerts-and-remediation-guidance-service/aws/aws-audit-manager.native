@@ -1,0 +1,16 @@
+
+      # Crie uma avaliação de segurança
+aws auditmanager create-assessment --assessment-name MyAssessment --description "Example Audit Manager Assessment" --framework NIST_CSF --assessment-scope account
+
+# Adicione controles à avaliação
+aws auditmanager update-assessment --assessment-id <ASSESSMENT_ID> --controls '[{"controlId": "NIST-CSF-AC-1", "selected": true}]'
+
+# Crie um conjunto de controle
+aws auditmanager create-control-set --control-set-name MyControlSet --description "Example Audit Manager Control Set" --framework NIST_CSF --control-set-type standard
+
+# Adicione controles ao conjunto de controle
+aws auditmanager update-control-set --control-set-id <CONTROL_SET_ID> --controls '[{"controlId": "NIST-CSF-AC-1"}]'
+
+# Adicione um controle personalizado
+aws auditmanager create-control --control-name MyCustomControl --description "Example Audit Manager Custom Control" --control-type custom --control-source aws --assessment-id <ASSESSMENT_ID> --control-set-id <CONTROL_SET_ID> --control-mapping '[{"sourceId": "NIST-CSF-AC-1", "sourceType": "framework"}]'
+    

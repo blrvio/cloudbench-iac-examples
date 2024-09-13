@@ -1,45 +1,37 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "my-gcp-project"
 }
 
-# Create a Cloud Spanner Instance
+# Crie uma instância do Cloud Spanner
 resource "google_spanner_instance" "default" {
-  name     = "my-spanner-instance"
-  config   = "regional-us-central1"
-  node_count = 1
+  name         = "my-spanner-instance"
+  config       = "regional-us-central1"
   display_name = "My Spanner Instance"
+  node_count   = 1
 }
 
-# Create a Cloud Spanner Database
+# Crie um banco de dados no Cloud Spanner
 resource "google_spanner_database" "default" {
-  instance  = google_spanner_instance.default.name
-  name      = "my-spanner-database"
-  ddl_statements = [
-    "CREATE TABLE Singers (
-      SingerId INT64 NOT NULL,
-      FirstName STRING(1024),
-      LastName STRING(1024),
-      SingerInfo BYTES(MAX)
-    ) PRIMARY KEY (SingerId)"
-  ]
+  instance = google_spanner_instance.default.name
+  name     = "my-spanner-database"
+  ddl      = <<DDL
+CREATE TABLE Singers (
+  SingerId INT64 NOT NULL,
+  FirstName STRING(1024),
+  LastName STRING(1024),
+  SingerInfo STRING(1024),
+PRIMARY KEY (SingerId)
+)
+DDL
 }
 
-# Create a Cloud Spanner Table
-resource "google_spanner_table" "default" {
-  instance  = google_spanner_instance.default.name
+# Crie um usuário do Cloud Spanner
+resource "google_spanner_database_user" "default" {
   database = google_spanner_database.default.name
-  name      = "Albums"
-  ddl_statements = [
-    "CREATE TABLE Albums (
-      AlbumId INT64 NOT NULL,
-      SingerId INT64,
-      AlbumTitle STRING(1024),
-      AlbumInfo BYTES(MAX)
-    ) PRIMARY KEY (AlbumId),
-    FOREIGN KEY (SingerId) REFERENCES Singers(SingerId)"
-  ]
+  instance = google_spanner_instance.default.name
+  name     = "my-spanner-user"
+  roles    = ["roles/spanner.databaseReader"]
 }
-  
+    

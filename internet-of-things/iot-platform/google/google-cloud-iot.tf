@@ -1,39 +1,36 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1" # Choose your region
+  project = "gcp-project-id" # Substitua pelo ID do seu projeto
+  region  = "us-central1" # Substitua pela região desejada
 }
 
-# Create a Cloud IoT Core Registry
-resource "google_iot_registry" "main" {
-  name     = "my-registry"
-  region   = "us-central1" # Choose your region
-  event_notification_config {
-    pubsub_topic = "projects/your-project-id/topics/my-topic"
-  }
+# Crie um registro de dispositivo
+resource "google_iot_device_registry" "registry" {
+  name = "my-device-registry"
+  region = "us-central1"
 }
 
-# Create a Cloud IoT Core Device
-resource "google_iot_device" "main" {
-  registry_id = google_iot_registry.main.id
-  name        = "my-device"
+# Crie um dispositivo
+resource "google_iot_device" "device" {
+  device_id      = "my-device"
+  device_registry = google_iot_device_registry.registry.name
+  region          = "us-central1"
 }
 
-# Create a Google Cloud Pub/Sub topic to receive device events
-resource "google_pubsub_topic" "main" {
-  name = "my-topic"
+# Crie um dispositivo para receber dados
+resource "google_iot_device_config" "device_config" {
+  device_id      = "my-device"
+  device_registry = google_iot_device_registry.registry.name
+  region          = "us-central1"
+  binary_data     = "base64:your-configuration-data" # Substitua pelos seus dados de configuração
 }
 
-# Create a Google Cloud Function to process device events
-resource "google_cloudfunctions2_function" "main" {
-  name     = "my-function"
-  runtime  = "nodejs16"
-  entry_point = "helloHTTP"
-  trigger_http = true
-  source_archive_bucket = "your-bucket-name"
-  source_archive_object = "your-function-code.zip"
-  region  = "us-central1" # Choose your region
+# Publique dados para o dispositivo
+resource "google_iot_device_state" "device_state" {
+  device_id      = "my-device"
+  device_registry = google_iot_device_registry.registry.name
+  region          = "us-central1"
+  binary_data     = "base64:your-data" # Substitua pelos seus dados
 }
-
-  
+    

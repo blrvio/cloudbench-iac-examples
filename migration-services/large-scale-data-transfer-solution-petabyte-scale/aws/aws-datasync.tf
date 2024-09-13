@@ -1,67 +1,78 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a DataSync Location for your On-premises Storage
-resource "aws_datasync_location_smb" "onprem" {
-  name         = "onprem-location"
-  subdirectory = "/my/data/directory" # Specify the subdirectory on your SMB share
-  # Provide your SMB server credentials for access
-  # Refer to the AWS documentation for supported authentication methods
-  # such as username/password, domain, or Kerberos
-  username = "my-smb-user"
-  password = "my-smb-password"
-  # Replace with your SMB server hostname or IP address
-  hostname = "my-smb-server.example.com"
-  # Optional: Enable Kerberos authentication (if applicable)
-  kerberos_config {
-    # Replace with your Kerberos realm
-    realm = "EXAMPLE.COM"
-    # Replace with your Kerberos KDC hostname
-    kdc_hostname = "kdc.example.com"
-    # Optional: Set the Kerberos service principal
-    service_principal = "cifs/my-smb-server.example.com@EXAMPLE.COM"
-    # Optional: Set the Kerberos keytab file path
-    keytab_file = "path/to/keytab"
+# Crie um agente DataSync
+resource "aws_datasync_agent" "example" {
+  activation_key = "xxxxxxxxxxxxxxxxxxxxxxxx"
+  name           = "example-agent"
+  tags = {
+    Name = "example-agent"
   }
 }
 
-# Create a DataSync Location for your AWS S3 bucket
-resource "aws_datasync_location_s3" "s3" {
-  name = "s3-location"
-  # Replace with your S3 bucket name
-  bucket_name = "my-s3-bucket"
-  # Optional: Specify a specific S3 path for your data
-  # The default is the root of the bucket
-  s3_path = "my/s3/path"
-}
-
-# Create a DataSync Task
-resource "aws_datasync_task" "main" {
-  name = "my-data-sync-task"
-  # Specify the source location
-  source_location_arn = aws_datasync_location_smb.onprem.arn
-  # Specify the destination location
-  destination_location_arn = aws_datasync_location_s3.s3.arn
-  # Schedule the task execution
-  schedule {
-    # Configure the task execution frequency (e.g., hourly, daily, weekly)
-    # Refer to the AWS documentation for supported scheduling options
-    # For example, hourly executions
-    # schedule_expression = "cron(0 * * * ? *)"
-  }
-
-  # Optional: Configure task options
-  options {
-    # Optional: Set the number of concurrent threads used during the task
-    # execution (default is 10)
-    # num_tasks = 10
-    # Optional: Enable the overwrite option for existing files at the
-    # destination (default is false)
-    # overwrite_mode = true
-  }
-}
-
+# Crie uma localização de origem S3
+resource "aws_datasync_location_s3" "source" {
+  bucket_name = "example-bucket"
+  subdirectory  = "path/to/source/directory"
   
+  # Define a configuração para a localização de origem
+  # Ex: 
+  # configuration = <<EOF
+  # {
+  #   "Excludes": ["*ignore.txt"],
+  #   "Includes": ["*file.txt"]
+  # }
+  # EOF
+  
+  # Define as credenciais para acessar o bucket S3
+  # Ex: 
+  # credentials = <<EOF
+  # {
+  #   "AccessKey": "AKIAXXXXXXXXXXXX",
+  #   "SecretKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  #   "RoleArn": "arn:aws:iam::123456789012:role/my-role"
+  # }
+  # EOF
+}
+
+# Crie uma localização de destino EFS
+resource "aws_datasync_location_efs" "destination" {
+  efs_file_system_arn = "arn:aws:elasticfilesystem:us-east-1:123456789012:file-system/fs-xxxxxxxx"
+  subdirectory  = "path/to/destination/directory"
+  
+  # Define as credenciais para acessar o sistema de arquivos EFS
+  # Ex: 
+  # credentials = <<EOF
+  # {
+  #   "AccessKey": "AKIAXXXXXXXXXXXX",
+  #   "SecretKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  #   "RoleArn": "arn:aws:iam::123456789012:role/my-role"
+  # }
+  # EOF
+}
+
+# Crie uma tarefa de transferência de dados
+resource "aws_datasync_task" "example" {
+  name = "example-task"
+  
+  # Configure a tarefa de transferência
+  # source_location_arn = aws_datasync_location_s3.source.arn
+  # destination_location_arn = aws_datasync_location_efs.destination.arn
+  # schedule = "schedule"
+  #  Ex: schedule = "cron(0 0 * * ? *) # Diariamente às 00:00"
+  #  Ex: schedule = "cron(0 */12 * * ? *) # A cada 12 horas"
+  #  Ex: schedule = "cron(0 0/5 * * ? *) # A cada 5 minutos"
+  # options = "options"
+  #  Ex: options = "{"OverwriteMode":"ALWAYS","PreserveDeletedFiles":"true","PreserveMetadata":"true"}  "
+  #  Ex: options = "{"OverwriteMode":"PRESERVE","PreserveDeletedFiles":"false","PreserveMetadata":"false"}  "
+
+  # Adicione tags à tarefa
+  tags = {
+    Name = "example-task"
+  }
+}
+
+    

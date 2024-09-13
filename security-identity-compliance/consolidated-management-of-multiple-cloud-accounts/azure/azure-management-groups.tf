@@ -1,20 +1,30 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Configure recursos pré-lançados
 }
 
-# Create a Management Group
+# Crie um grupo de gerenciamento
 resource "azurerm_management_group" "example" {
-  name     = "MyManagementGroup"
-  parent_id = "root"
+  name     = "example-mg"
+  display_name = "Example Management Group"
+  parent_id = "providers.azurerm.management_group.parent.id" # Substitua pelo ID do grupo pai
 }
 
-# Create a Subscription under the Management Group
-resource "azurerm_subscription" "example" {
-  display_name = "MySubscription"
+# Crie um grupo de gerenciamento pai (opcional)
+resource "azurerm_management_group" "parent" {
+  name     = "parent-mg"
+  display_name = "Parent Management Group"
+}
+
+# Atribua uma política de gerenciamento ao grupo de gerenciamento
+resource "azurerm_policy_assignment" "example" {
+  name                = "example-policy-assignment"
   management_group_id = azurerm_management_group.example.id
-  location = "westus"
+  policy_definition_id = "{your policy definition id}" # Substitua pelo ID da definição de política
+  scope               = "managementGroup/example-mg"
+  display_name        = "Example Policy Assignment"
+  enforcement_mode    = "Default"
 }
 
-  
+    

@@ -1,0 +1,7 @@
+
+      // Create a Cloud Functions function
+ibmcloud fn create my_function --runtime nodejs-16 --code "// Your function code" --trigger http --memory 128 --timeout 60 --region us-south
+
+// Create a Cloud Object Storage bucket
+ibmcloud storage create my_bucket --location us-south
+    

@@ -1,0 +1,10 @@
+
+      // Crie um aplicativo CodeDeploy
+aws deploy create-application --application-name my_app
+
+// Crie um grupo de implantação CodeDeploy
+aws deploy create-deployment-group --application-name my_app --deployment-group-name my_group --service-role-arn arn:aws:iam::xxxxxxxx:role/codedeploy-service-role --deployment-config-name CodeDeployDefault.OneAtATime --auto-rollback-configuration Enabled=true,Events=[DEPLOYMENT_FAILURE] --ec2-tag-filters Key=Name,Type=KEY_ONLY,Value=web-server
+
+// Crie um artefato CodeDeploy
+aws deploy create-deployment-config --deployment-config-name MyDeploymentConfig --minimum-healthy-hosts Value=1,Type=PERCENTAGE --canary-interval 60 --canary-percentage 10
+    

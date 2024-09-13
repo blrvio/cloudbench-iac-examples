@@ -1,0 +1,10 @@
+
+      // Crie um evento EventArc
+aws events create-event-bus --name my-event-bus --description "Event bus for example events"
+
+// Adicione uma política de evento
+aws events put-permission --event-bus-name my-event-bus --statement-id allow-put-events --action events:PutEvents --principal arn:aws:iam::123456789012:user/example-user
+
+// Crie uma regra de evento
+aws events put-rule --name my-rule --event-bus-name my-event-bus --event-pattern '{"source": ["aws.ec2"]}' --targets [{"Id": "my-target", "Arn": "arn:aws:lambda:us-east-1:123456789012:function:my-lambda-function"}]
+    

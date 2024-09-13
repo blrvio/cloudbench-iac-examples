@@ -1,50 +1,33 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable AzureRM features
+  features {} # Ativar recursos pré-lançados
 }
 
-# Create a StorSimple Virtual Appliance (VA)
-resource "azurerm_storsimple_virtual_appliance" "main" {
-  name               = "storsimple-va"
+# Crie um recurso StorSimple Device Manager
+resource "azurerm_storsimple_device_manager" "example" {
+  name     = "storsimple-device-manager"
   resource_group_name = "my-resource-group"
-  location           = "westus2"
-  # Other settings (e.g., size, bandwidth, etc.)
+  location = "westus"
 }
 
-# Create a StorSimple Manager
-resource "azurerm_storsimple_manager" "main" {
-  name               = "storsimple-manager"
+# Crie um dispositivo StorSimple
+resource "azurerm_storsimple_device" "example" {
+  name     = "my-storsimple-device"
   resource_group_name = "my-resource-group"
-  location           = "westus2"
-  # Other settings (e.g., version, storage account, etc.)
+  device_manager_name  = azurerm_storsimple_device_manager.example.name
+  location = "westus"
 }
 
-# Create a StorSimple Device
-resource "azurerm_storsimple_device" "main" {
-  name               = "storsimple-device"
+# Crie um volume StorSimple
+resource "azurerm_storsimple_volume" "example" {
+  name     = "my-storsimple-volume"
   resource_group_name = "my-resource-group"
-  location           = "westus2"
-  manager_id         = azurerm_storsimple_manager.main.id
-  # Other settings (e.g., model, connection, etc.)
+  device_name  = azurerm_storsimple_device.example.name
+  location = "westus"
+
+  # Define a capacidade do volume
+  capacity_in_gibibytes = 1024
 }
 
-# Create a StorSimple Volume Container
-resource "azurerm_storsimple_volume_container" "main" {
-  name               = "storsimple-vc"
-  resource_group_name = "my-resource-group"
-  location           = "westus2"
-  device_id         = azurerm_storsimple_device.main.id
-  # Other settings (e.g., capacity, security settings, etc.)
-}
-
-# Create a StorSimple Volume
-resource "azurerm_storsimple_volume" "main" {
-  name               = "storsimple-volume"
-  resource_group_name = "my-resource-group"
-  location           = "westus2"
-  volume_container_id = azurerm_storsimple_volume_container.main.id
-  # Other settings (e.g., size, type, etc.)
-}
-
-  
+    

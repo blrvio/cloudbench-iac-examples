@@ -1,61 +1,54 @@
 
-    terraform { required_providers {
-  google = {
-    source  = "hashicorp/google"
-    version = "~> 4.0"
-  }
-}
-}
-
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "gcp-project-id"
+  project = "your-project-id"
   region  = "us-central1"
 }
 
-resource "google_vertex_ai_endpoint" "my_endpoint" {
-  display_name = "my_endpoint"
-  location     = "us-central1"
-  project      = "gcp-project-id"
-  machine_spec {
-    machine_type = "n1-standard-1"
-    accelerator_type = "NVIDIA_TESLA_T4"
-  }
-
-  # Define a model to be deployed on the endpoint
-  deployed_models {
-    model = google_vertex_ai_model.my_model.name
-    initial_instance_count = 1
-    min_replica_count      = 1
-    max_replica_count      = 10
+# Crie um modelo de treinamento de Vertex AI
+resource "google_vertex_ai_model" "model" {
+  display_name = "my-model"
+  description = "Modelo de treinamento de Vertex AI"
+  version_id = "1"
+  model_type = "AUTOML_IMAGE_OBJECT_DETECTION"
+  model {
+    image_classification_model {
+      # ...
+    }
   }
 }
 
-resource "google_vertex_ai_model" "my_model" {
-  display_name = "my_model"
-  location     = "us-central1"
-  project      = "gcp-project-id"
-
-  # Define the container image for the model
-  container_spec {
-    image = "us-docker.pkg.dev/cloud-aiplatform/release/1.16.0/vertex-ai-sdk"
+# Crie um ponto de extremidade para o modelo de treinamento
+resource "google_vertex_ai_endpoint" "endpoint" {
+  display_name = "my-endpoint"
+  description = "Ponto de extremidade para o modelo de treinamento"
+  location = "us-central1"
+  model {
+    name = google_vertex_ai_model.model.name
   }
-
-  # Define the model's runtime version
-  version {
-    runtime_version = "1.16.0"
+  traffic_split {
+    "0": 100
   }
 }
 
-resource "google_storage_bucket" "my_bucket" {
-  name     = "my-bucket"
-  location = "US"
-  force_destroy = true
+# Importe dados de treinamento
+resource "google_storage_bucket_object" "training_data" {
+  name     = "training_data.csv"
+  bucket   = "your-bucket-name"
+  source   = "path/to/training_data.csv"
 }
 
-resource "google_storage_bucket_object" "my_model_file" {
-  bucket = google_storage_bucket.my_bucket.name
-  name   = "my_model.tar.gz"
-  source = "path/to/my_model.tar.gz"
+# Treine um modelo de ML com o Vertex AI
+resource "google_vertex_ai_training_job" "training_job" {
+  display_name = "my-training-job"
+  description = "Tarefa de treinamento para o modelo"
+  location = "us-central1"
+  training_input {
+    # ...
+  }
+  model {
+    name = google_vertex_ai_model.model.name
+  }
 }
 
-  
+    

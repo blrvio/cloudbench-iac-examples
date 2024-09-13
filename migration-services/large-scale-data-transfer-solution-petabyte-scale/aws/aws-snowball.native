@@ -1,0 +1,10 @@
+
+      // Crie um job de Snowball
+aws snowball create-job --job-type IMPORT --description "Transferir dados para o AWS S3" --# ... outros atributos
+
+// Crie um volume de Snowball
+aws snowball create-volume --job-id job-xxxxxxxx --# ... outros atributos
+
+// Crie um endereço de entrega
+aws snowball create-address --address-type SHIP_TO --# ... outros atributos
+    

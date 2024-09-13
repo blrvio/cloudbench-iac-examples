@@ -1,0 +1,24 @@
+
+      // Create a simple Exadata Cloud Service instance
+# Replace with your specific values
+
+# Create a Exadata Cloud Service instance
+ocs instance create
+--name "my-exadata-instance"
+--shape "Exadata_X8_8" # Shape to use, you can use `ocscli list-shapes` to view available shapes
+--subnet "subnet-id" # Replace with the subnet ID
+--availability-domain "AD1" # Availability domain for the instance
+--storage-type "NFS" # Use NFS as the storage type, you can also use SSD
+--storage-size "100GB" # Size of the storage in GB
+--vnic "vnic-id" # Replace with the VNIC ID
+--network "network-id" # Replace with the network ID
+--security-list "security-list-id" # Replace with the security list ID
+--public-ip "true" # If you want the instance to have a public IP address
+--ssh-key-pair "ssh-key-pair-id" # Replace with the SSH key pair ID
+--db-version "19c" # Database version to use, you can use `ocscli list-db-versions` to view available versions
+--db-edition "Enterprise" # Database edition to use, you can use `ocscli list-db-editions` to view available editions
+--db-home "19.17.0.0" # Database home to use, you can use `ocscli list-db-homes` to view available homes
+--db-password "your-password" # Replace with the password for the database user
+--admin-password "your-password" # Replace with the password for the admin user
+--admin-username "your-username" # Replace with the username for the admin user
+    

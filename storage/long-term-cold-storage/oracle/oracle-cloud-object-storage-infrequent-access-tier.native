@@ -1,0 +1,8 @@
+
+      // Utilize a OCI CLI ou a interface da web para gerenciar seus buckets e objetos
+# Exemplo de comando OCI CLI para criar um bucket
+oci os create-bucket --namespace oci --bucket-name my-infrequent-access-bucket --storage-tier INFREQUENT_ACCESS
+
+# Exemplo de comando OCI CLI para upload de um objeto
+oci os upload-object --namespace oci --bucket-name my-infrequent-access-bucket --object-name my-object --source-file my-object.txt
+    

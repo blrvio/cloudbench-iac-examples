@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Analytics
+firebase analytics:init --project your-project-id --app your-app-id
+
+// Defina um evento personalizado
+firebase analytics:event:define --app your-app-id --event-name custom_event_name --parameter-name custom_parameter_name --parameter-type string
+    

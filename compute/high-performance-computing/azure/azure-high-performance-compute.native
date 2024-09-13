@@ -1,0 +1,10 @@
+
+      // Criar um grupo de recursos
+az group create -n example-rg -l westus2
+
+// Criar um cluster de HPC
+az hpc cluster create -g example-rg -n example-hpc-cluster -l westus2 -s Standard_A2_v2 -vm Standard_A2_v2 -os Linux
+
+// Adicionar nós ao cluster
+az hpc node create -g example-rg -c example-hpc-cluster -n example-hpc-node -vm Standard_A2_v2
+    

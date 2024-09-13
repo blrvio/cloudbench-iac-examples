@@ -1,36 +1,20 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  # Replace with your IBM Cloud API Key
-  api_key = "YOUR_API_KEY"
-  # Replace with your IBM Cloud Region
-  region = "us-south"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a DNS zone
-resource "ibm_dns_zone" "main" {
+# Crie uma zona DNS
+resource "aws_route53_zone" "example_zone" {
   name = "example.com"
-  # Replace with your IBM Cloud Resource Group ID
-  resource_group_id = "YOUR_RESOURCE_GROUP_ID"
 }
 
-# Create a DNS record
-resource "ibm_dns_record" "main" {
-  zone_id = ibm_dns_zone.main.id
-  name = "www"
-  type = "A"
-  # Replace with the IP address of your server
-  data = "1.2.3.4"
-  ttl = 300
+# Crie um registro DNS
+resource "aws_route53_record" "example_record" {
+  zone_id = aws_route53_zone.example_zone.zone_id
+  name    = "www"
+  type    = "A"
+  ttl     = 300
+  records = ["192.168.0.10"]
 }
-
-# Output the DNS zone ID
-output "zone_id" {
-  value = ibm_dns_zone.main.id
-}
-
-# Output the DNS record ID
-output "record_id" {
-  value = ibm_dns_record.main.id
-}
-  
+    

@@ -1,133 +1,44 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Timestream database
-resource "aws_timestream_database" "main" {
-  database_name = "my-timestream-database"
-  # Optional settings
-  kms_key_id = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
-  tags = {
-    Name = "My Timestream Database"
-  }
+# Crie um banco de dados do Timestream
+resource "aws_timestream_database" "example" {
+  database_name = "example"
 }
 
-# Create a Timestream table
-resource "aws_timestream_table" "main" {
-  database_name = aws_timestream_database.main.database_name
-  table_name    = "my-timestream-table"
-  # Optional settings
+# Crie uma tabela do Timestream
+resource "aws_timestream_table" "example" {
+  database_name = aws_timestream_database.example.database_name
+  table_name    = "example"
   retention_properties {
-    memory_store_retention_period_in_hours  = 24  # Keep data in memory for 24 hours
-    magnetic_store_retention_period_in_days = 365 # Keep data in magnetic store for 365 days
-  }
-  # Define the time dimension
-  time_dimension {
-    name             = "time"
-    time_column_name = "timestamp"
-  }
-  # Define the dimension attributes
-  dimensions {
-    name       = "region"
-    value_type = "VARCHAR"
-  }
-  # Define the measure attributes
-  measures {
-    name       = "value"
-    value_type = "DOUBLE"
-  }
-  # Add tags to the table
-  tags = {
-    Name = "My Timestream Table"
+    memory_store_retention_period_in_hours = 24
   }
 }
 
-# Create a Timestream write role
-resource "aws_iam_role" "write" {
-  name               = "timestream-write-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
+# Escreva dados na tabela
+resource "aws_timestream_write_records" "example" {
+  database_name = aws_timestream_database.example.database_name
+  table_name    = aws_timestream_table.example.table_name
+  records = [
     {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "timestream.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
+      measure_name = "value"
+      measure_value = "10"
+      time          = "2023-10-26T12:00:00Z"
+      dimensions = {
+        "region" = "us-east-1"
+      }
     }
   ]
 }
-EOF
+
+# Leia dados da tabela
+resource "aws_timestream_query" "example" {
+  database_name = aws_timestream_database.example.database_name
+  table_name    = aws_timestream_table.example.table_name
+  query         = "SELECT * FROM example WHERE time > '2023-10-26T12:00:00Z'"
 }
 
-# Attach a policy to the Timestream write role
-resource "aws_iam_role_policy" "write" {
-  name   = "timestream-write-policy"
-  role   = aws_iam_role.write.name
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "timestream:WriteRecords",
-        "timestream:DescribeEndpoints"
-      ],
-      "Resource": [
-        "arn:aws:timestream:us-east-1:123456789012:database:my-timestream-database",
-        "arn:aws:timestream:us-east-1:123456789012:table:my-timestream-database:my-timestream-table"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-# Create a Timestream read role
-resource "aws_iam_role" "read" {
-  name               = "timestream-read-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "timestream.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-# Attach a policy to the Timestream read role
-resource "aws_iam_role_policy" "read" {
-  name   = "timestream-read-policy"
-  role   = aws_iam_role.read.name
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "timestream:DescribeEndpoints",
-        "timestream:Select"
-      ],
-      "Resource": [
-        "arn:aws:timestream:us-east-1:123456789012:database:my-timestream-database",
-        "arn:aws:timestream:us-east-1:123456789012:table:my-timestream-database:my-timestream-table"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-  
+    

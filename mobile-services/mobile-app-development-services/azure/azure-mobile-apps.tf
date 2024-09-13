@@ -1,52 +1,57 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Configuração de recursos
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "example" {
-  name     = "example-mobile-apps-rg"
-  location = "westus2"
+# Crie um recurso de aplicativo móvel
+resource "azurerm_mobile_app" "example" {
+  name     = "example-mobile-app"
+  location = "westus2" # Substitua pela sua região desejada
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  # Outros parâmetros de configuração
 }
 
-# Create an App Service Plan
-resource "azurerm_app_service_plan" "example" {
-  name     = "example-mobile-apps-plan"
-  location = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  sku {
-    tier = "Free"
-    size = "F1"
-  }
+# Crie um banco de dados para o aplicativo móvel
+resource "azurerm_sql_database" "example" {
+  name     = "example-mobile-db"
+  location = "westus2" # Substitua pela sua região desejada
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  server_name = "example-sql-server" # Substitua pelo nome do seu servidor SQL
+  # Outros parâmetros de configuração
 }
 
-# Create an App Service
-resource "azurerm_app_service" "example" {
-  name                = "example-mobile-apps"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  app_service_plan_id = azurerm_app_service_plan.example.id
-  # Enable App Service Mobile Apps
-  kind                = "functionapp,mobileapp"
+# Crie uma tabela no banco de dados
+resource "azurerm_sql_table" "example" {
+  name             = "example-table"
+  database_name    = "example-mobile-db"
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  server_name      = "example-sql-server" # Substitua pelo nome do seu servidor SQL
+  schema           = "dbo" # Substitua pelo esquema desejado
+  # Outros parâmetros de configuração
 }
 
-# Create a Mobile App Backend
-resource "azurerm_mobile_app_backend" "example" {
-  name = "example-mobile-apps-backend"
-  resource_group_name = azurerm_resource_group.example.name
-  app_service_name   = azurerm_app_service.example.name
-  location = azurerm_resource_group.example.location
-  # Set the backend to use the current App Service
-  app_service_plan_id = azurerm_app_service_plan.example.id
+# Configure o serviço de notificação
+resource "azurerm_notification_hub" "example" {
+  name     = "example-notification-hub"
+  location = "westus2" # Substitua pela sua região desejada
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  # Outros parâmetros de configuração
 }
 
-# Create a Mobile App Backend table
-resource "azurerm_mobile_app_backend_table" "example" {
-  name                 = "example-table"
-  resource_group_name = azurerm_resource_group.example.name
-  app_service_name   = azurerm_app_service.example.name
-  backend_id         = azurerm_mobile_app_backend.example.id
+# Crie uma conexão entre o aplicativo móvel e o serviço de notificação
+resource "azurerm_mobile_app_notification_hub_connection" "example" {
+  name                 = "example-notification-hub-connection"
+  mobile_app_name       = "example-mobile-app"
+  notification_hub_name = "example-notification-hub"
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
 }
 
-  
+# Crie uma política de acesso para o aplicativo móvel
+resource "azurerm_mobile_app_access_policy" "example" {
+  name                 = "example-access-policy"
+  mobile_app_name       = "example-mobile-app"
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  # Outros parâmetros de configuração
+}
+    

@@ -1,0 +1,13 @@
+
+      // Crie um papel IAM para a função Lambda
+aws iam create-role --role-name lambda_role --assume-role-policy file://assume_role_policy.json
+
+// Crie uma política IAM para a função Lambda
+aws iam create-policy --policy-name lambda_policy --policy-document file://policy_document.json
+
+// Anexa a política ao papel IAM
+aws iam attach-role-policy --role-name lambda_role --policy-arn arn:aws:iam::123456789012:policy/lambda_policy
+
+// Crie a função Lambda
+aws lambda create-function --function-name my_lambda_function --runtime nodejs16.x --role arn:aws:iam::123456789012:role/lambda_role --handler index.handler --zip-file file://function_code.zip
+    

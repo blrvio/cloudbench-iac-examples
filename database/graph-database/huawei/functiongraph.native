@@ -1,0 +1,17 @@
+
+      // Crie uma função FunctionGraph
+aws lambda create-function --function-name my-function --runtime nodejs18.x --handler index.handler --role arn:aws:iam::xxxxxxxx:role/lambda_role --zip-file fileb://lambda.zip
+
+// Crie uma função de IAM para a função FunctionGraph
+aws iam create-role --role-name lambda_role --assume-role-policy fileb://assume_role_policy.json
+
+// Crie uma política de IAM para a função FunctionGraph
+aws iam create-policy --policy-name lambda_policy --policy-document fileb://policy.json
+
+// Adicione a política à função de IAM
+aws iam attach-role-policy --role-name lambda_role --policy-arn arn:aws:iam::xxxxxxxx:policy/lambda_policy
+
+// Define os arquivos JSON (não implementados no exemplo)
+// assume_role_policy.json
+// policy.json
+    

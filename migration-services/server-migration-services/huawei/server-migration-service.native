@@ -1,0 +1,7 @@
+
+      // Crie um servidor de migração
+aws smis create-server --name example --tags "Name=Example Server"
+
+// Crie uma tarefa de migração
+aws smis start-replication-run --server-id s-xxxxxxxx --source-server-type LINUX --source-server-ip 10.0.0.1 --destination-volume-type gp2 --tags "Name=Example Replication Run"
+    

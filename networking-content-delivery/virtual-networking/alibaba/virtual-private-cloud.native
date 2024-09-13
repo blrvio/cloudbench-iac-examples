@@ -1,0 +1,25 @@
+
+      // Crie uma VPC
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+// Habilite DNS no VPC
+aws ec2 modify-vpc-attribute --vpc-id vpc-xxxxxxxx --enable-dns-hostnames --enable-dns-support
+
+// Crie uma sub-rede
+aws ec2 create-subnet --vpc-id vpc-xxxxxxxx --cidr-block 10.0.1.0/24 --availability-zone us-east-1a
+
+// Crie um gateway de internet
+aws ec2 create-internet-gateway
+
+// Adicione o gateway de internet à VPC
+aws ec2 attach-internet-gateway --internet-gateway-id igw-xxxxxxxx --vpc-id vpc-xxxxxxxx
+
+// Crie uma tabela de roteamento
+aws ec2 create-route-table --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de roteamento para a tabela de roteamento
+aws ec2 create-route --route-table-id rtb-xxxxxxxx --destination-cidr-block 0.0.0.0/0 --gateway-id igw-xxxxxxxx
+
+// Associe a tabela de roteamento à sub-rede
+aws ec2 associate-route-table --subnet-id subnet-xxxxxxxx --route-table-id rtb-xxxxxxxx
+    

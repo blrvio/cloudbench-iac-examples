@@ -1,29 +1,29 @@
 
-    # Configure the Azure provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Garante a compatibilidade com recursos mais recentes
 }
 
-# Create a resource group
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "westus2"
+  name     = "example-rg"
+  location = "West Europe"
 }
 
-# Create a DNS zone
+# Crie uma zona DNS
 resource "azurerm_dns_zone" "example" {
   name                = "example.com"
   resource_group_name = azurerm_resource_group.example.name
 }
 
-# Create a DNS record set
-resource "azurerm_dns_record_set" "example" {
+# Crie um registro A
+resource "azurerm_dns_record_set" "a" {
   name                = "www"
   resource_group_name = azurerm_resource_group.example.name
-  zone_name          = azurerm_dns_zone.example.name
+  zone_name           = azurerm_dns_zone.example.name
   type                = "A"
   ttl                 = 3600
-  records              = ["10.0.0.4"]
-}
 
-  
+  records = ["10.0.0.4"]
+}
+    

@@ -1,29 +1,26 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+      # Configure o provedor Oracle Cloud Infrastructure
 provider "oci" {
-  region = "us-ashburn-1" # Replace with your desired region
-  # ... other provider configuration options
+  region = "us-ashburn-1" # Substitua pela sua região desejada
+  # Adicione credenciais de autenticação
 }
 
-# Create an Oracle Functions application
-resource "oci_functions_application" "main" {
-  name     = "my-functions-app"
-  # ... other application configuration options
+# Crie um namespace para as funções
+resource "oci_functions_namespace" "example_namespace" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa" # Substitua pelo ID do seu compartimento
+  display_name   = "example-namespace"
 }
 
-# Create an Oracle Functions function
-resource "oci_functions_function" "main" {
-  application_id = oci_functions_application.main.id
-  name            = "my-function"
-  # ... other function configuration options
-  # ... function code
+# Crie uma função
+resource "oci_functions_function" "example_function" {
+  namespace_id  = oci_functions_namespace.example_namespace.id
+  display_name = "example-function"
+  # Adicione o código da função
 }
 
-# Create a trigger for the Oracle Functions function
-resource "oci_functions_trigger" "main" {
-  application_id = oci_functions_application.main.id
-  function_id     = oci_functions_function.main.id
-  name            = "my-trigger"
-  # ... other trigger configuration options
+# Crie um endpoint para a função
+resource "oci_functions_function_endpoint" "example_endpoint" {
+  function_id = oci_functions_function.example_function.id
+  # Adicione configurações adicionais do endpoint
 }
-  
+    

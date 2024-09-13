@@ -1,40 +1,19 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+  project = "gcp-project-id" # Substitua pelo seu ID do projeto
+  region  = "us-central1" # Substitua pela sua região desejada
 }
 
-# Create a Stackdriver Monitoring Alert Policy
-resource "google_monitoring_alert_policy" "main" {
-  display_name = "My Alert Policy"
-  # Define the alert condition
-  condition {
-    display_name = "CPU Utilization"
-    condition_threshold {
-      filter = "metric.type = \"compute.googleapis.com/instance/cpu/utilization\" AND resource.type = \"gce_instance\" AND resource.labels.instance_name = \"your-instance-name\""
-      duration  = "600s"
-      trigger {
-        # Trigger the alert if CPU utilization is above 90%
-        count = 1
-        percent = 90
-        direction = "above"
-        # Trigger for 1 minute
-        period = "60s"
-      }
-    }
-  }
-  # Define the notification channels
-  notification_channels = ["projects/your-project-id/notificationChannels/your-channel-id"]
+# Crie um alerta de monitoramento
+resource "google_monitoring_alert_policy" "my_alert" {
+  display_name = "My Alert"
+  # ...
 }
 
-# Create a Stackdriver Logging Metric
-resource "google_logging_metric" "main" {
-  name         = "my-logging-metric"
-  filter       = "resource.type = \"gce_instance\" AND resource.labels.instance_name = \"your-instance-name\""
-  metric_filter = "logName = \"projects/your-project-id/logs/syslog\" AND severity >= ERROR"
-  value_extractor = "extract(response.code, r'\d+')"
-  description = "Metric for instance logs"
+# Crie um dashboard de monitoramento
+resource "google_monitoring_dashboard" "my_dashboard" {
+  display_name = "My Dashboard"
+  # ...
 }
-
-  
+    

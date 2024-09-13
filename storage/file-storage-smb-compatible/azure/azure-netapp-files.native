@@ -1,0 +1,4 @@
+
+      // Crie um volume NetApp Files
+az storage netapp-files volume create --account-name account-name --capacity 1024 --location location --resource-group resource-group-name --service-level Standard --subnet subnet-id --volume-name volume-name
+    

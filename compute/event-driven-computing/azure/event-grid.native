@@ -1,0 +1,7 @@
+
+      # Crie um tópico do Event Grid
+azurerm eventgrid topic create --name example-topic --resource-group example-resources --location westus2
+
+# Crie uma regra de assinatura do Event Grid
+azurerm eventgrid event-subscription create --name example-subscription --topic-name example-topic --resource-group example-resources --event-type "Microsoft.Storage.BlobCreated" --endpoint "https://example.com/webhook" --dead-letter-endpoint "https://example.com/deadletter"
+    

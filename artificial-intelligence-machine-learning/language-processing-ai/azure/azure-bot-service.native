@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+azurerm resource group create -n example-resource-group -l westus2
+
+// Crie um recurso de Bot Service
+azurerm bot create -g example-resource-group -n example-bot-service -l westus2 --sku Free
+
+// Crie um canal direto para o Bot Service
+azurerm bot channel directline create -g example-resource-group -n example-bot-service -l westus2
+    

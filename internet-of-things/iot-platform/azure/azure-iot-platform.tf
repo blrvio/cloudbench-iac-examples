@@ -1,47 +1,43 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Ative os recursos mais recentes
 }
 
-# Create an Azure IoT Hub
-resource "azurerm_iot_hub" "main" {
-  name                = "my-iot-hub"
+# Crie um hub IoT
+resource "azurerm_iot_hub" "example" {
+  name                = "example-hub"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  sku {
-    name = "S1"
-  }
-  partitioning {
-    enabled = false
-  }
+  resource_group_name = "example-resources"
+  sku                  = "S1"
 
-  # Define the storage endpoints
-  storage_endpoint {
-    container_name = "events"
-    auth_mode      = "keyBased"
-    connection_string = "your_connection_string"
+  tags = {
+    environment = "production"
   }
 }
 
-# Create an Azure IoT Hub Device Identity
-resource "azurerm_iot_hub_device_identity" "main" {
-  name                 = "my-device"
-  iot_hub_name        = azurerm_iot_hub.main.name
-  resource_group_name = azurerm_iot_hub.main.resource_group_name
-  # Assign a device ID
-  device_id = "my-device-id"
+# Crie um dispositivo IoT
+resource "azurerm_iot_hub_device" "example" {
+  name                = "example-device"
+  iot_hub_name        = azurerm_iot_hub.example.name
+  resource_group_name = "example-resources"
 }
 
-# Create an Azure IoT Hub Endpoint
-resource "azurerm_iot_hub_endpoint" "main" {
-  name                 = "my-endpoint"
-  iot_hub_name        = azurerm_iot_hub.main.name
-  resource_group_name = azurerm_iot_hub.main.resource_group_name
-  # Define the endpoint type
-  endpoint_type = "ingress"
-  # Add a new endpoint
-  endpoint_uri = "your_endpoint_uri"
+# Crie uma regra de encaminhamento para o hub IoT
+resource "azurerm_iot_hub_route" "example" {
+  name                = "example-route"
+  iot_hub_name        = azurerm_iot_hub.example.name
+  resource_group_name = "example-resources"
+
+  source          = "DeviceMessages"
+  endpoint        = "EventHubs"
+  endpoint_name  = "example-eventhub"
+  condition        = "true"
+  ttl             = 7200
+
+  // ... outras configurações de encaminhamento ...
 }
 
-  
+# ... mais recursos do Azure IoT Platform ...
+
+    

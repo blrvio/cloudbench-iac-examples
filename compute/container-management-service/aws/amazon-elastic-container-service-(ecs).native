@@ -1,0 +1,10 @@
+
+      // Crie um cluster ECS
+aws ecs create-cluster --cluster-name ecs-cluster
+
+// Crie uma definição de tarefa ECS
+aws ecs register-task-definition --family ecs-task-definition --container-definitions '[{"name": "my-container", "image": "nginx:latest", "portMappings": [{"containerPort": 80, "hostPort": 80, "protocol": "tcp"}], "essential": true}]'
+
+// Crie um serviço ECS
+aws ecs create-service --cluster ecs-cluster --service-name ecs-service --task-definition ecs-task-definition:1 --desired-count 1 --launch-type FARGATE --network-configuration '{\"awsvpcConfiguration\": {\"subnets\": [\"subnet-xxxxxxxx\"], \"securityGroups\": [\"sg-xxxxxxxx\"]}}'
+    

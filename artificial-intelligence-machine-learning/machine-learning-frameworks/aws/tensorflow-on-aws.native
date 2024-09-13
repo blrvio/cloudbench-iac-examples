@@ -1,0 +1,52 @@
+
+      aws eks create-cluster --name tf-eks-cluster --role-arn arn:aws:iam::xxxxxxxx:role/eks_cluster_role
+
+aws iam create-role --role-name eks_cluster_role --assume-role-policy '{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"eks.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}'
+
+aws iam create-role --role-name tensorflow_role --assume-role-policy '{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}'
+
+aws iam create-instance-profile --instance-profile-name tensorflow_profile
+
+aws iam add-role-to-instance-profile --instance-profile-name tensorflow_profile --role-name tensorflow_role
+
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --iam-instance-profile tensorflow_profile
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: tensorflow-service
+  namespace: default
+spec:
+  selector: 
+    app: tensorflow
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+EOF
+
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tensorflow-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: tensorflow
+  template:
+    metadata:
+      labels: 
+        app: tensorflow
+    spec:
+      containers:
+      - name: tensorflow
+        image: tensorflow/tensorflow:latest
+        ports:
+        - containerPort: 80
+EOF
+    

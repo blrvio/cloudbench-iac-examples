@@ -1,0 +1,7 @@
+
+      #  Create a FastConnect
+oci core fast-connect create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7777777777777777777777777777 --display-name FastConnectExample --#...
+
+# Create a FastConnect Connection
+oci core fast-connect-connection create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7777777777777777777777777777 --display-name FastConnectConnectionExample --fast-connect-id ocid1.fastconnect.oc1..aaaaaaaaw7777777777777777777777777777 --#...
+    

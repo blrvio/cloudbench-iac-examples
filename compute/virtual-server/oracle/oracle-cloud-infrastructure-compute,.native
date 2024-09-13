@@ -1,0 +1,16 @@
+
+      // Create a Compute Instance
+oci compute instance create --availability-domain AD-1 --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name example-instance --shape VM.Standard.E2.1 --source-type image --image-id ocid1.image.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+// Create a Virtual Network
+oci network vcn create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name example-vnet --cidr-block 10.0.0.0/16
+
+// Create a Subnet
+oci network subnet create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name example-subnet --vcn-id ocid1.vcn.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --cidr-block 10.0.1.0/24
+
+// Create a Security List
+oci network security-list create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name example-security-list --egress-rules "protocol=all,source=0.0.0.0/0" --ingress-rules "protocol=tcp,source=0.0.0.0/0,port-range=22"
+
+// Create a Network Security Group
+oci network security-group create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name example-nsg --security-list-ids ocid1.securitylist.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    

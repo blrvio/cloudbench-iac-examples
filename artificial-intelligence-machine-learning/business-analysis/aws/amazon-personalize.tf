@@ -1,66 +1,53 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Personalize dataset group
-resource "aws_personalize_dataset_group" "main" {
-  name = "my-personalize-dataset-group"
-  # Configure the dataset group settings
-  dataset_group_config {
-    # Choose the type of recommendation model to create
-    recipe_arn = "arn:aws:personalize:us-east-1:123456789012:recipe/personalize-knn-user-personalization"
+# Crie um dataset de eventos
+resource "aws_personalize_dataset" "events" {
+  name   = "events"
+  dataset_type = "EVENT"
+  schema_arn  = "arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012"
+}
+
+# Crie um dataset de usuários
+resource "aws_personalize_dataset" "users" {
+  name   = "users"
+  dataset_type = "USER"
+  schema_arn  = "arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012"
+}
+
+# Crie um dataset de itens
+resource "aws_personalize_dataset" "items" {
+  name   = "items"
+  dataset_type = "ITEM"
+  schema_arn  = "arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012"
+}
+
+# Crie um esquema para o dataset
+resource "aws_personalize_schema" "schema" {
+  name     = "schema"
+  schema   = "{\"type\": \"record\", \"name\": \"schema\", \"namespace\": \"com.example\", \"fields\": [{\"name\": \"user_id\", \"type\": \"string\"}, {\"name\": \"item_id\", \"type\": \"string\"}, {\"name\": \"event_type\", \"type\": \"string\"}]}"
+}
+
+# Crie um modelo de recomendação
+resource "aws_personalize_solution" "recommendation_model" {
+  name  = "recommendation_model"
+  recipe_arn = "arn:aws:personalize:us-east-1:123456789012:recipe/PERSONALIZE-DEFAULT-USER-PERSONALIZATION"
+  training_data_config {
+    dataset_group_arn = "arn:aws:personalize:us-east-1:123456789012:dataset-group:dataset-group-123456789012"
   }
 }
 
-# Create a Personalize dataset
-resource "aws_personalize_dataset" "interactions" {
-  dataset_group_name = aws_personalize_dataset_group.main.name
-  name                = "interactions"
-  # Configure the dataset type
-  dataset_type = "INTERACTIONS"
-  # Import your dataset from an S3 bucket
-  schema_arn = "arn:aws:personalize:us-east-1:123456789012:schema/my-schema"
-  # Set the data source to an S3 bucket
-  data_source {
-    s3_data_source {
-      bucket_name = "my-bucket"
-      s3_data_path = "interactions.csv"
-    }
-  }
+# Crie um grupo de datasets para o modelo
+resource "aws_personalize_dataset_group" "dataset_group" {
+  name = "dataset-group"
 }
 
-# Create a Personalize solution
-resource "aws_personalize_solution" "main" {
-  name                 = "my-personalize-solution"
-  dataset_group_name   = aws_personalize_dataset_group.main.name
-  solution_config {
-    # Choose the training algorithm to use
-    recipe_arn = "arn:aws:personalize:us-east-1:123456789012:recipe/personalize-knn-user-personalization"
-  }
+# Crie um esquema para o dataset
+resource "aws_personalize_schema" "schema" {
+  name     = "schema"
+  schema   = "{\"type\": \"record\", \"name\": \"schema\", \"namespace\": \"com.example\", \"fields\": [{\"name\": \"user_id\", \"type\": \"string\"}, {\"name\": \"item_id\", \"type\": \"string\"}, {\"name\": \"event_type\", \"type\": \"string\"}]}"
 }
-
-# Create a Personalize campaign
-resource "aws_personalize_campaign" "main" {
-  name                 = "my-personalize-campaign"
-  solution_arn          = aws_personalize_solution.main.arn
-  campaign_config {
-    # Configure the campaign settings
-    min_recommendation_confidence = 0.0
-  }
-}
-
-# Create a Personalize schema
-resource "aws_personalize_schema" "main" {
-  name         = "my-schema"
-  # Define the schema for your dataset
-  schema {
-    user_id_field = "user_id"
-    item_id_field = "item_id"
-    event_type_field = "event_type"
-    timestamp_field = "timestamp"
-  }
-}
-
-  
+    

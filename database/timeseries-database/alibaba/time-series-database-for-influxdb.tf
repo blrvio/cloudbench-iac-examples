@@ -1,28 +1,34 @@
 
-    # Configure the Alibaba Cloud provider
-provider "alicloud" {
-  region = "cn-hangzhou" # Replace with your desired region
-  # ... other provider configurations ...
+      # Configure the InfluxDB provider
+provider "influxdb" {
+  url     = "https://example.com"
+  token   = "example_token"
+  org     = "example_org"
+  bucket  = "example_bucket"
 }
 
-# Create an InfluxDB instance
-resource "alicloud_hitsdb_instance" "default" {
-  instance_name = "my-influxdb-instance"
-  # ... other instance configurations ...
+# Create a measurement
+resource "influxdb_measurement" "my_measurement" {
+  name     = "my_measurement"
+  database = "my_database"
+  fields   = {
+    "value" = "float"
+  }
 }
 
-# Create an InfluxDB database
-resource "alicloud_hitsdb_database" "default" {
-  instance_id  = alicloud_hitsdb_instance.default.id
-  database_name = "my-influxdb-database"
-  # ... other database configurations ...
+# Write data to the measurement
+resource "influxdb_write" "write_data" {
+  measurement = influxdb_measurement.my_measurement.name
+  database   = influxdb_measurement.my_measurement.database
+  data       = <<EOF
+my_measurement,tag1=value1,tag2=value2 value=1.0
+EOF
 }
 
-# Create an InfluxDB user
-resource "alicloud_hitsdb_user" "default" {
-  instance_id  = alicloud_hitsdb_instance.default.id
-  user_name    = "my-influxdb-user"
-  password     = "my-influxdb-password"
-  # ... other user configurations ...
+# Query data from the measurement
+resource "influxdb_query" "query_data" {
+  query = <<EOF
+SELECT * FROM my_measurement WHERE time > now() - 1h
+EOF
 }
-  
+    

@@ -1,0 +1,10 @@
+
+      # Crie um repositório de contêineres
+ibmcloud cr create-repository --name my_repo --namespace <your_ibm_cloud_namespace>
+
+# Importe uma imagem de contêiner
+ibmcloud cr import-image --source <your_docker_hub_image_name> --namespace <your_ibm_cloud_namespace> --repository my_repo
+
+# Publique uma imagem de contêiner
+ibmcloud cr push --namespace <your_ibm_cloud_namespace> --repository my_repo <your_local_image_path>
+    

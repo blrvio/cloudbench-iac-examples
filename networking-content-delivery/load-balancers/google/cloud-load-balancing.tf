@@ -1,82 +1,34 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+      # Configure o provedor (substitua pelo provedor específico)
+provider "<provider_name>" {
+  # Configurações do provedor
 }
 
-# Create a backend service
-resource "google_compute_backend_service" "main" {
-  name = "my-backend-service"
-  protocol = "HTTP"
-  timeout_sec = 5
-  port_name = "http"
-
-  # Create a health check
-  health_checks = [google_compute_health_check.http.id]
-
-  # Define backend capacity
-  capacity_scaler {
-    name = "default"
-    capacity = 100
-  }
+# Crie um balanceador de carga
+resource "<provider_name>_load_balancer" "lb" {
+  # Configurações do balanceador de carga
 }
 
-# Create a HTTP health check
-resource "google_compute_health_check" "http" {
-  name           = "my-http-health-check"
-  check_interval_sec = 5
-  timeout_sec         = 5
-  healthy_threshold   = 2
-  unhealthy_threshold = 2
-  request_path = "/"
-  port_name = "http"
-  port_specification = "USE_NAMED_PORT"
+# Crie um listener para o balanceador de carga
+resource "<provider_name>_load_balancer_listener" "lb_listener" {
+  load_balancer_id = <provider_name>_load_balancer.lb.id
+  # Configurações do listener
 }
 
-# Create a load balancer
-resource "google_compute_target_http_proxy" "main" {
-  name         = "my-target-http-proxy"
-  url_map      = google_compute_url_map.main.id
-  backend_service = google_compute_backend_service.main.id
+# Crie um pool de instâncias para o balanceador de carga
+resource "<provider_name>_load_balancer_target_group" "lb_target_group" {
+  # Configurações do pool de instâncias
 }
 
-# Create a URL map
-resource "google_compute_url_map" "main" {
-  name = "my-url-map"
-  host_rule {
-    hosts = ["*"]
-    path_matcher = "all_paths"
-  }
-  path_matcher {
-    name = "all_paths"
-    default_service = google_compute_backend_service.main.id
-  }
+# Adicione instâncias ao pool de instâncias
+resource "<provider_name>_load_balancer_target_group_attachment" "lb_target_group_attachment" {
+  target_group_id = <provider_name>_load_balancer_target_group.lb_target_group.id
+  target_id      = <instance_id> # Substitua pelo ID da instância
 }
 
-# Create a firewall rule
-resource "google_compute_firewall" "main" {
-  name   = "my-firewall-rule"
-  network = "projects/your-project-id/global/networks/default"
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-  source_ranges = ["0.0.0.0/0"]
+# Crie uma regra para o listener
+resource "<provider_name>_load_balancer_rule" "lb_rule" {
+  listener_arn = <provider_name>_load_balancer_listener.lb_listener.arn
+  # Configurações da regra
 }
-
-# Create a network
-resource "google_compute_network" "main" {
-  name    = "my-network"
-  auto_create_subnetworks = false
-}
-
-# Create a subnet
-resource "google_compute_subnetwork" "main" {
-  name           = "my-subnet"
-  network        = google_compute_network.main.self_link
-  region         = "us-central1"
-  ip_cidr_range = "10.128.0.0/20"
-}
-
-  
+    

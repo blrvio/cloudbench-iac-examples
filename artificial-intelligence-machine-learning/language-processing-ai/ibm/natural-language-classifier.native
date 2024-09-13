@@ -1,0 +1,8 @@
+
+      // Crie um classificador de linguagem natural
+aws comprehend create-classifier --classifier-name "my-classifier" --version-name "my-classifier-v1" --language-code en --description "This is a classifier for my data" --training-data-uri "s3://my-bucket/my-classifier-training-data.json" --tags "Key1=Value1,Key2=Value2" 
+
+// Crie um classificador de linguagem natural
+aws comprehend create-classifier --classifier-name "my-classifier" --version-name "my-classifier-v1" --language-code en --description "This is a classifier for my data" --training-data-uri "s3://my-bucket/my-classifier-training-data.json" --tags "Key1=Value1,Key2=Value2" 
+
+    

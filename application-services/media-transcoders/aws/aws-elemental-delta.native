@@ -1,0 +1,13 @@
+
+      // Crie uma instância do AWS Elemental Delta
+aws elemental-delta create-channel --name "my-channel" --description "My Elemental Delta channel"
+
+// Crie uma pipeline para o AWS Elemental Delta
+aws elemental-delta create-pipeline --name "my-pipeline" --description "My Elemental Delta pipeline"
+
+// Crie uma localização de armazenamento para o AWS Elemental Delta
+aws elemental-delta create-storage-location --name "my-storage-location" --s3-bucket-url "s3://my-bucket" --s3-bucket-path "path/to/my/files"
+
+// Crie um endpoint para o AWS Elemental Delta
+aws elemental-delta create-endpoint --name "my-endpoint" --url "https://my-endpoint.com"
+    

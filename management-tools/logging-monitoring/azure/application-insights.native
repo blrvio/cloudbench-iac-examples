@@ -1,0 +1,10 @@
+
+      // Crie um recurso de Application Insights
+azurerm applicationinsights create --resource-group example-resources --name example-insights --location westus2 --application-type web
+
+// Crie um workspace Log Analytics
+azurerm log-analytics workspace create --resource-group example-resources --name example-workspace --location westus2 --sku PerGB2018
+
+// Crie um recurso de Application Insights conectado a um workspace Log Analytics
+azurerm applicationinsights create --resource-group example-resources --name example-insights --location westus2 --application-type web --workspace-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.operationalinsights/workspaces/example-workspace
+    

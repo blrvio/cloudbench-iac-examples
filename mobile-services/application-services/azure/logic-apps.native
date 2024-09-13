@@ -1,0 +1,18 @@
+
+      // Crie um grupo de recursos
+azurerm resource-group create --name example-rg --location "West Europe"
+
+// Crie um aplicativo de lógica
+azurerm logic-app create --name example-logic-app --resource-group example-rg --location "West Europe"
+
+// Defina o esquema do aplicativo de lógica, substitua o exemplo por seu esquema
+// https://schema.management.azure.com/schemas/2015-08-01/logicAppDefinition.json#
+// Adicione um exemplo de esquema aqui
+
+// Crie um plano de serviço do aplicativo de lógica
+azurerm logic-app-plan create --name example-logic-app-plan --resource-group example-rg --location "West Europe"
+
+// Vincule o aplicativo de lógica ao plano de serviço
+azurerm logic-app-plan-app create --name example-logic-app --resource-group example-rg --logic-app-id "example-logic-app" --logic-app-plan-id "example-logic-app-plan"
+
+    

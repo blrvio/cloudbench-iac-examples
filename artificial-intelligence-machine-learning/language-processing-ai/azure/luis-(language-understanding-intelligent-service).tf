@@ -1,70 +1,38 @@
 
-    # Configure the AzureRM provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use the latest features
+  features {} # Habilita recursos beta
 }
 
-# Create a LUIS authoring resource
+# Crie um recurso de LUIS
 resource "azurerm_cognitive_services_account" "luis" {
   name                = "my-luis-account"
   location            = "westus2"
   resource_group_name = "my-resource-group"
   kind                = "luis"
   sku {
-    name = "F0"
+    name     = "F0"
+    tier     = "Free"
+    capacity = 1
   }
-  # Optional settings
-  # tags                  = {
-  #   Environment = "Dev"
-  # }
 }
 
-# Create a LUIS app
-resource "azurerm_luis_authoring_app" "main" {
-  name                  = "my-luis-app"
-  location              = "westus2"
-  resource_group_name   = "my-resource-group"
-  cognitive_services_id = azurerm_cognitive_services_account.luis.id
-  # Optional settings
-  # culture               = "en-us"
-  # version               = "0.1"
-  # description            = "My LUIS app"
+# Crie um aplicativo LUIS
+resource "azurerm_luis_app" "my-luis-app" {
+  name                 = "my-luis-app"
+  location             = azurerm_cognitive_services_account.luis.location
+  resource_group_name = azurerm_cognitive_services_account.luis.resource_group_name
+  cognitive_services_account_id = azurerm_cognitive_services_account.luis.id
 }
 
-# Create a LUIS intent
-resource "azurerm_luis_intent" "main" {
-  app_id         = azurerm_luis_authoring_app.main.id
-  name           = "BookFlight"
-  version        = "0.1"
-  # Optional settings
-  # description    = "Book a flight intent"
-  # is_closed      = true
-  # example_utterances = ["book a flight to london","find me a flight to paris"]
+# Crie um endpoint LUIS
+resource "azurerm_luis_endpoint" "my-luis-endpoint" {
+  name                 = "my-luis-endpoint"
+  location             = azurerm_cognitive_services_account.luis.location
+  resource_group_name = azurerm_cognitive_services_account.luis.resource_group_name
+  cognitive_services_account_id = azurerm_cognitive_services_account.luis.id
+  luis_app_id           = azurerm_luis_app.my-luis-app.id
+  endpoint_type        = "authoring"
 }
 
-# Create a LUIS entity
-resource "azurerm_luis_entity" "main" {
-  app_id         = azurerm_luis_authoring_app.main.id
-  name           = "City"
-  version        = "0.1"
-  # Optional settings
-  # description    = "City entity"
-  # is_closed      = false
-  # example_utterances = ["london","paris","new york"]
-}
-
-# Create a LUIS utterance example
-resource "azurerm_luis_utterance_example" "main" {
-  app_id         = azurerm_luis_authoring_app.main.id
-  intent_name   = azurerm_luis_intent.main.name
-  text           = "Book a flight to london"
-  version        = "0.1"
-  # Optional settings
-  # entity_labels = [{
-  #   entity_name = "City"
-  #   start        = 18
-  #   end          = 24
-  # }]
-}
-
-  
+    

@@ -1,71 +1,34 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Cloud HSM instance
-resource "ibm_cloud_hsm_instance" "main" {
-  name = "my-hsm-instance"
-  # Select the hardware security module (HSM) model
-  model = "HSMv2-144"
-  # Select the data center location
-  datacenter = "dal10"
-  # Select the network to which the HSM will be connected
-  network = "my-network"
-  # Select the number of partitions
-  partition_count = 1
+# Crie um cluster HSM
+resource "aws_hsm_cluster" "main" {
+  hsm_type           = "hsm1-m4" # Substitua pelo tipo de HSM desejado
+  subnet_ids          = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"] # Substitua pelos IDs das sub-redes
+  security_group_ids = ["sg-xxxxxxxx"] # Substitua pelo ID do grupo de segurança
+  # ...
 }
 
-# Configure the HSM network
-resource "ibm_cloud_hsm_network" "main" {
-  name = "my-network"
-  # Select the VPC
-  vpc = "my-vpc"
-  # Select the subnet
-  subnet = "my-subnet"
+# Crie um HSM
+resource "aws_hsm_v2_cluster" "main" {
+  hsm_type           = "hsm1-m4" # Substitua pelo tipo de HSM desejado
+  subnet_ids          = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"] # Substitua pelos IDs das sub-redes
+  security_group_ids = ["sg-xxxxxxxx"] # Substitua pelo ID do grupo de segurança
+  # ...
 }
 
-# Create a HSM client
-resource "ibm_cloud_hsm_client" "main" {
-  name = "my-hsm-client"
-  # Select the HSM instance
-  instance = ibm_cloud_hsm_instance.main.id
+# Crie um certificado HSM
+resource "aws_hsm_v2_certificate" "main" {
+  cluster_id = aws_hsm_v2_cluster.main.id
+  # ...
 }
 
-# Grant access to the HSM client
-resource "ibm_cloud_hsm_client_access" "main" {
-  client = ibm_cloud_hsm_client.main.id
-  instance = ibm_cloud_hsm_instance.main.id
-  # Grant access to the default partition
-  partition = 0
+# Crie uma chave HSM
+resource "aws_hsm_v2_key" "main" {
+  cluster_id = aws_hsm_v2_cluster.main.id
+  # ...
 }
-
-# Create a HSM partition
-resource "ibm_cloud_hsm_partition" "main" {
-  instance = ibm_cloud_hsm_instance.main.id
-  # Set the partition ID
-  partition = 0
-  # Set the partition label
-  label = "my-partition"
-  # Set the partition state
-  state = "active"
-}
-
-# Create a HSM partition role
-resource "ibm_cloud_hsm_partition_role" "main" {
-  instance = ibm_cloud_hsm_instance.main.id
-  partition = 0
-  # Set the role name
-  name = "my-partition-role"
-}
-
-# Grant access to the HSM partition role
-resource "ibm_cloud_hsm_partition_role_access" "main" {
-  client = ibm_cloud_hsm_client.main.id
-  instance = ibm_cloud_hsm_instance.main.id
-  partition = 0
-  role = ibm_cloud_hsm_partition_role.main.name
-}
-
-  
+    

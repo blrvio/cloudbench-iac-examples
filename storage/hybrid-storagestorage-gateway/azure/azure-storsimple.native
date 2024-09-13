@@ -1,0 +1,10 @@
+
+      // Create a StorSimple Device Manager
+# az storsimple create -g my-resource-group -n storsimple-device-manager --location westus
+
+// Create a StorSimple Device
+# az storsimple device create -g my-resource-group -n my-storsimple-device -d storsimple-device-manager -l westus
+
+// Create a StorSimple Volume
+# az storsimple volume create -g my-resource-group -n my-storsimple-volume -d my-storsimple-device -l westus --capacity-in-gibibytes 1024
+    

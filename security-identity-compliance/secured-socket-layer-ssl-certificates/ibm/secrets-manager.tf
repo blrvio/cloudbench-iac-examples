@@ -1,23 +1,24 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  api_key = "your_api_key"
+      # Configure o provedor do AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Secret
-resource "ibm_secrets_manager_secret" "main" {
-  name   = "my-secret"
-  secret = "my-secret-value"
-
-  # Optional: Set tags for the secret
-  tags = {
-    environment = "dev"
-  }
+# Crie um segredo no Secrets Manager
+resource "aws_secretsmanager_secret" "example" {
+  name = "example"
+  description  = "Exemplo de segredo"
 }
 
-# Get a secret value
+# Adicione um valor ao segredo
+resource "aws_secretsmanager_secret_version" "version" {
+  secret_id  = aws_secretsmanager_secret.example.id
+  secret_string = "senha_secreta"
+  version_stages = ["AWSCURRENT"]
+}
+
+# Acesse o valor do segredo
 output "secret_value" {
-  value = ibm_secrets_manager_secret.main.secret
+  value = aws_secretsmanager_secret_version.version.secret_string
 }
-  
+    

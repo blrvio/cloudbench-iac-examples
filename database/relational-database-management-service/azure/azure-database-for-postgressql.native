@@ -1,0 +1,7 @@
+
+      # Crie um servidor Azure PostgreSQL
+azurerm postgresql-server create -g myresourcegroup -n mypostgresqldb -l eastus -a myadmin -p mypassword -s GP_Gen5_2 -v 13 -m 1024 --backup-retention 7
+
+# Crie um banco de dados no servidor PostgreSQL
+azurerm postgresql-database create -g myresourcegroup -s mypostgresqldb -n mydb
+    

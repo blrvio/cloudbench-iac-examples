@@ -1,32 +1,31 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "gcp-project-id"
 }
 
-# Create a Cloud AutoML Model
-resource "google_automl_model" "my_model" {
-  display_name    = "my-automl-model"
-  dataset_id      = "your-dataset-id"
-  prediction_type = "image_classification"
-  # Optional configuration
-  # deployment_state = "DEPLOYED"
-  # model_type = "CLOUD"
-}
-
-# Create a Cloud AutoML Dataset
+# Crie um conjunto de dados do AutoML
 resource "google_automl_dataset" "my_dataset" {
-  display_name = "my-automl-dataset"
-  dataset_type = "IMAGE_OBJECT_DETECTION"
+  display_name = "My Dataset"
+  dataset_metadata {
+    image_classification_dataset_metadata {
+      # Especifique as configurações do conjunto de dados
+    }
+  }
 }
 
-# Create a Cloud AutoML Dataset Item
-resource "google_automl_dataset_item" "my_dataset_item" {
-  dataset_id = google_automl_dataset.my_dataset.id
-  # Set appropriate values for the dataset type
-  # Example for image classification:
-  # image_classification { content = "your-image-data" }
+# Crie um modelo AutoML
+resource "google_automl_model" "my_model" {
+  dataset_id  = google_automl_dataset.my_dataset.dataset_id
+  display_name = "My Model"
+  model_type  = "IMAGE_CLASSIFICATION"
+  # Especifique as configurações do modelo
 }
 
-  
+# Crie um ponto final do AutoML
+resource "google_automl_endpoint" "my_endpoint" {
+  display_name = "My Endpoint"
+  model_id     = google_automl_model.my_model.model_id
+  # Especifique as configurações do ponto final
+}
+    

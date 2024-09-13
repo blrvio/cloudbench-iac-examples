@@ -1,38 +1,52 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "your-project-id"
 }
 
-# Create a Cloud Endpoint service
+# Crie um serviço Cloud Endpoints
 resource "google_endpoints_service" "default" {
-  name  = "my-cloud-endpoints-service"
-  config {
-    api_version = "v1"
-    title       = "My Cloud Endpoints API"
-  }
-  disable_authentication = false
-  disable_authorization = false
-}
-
-# Create a Cloud Endpoint service configuration
-resource "google_endpoints_service_config" "default" {
-  service_name = google_endpoints_service.default.name
+  name = "my-service"
   config {
     http {
-      rules {
-        selector      = "GET:/echo"
-        allowed_methods = ["GET"]
+      path {
+        pattern = "/api/v1/*"
       }
     }
   }
 }
 
-# Deploy the Cloud Endpoint service configuration
-resource "google_endpoints_service_deployment" "default" {
-  service_name = google_endpoints_service.default.name
-  config_id    = google_endpoints_service_config.default.config_id
+# Crie uma configuração de roteamento para o serviço
+resource "google_endpoints_service_routing_rule" "default" {
+  service = google_endpoints_service.default.name
+  address = "my-service-address"
 }
 
-  
+# Crie uma configuração de validação de API
+resource "google_endpoints_service_validation_rule" "default" {
+  service = google_endpoints_service.default.name
+  path = "/api/v1/users"
+  methods = ["GET"]
+  headers = ["Authorization"]
+  query_parameters = ["name"]
+  body_parameters = ["id"]
+}
+
+# Crie um serviço Cloud Endpoints para uma API existente
+resource "google_endpoints_service" "existing_api" {
+  name = "my-existing-api"
+  config {
+    grpc {
+      path {
+        pattern = "/api/v1/*"
+      }
+    }
+  }
+  existing_api {
+    grpc {
+      api_version = "v1"
+      api_name = "my-existing-api"
+    }
+  }
+}
+    

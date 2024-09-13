@@ -1,0 +1,10 @@
+
+      // Crie um banco de dados NoSQL
+oci nosql table create --compartment-id ocid1.compartment.oc1..aaaaaaaaz554q6q --table-name example-table --table-type KEY_VALUE --initial-capacity 1 --storage-size-in-gb 10
+
+// Crie um índice no banco de dados NoSQL
+oci nosql index create --compartment-id ocid1.compartment.oc1..aaaaaaaaz554q6q --table-name example-table --index-name example-index --index-type HASH --key-path "["key"]"
+
+// Crie um endpoint de acesso ao banco de dados NoSQL
+oci nosql endpoint create --compartment-id ocid1.compartment.oc1..aaaaaaaaz554q6q --table-name example-table --endpoint-type READ_WRITE --is-public false
+    

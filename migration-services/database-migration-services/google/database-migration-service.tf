@@ -1,66 +1,52 @@
 
-    # Configure the Google Cloud Provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1" # Change to your preferred region
+      # Configure the AWS provider
+provider "aws" {
+  region = "us-east-1" # Replace with your desired region
 }
 
-# Create a Cloud SQL instance
-resource "google_sql_database_instance" "main" {
-  name           = "my-cloud-sql-instance"
-  region         = "us-central1" # Change to your preferred region
-  database_version = "MYSQL_8_0"
-  settings {
-    tier             = "db-f1-micro"
-    availability_type = "REGIONAL"
-  }
-  deletion_protection = false
+# Create a DMS replication instance
+resource "aws_dms_replication_instance" "default" {
+  replication_instance_class = "dms.t2.small"
+  replication_instance_identifier = "dms-replication-instance"
+  engine_version = "1.2.0"
+
+  # Additional configuration options...
 }
 
-# Create a Database Migration Service (DMS) instance
-resource "google_dms_instance" "main" {
-  name      = "my-dms-instance"
-  location = "us-central1"
-  labels = {
-    "env" = "dev"
-  }
-  #  Optional settings for the DMS instance.
-  # network = "projects/project-id/global/networks/default"
-  # subnet   = "projects/project-id/regions/us-central1/subnetworks/default"
-  # optional settings for the DMS instance.
-  # machine_type = "dms-n1-standard-2"
-  #  optional settings for the DMS instance.
-  #  kms_key_name = "projects/project-id/locations/us-central1/keyRings/default/cryptoKeys/key-1"
+# Create a DMS replication task
+resource "aws_dms_replication_task" "default" {
+  replication_task_identifier = "dms-replication-task"
+  replication_instance_arn = aws_dms_replication_instance.default.replication_instance_arn
+  source_endpoint_arn = aws_dms_endpoint.source.endpoint_arn
+  target_endpoint_arn = aws_dms_endpoint.target.endpoint_arn
+
+  # Additional configuration options...
 }
 
-# Create a Database Migration Service (DMS) migration job
-resource "google_dms_migration_job" "main" {
-  name     = "my-migration-job"
-  instance = google_dms_instance.main.name
-  source_database {
-    # Specify database type and connection details. Example for MySQL
-    # database_type = "MYSQL"
-    # hostname = "my-mysql-server.com"
-    # port = 3306
-    # username = "username"
-    # password = "password"
-  }
-  target_database {
-    # Specify database type and connection details. Example for Cloud SQL
-    # database_type = "CLOUD_SQL"
-    # connection_name = "projects/project-id/instances/my-cloud-sql-instance"
-  }
-  migration_type    = "FULL_LOAD"
-  #  Optional settings for the migration job
-  #  schedule_config {
-  #    enabled = true
-  #  }
+# Create a DMS endpoint for the source database
+resource "aws_dms_endpoint" "source" {
+  endpoint_id = "dms-source-endpoint"
+  endpoint_type = "source"
+  engine_name = "mysql"
+  username = "username"
+  password = "password"
+  hostname = "hostname"
+  port = 3306
+
+  # Additional configuration options...
 }
 
-# Create a Cloud SQL database for the migrated data
-resource "google_sql_database" "main" {
-  name    = "my-migrated-database"
-  instance = google_sql_database_instance.main.name
+# Create a DMS endpoint for the target database
+resource "aws_dms_endpoint" "target" {
+  endpoint_id = "dms-target-endpoint"
+  endpoint_type = "target"
+  engine_name = "postgres"
+  username = "username"
+  password = "password"
+  hostname = "hostname"
+  port = 5432
+
+  # Additional configuration options...
 }
 
-  
+    

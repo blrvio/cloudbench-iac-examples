@@ -1,46 +1,49 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor Oracle Cloud Infrastructure
 provider "oci" {
+  # Substitua pelas suas credenciais
   region     = "us-ashburn-1"
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaax77y757757"
-  user_ocid  = "ocid1.user.oc1..aaaaaaaaw77y757757"
-  fingerprint = "53:99:76:9C:A6:B9:71:29:42:C0:53:1D:48:B2:41:FB"
+  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaw766w5678"
+  user_ocid  = "ocid1.user.oc1..aaaaaaaay766w5678"
+  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
-# Create a Traffic Management Policy
-resource "oci_traffic_management_policy" "main" {
-  compartment_id   = "ocid1.compartment.oc1..aaaaaaaay77y757757"
-  display_name    = "My Traffic Management Policy"
-  description     = "A policy for managing traffic"
-  traffic_rules = [
-    {
-      name  = "rule1"
-      match = {
-        # Define the matching criteria for the traffic rule
-        source_address_block = "0.0.0.0/0"
-      }
-      action = {
-        # Define the action to take on the traffic
-        forward_to = ["ocid1.loadbalancer.oc1..aaaaaaaaz77y757757"]
-      }
-    }
-  ]
+# Crie um balanceador de carga
+resource "oci_load_balancer" "example" {
+  # Substitua pelos seus valores
+  name             = "my-load-balancer"
+  shape             = "SILVER"
+  subnet_ids        = ["ocid1.subnet.oc1..aaaaaaaax766w5678"]
+  availability_domain = "us-ashburn-1a"
 }
 
-# Create a Traffic Management Association
-resource "oci_traffic_management_association" "main" {
-  compartment_id     = "ocid1.compartment.oc1..aaaaaaaay77y757757"
-  traffic_management_policy_id = oci_traffic_management_policy.main.id
-  target_type    = "INSTANCE"
-  target_id      = "ocid1.instance.oc1..aaaaaaaab77y757757"
+# Crie um backend set
+resource "oci_load_balancer_backend_set" "example" {
+  # Substitua pelos seus valores
+  load_balancer_id = oci_load_balancer.example.id
+  name             = "my-backend-set"
+  backend_servers { # Defina os seus servidores backend
+    name   = "example"
+    ip     = "10.0.0.1"
+    port   = "80"
+    weight = 10
+  }
 }
 
-# Create a Traffic Management Association using a Load Balancer as target
-resource "oci_traffic_management_association" "lb_target" {
-  compartment_id     = "ocid1.compartment.oc1..aaaaaaaay77y757757"
-  traffic_management_policy_id = oci_traffic_management_policy.main.id
-  target_type    = "LOAD_BALANCER"
-  target_id      = "ocid1.loadbalancer.oc1..aaaaaaaaz77y757757"
+# Crie uma regra de balanceamento de carga
+resource "oci_load_balancer_rule" "example" {
+  # Substitua pelos seus valores
+  load_balancer_id = oci_load_balancer.example.id
+  name             = "my-load-balancer-rule"
+  backend_set_id   = oci_load_balancer_backend_set.example.id
+  # Defina a regra de balanceamento (por exemplo, round robin, least connections)
+  policy           = "ROUND_ROBIN"
+  # Defina o host e o caminho a serem balanceados
+  match_conditions { # Defina as condições de correspondência
+    host       = "www.example.com"
+    path       = "/"
+    method     = "GET"
+  }
 }
 
-  
+    

@@ -1,0 +1,13 @@
+
+      # Crie um trail
+aws cloudtrail create-trail --name my-trail --s3-bucket-name my-bucket --s3-key-prefix cloudtrail-logs --is-multi-region-trail --enable-log-file-validation
+
+# Adicione eventos para serem logados
+aws cloudtrail put-event-selectors --name my-trail --event-selectors '[{"ReadWriteType":["All"]}]'
+
+# Configure a notificação SNS
+aws sns create-topic --name cloudtrail-notifications
+
+# Configure a notificação de evento
+aws cloudtrail put-event-selectors --name my-trail --event-selectors '[{"ReadWriteType":["All"], "DataResources":["aws.ec2"], "IncludeManagementEvents":true}, {"AdvancedEventSelectors":[{"Name":"notifications","Field":"eventSource","Values":["aws.ec2"]}]}]'
+    

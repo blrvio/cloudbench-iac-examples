@@ -1,0 +1,4 @@
+
+      // Create a cluster using the gcloud command-line tool
+gcloud container clusters create my-anthos-cluster --project=gcp-project-id --zone=us-central1-a
+    

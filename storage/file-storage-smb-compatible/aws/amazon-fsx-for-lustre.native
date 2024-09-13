@@ -1,0 +1,7 @@
+
+      // Crie um sistema de arquivos FSx para Lustre
+aws fsx create-file-system --file-system-type PERSISTENT_1 --storage-capacity 1200 --subnet-ids subnet-xxxxxxxx --security-groups sg-xxxxxxxx --tags Name=fsx-lustre-main
+
+// Crie um ponto de montagem para o sistema de arquivos FSx para Lustre
+aws fsx create-mount-target --file-system-id fsx-xxxxxxxx --subnet-id subnet-xxxxxxxx --security-groups sg-xxxxxxxx
+    

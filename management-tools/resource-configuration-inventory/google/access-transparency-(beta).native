@@ -1,0 +1,10 @@
+
+      # Crie um registro de acesso
+aws access-transparency create-access-log --target-id target-id --name example --vpc-id vpc-xxxxxxxx
+
+# Crie um gravador de acesso
+aws access-transparency create-access-log-recorder --name example --vpc-id vpc-xxxxxxxx --logging-status ENABLED
+
+# Crie um gravador de acesso que exporta logs para um bucket do S3
+aws access-transparency create-access-log-recorder --name example --vpc-id vpc-xxxxxxxx --logging-status ENABLED --s3-export s3-bucket=example s3-prefix=access-logs
+    

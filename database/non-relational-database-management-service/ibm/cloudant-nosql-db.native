@@ -1,0 +1,7 @@
+
+      # Crie um banco de dados Cloudant
+ibmcloud db create my_database
+
+# Crie um usuário Cloudant
+ibmcloud db user-create my_user my_password
+    

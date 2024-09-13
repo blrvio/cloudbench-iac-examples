@@ -1,0 +1,47 @@
+
+      // Install the IBM Cloud Unity SDK package from the Unity Asset Store.
+// Initialize the IBM Cloud service and configure your Watson services.
+// Create a Watson Assistant service instance in the IBM Cloud.
+// Retrieve the API key and endpoint from the Watson Assistant service.
+// Configure the Unity SDK with the API key and endpoint.
+// Instantiate a Watson Assistant service object.
+// Send a request to Watson Assistant with the user input.
+// Handle the response from Watson Assistant.
+// Display the response to the user.
+// Example code:
+using IBM.Cloud.SDK.Core.Service; // Include the IBM Cloud SDK.
+using IBM.Watson.Assistant.V1; // Include the Watson Assistant SDK.
+
+public class WatsonAssistantExample : MonoBehaviour
+{
+  // Define Watson Assistant credentials.
+  private const string apiKey = "your_api_key";
+  private const string endpoint = "your_endpoint";
+
+  // Create a Watson Assistant service object.
+  private AssistantService assistantService;
+
+  void Start()
+  {
+    // Initialize the IBM Cloud service.
+    var credentials = new Credentials(apiKey, endpoint);
+    // Initialize the Watson Assistant service.
+    assistantService = new AssistantService(credentials);
+  }
+
+  // Send a request to Watson Assistant with the user input.
+  public void SendMessage(string message)
+  {
+    // Create a request to Watson Assistant.
+    var request = new MessageRequest { text = message };
+
+    // Send the request to Watson Assistant.
+    assistantService.Message(request).OnResponse(response =>
+    {
+      // Handle the response from Watson Assistant.
+      // Display the response to the user.
+      Debug.Log(response.Result.Output.Text[0]);
+    });
+  }
+}
+    

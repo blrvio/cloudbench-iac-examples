@@ -1,0 +1,4 @@
+
+      // Crie uma instância do Autonomous Data Warehouse
+aws rds create-db-instance --db-instance-identifier adw --engine oracle-se2 --engine-version 19.0.0.0.0 --allocated-storage 100 --db-subnet-group-name adw-subnet --db-name adw_db --username admin --password password --storage-type standard --deletion-protection false --skip-final-snapshot true --tags Name=adw_instance
+    

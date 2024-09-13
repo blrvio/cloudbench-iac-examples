@@ -1,49 +1,23 @@
 
-    # Configure the Alibaba Cloud Provider
-provider "alicloud" {
-  region = "cn-hangzhou"  # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Machine Learning Platform for AI Instance
-resource "alicloud_paiflow_instance" "main" {
-  name          = "my-paiflow-instance"  # The name of your PAIFlow instance
-  instance_type = "PAIFlow.Basic.1C2G"   # The type of PAIFlow instance
-  # Specify the security group used for the instance
-  security_group_ids = [aws_security_group.paiflow_sg.id]
-  # Specify the vswitch used for the instance
-  vswitch_id = aws_vswitch.paiflow_vswitch.id
-}
-
-# Create a Security Group for the PAIFlow instance
-resource "alicloud_security_group" "paiflow_sg" {
-  name = "paiflow-sg"
-  # Allow ingress traffic for PAIFlow management
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+# Crie um endpoint de inferência
+resource "aws_sagemaker_endpoint_config" "my_endpoint_config" {
+  name         = "my-endpoint-config"
+  endpoint_config_name = "my-endpoint-config"
+  production_variants {
+    initial_instance_count = 1
+    instance_type         = "ml.t2.medium"
+    model_name             = "my-model"
+    variant_name           = "AllTraffic"
   }
 }
 
-# Create a VSwitch for the PAIFlow instance
-resource "alicloud_vswitch" "paiflow_vswitch" {
-  name       = "paiflow-vswitch"
-  cidr_block = "172.16.0.0/16"  # Replace with your desired CIDR block
-  # Specify the virtual private cloud (VPC) to which the VSwitch belongs
-  vpc_id = aws_vpc.paiflow_vpc.id
+resource "aws_sagemaker_endpoint" "my_endpoint" {
+  name         = "my-endpoint"
+  endpoint_config_name = aws_sagemaker_endpoint_config.my_endpoint_config.endpoint_config_name
 }
-
-# Create a VPC for the PAIFlow instance
-resource "alicloud_vpc" "paiflow_vpc" {
-  name       = "paiflow-vpc"
-  cidr_block = "172.16.0.0/16"  # Replace with your desired CIDR block
-}
-
-  
+    

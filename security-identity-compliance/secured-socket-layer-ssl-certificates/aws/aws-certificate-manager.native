@@ -1,0 +1,13 @@
+
+      // Crie um certificado ACM
+aws acm request-certificate --domain-name example.com --validation-method DNS --subject-alternative-names www.example.com
+
+// Obtenha a ARN do certificado
+certificate_arn=$(aws acm list-certificates --certificate-arn-prefix arn:aws:acm:us-east-1:123456789012:certificate/123456789012 --query 'Certificates[0].CertificateArn' --output text)
+
+// Valide o certificado usando DNS
+# aws acm validate-certificate --certificate-arn $certificate_arn
+
+// Use o certificado ACM em outros serviços do AWS
+# Ex: AWS CloudFront, AWS Application Load Balancer
+    

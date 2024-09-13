@@ -1,0 +1,12 @@
+
+      // Criar uma voz
+gcloud text-to-speech voices create my-voice --language-code en-US --name my-voice --ssml-gender MALE
+
+// Criar um arquivo de texto para sintetizar
+gcloud storage buckets create my-bucket --location US
+
+gcloud storage buckets cp your-text-file.txt gs://my-bucket/my-text.txt
+
+// Sintetizar o texto
+gcloud text-to-speech synthesize --text "gs://my-bucket/my-text.txt" --voice my-voice --audio-config audio_encoding=LINEAR16 --output-config gcs_uri="gs://my-bucket/my-speech.mp3"
+    

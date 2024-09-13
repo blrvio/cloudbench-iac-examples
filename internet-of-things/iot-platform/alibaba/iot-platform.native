@@ -1,0 +1,19 @@
+
+      // Crie um endpoint do AWS IoT
+aws iot create-endpoint --endpoint-type iot:Data-ATS
+
+// Crie uma política para o AWS IoT
+aws iot create-policy --policy-name example --policy-document '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["iot:Publish", "iot:Subscribe"], "Resource": "*"}]}'
+
+// Crie um certificado do AWS IoT
+aws iot create-certificate
+
+// Crie uma coisa do AWS IoT
+aws iot create-thing --thing-name example
+
+// Crie um registro de coisa do AWS IoT
+aws iot register-thing --certificate-pem 'certificate_pem' --thing-name 'thing_name'
+
+// Crie uma regra do AWS IoT
+aws iot create-rule --rule-name example --rule-disabled false --sql 'SELECT * FROM 'topic/'' --aws-iot-sql true --actions '{"cloudwatch_metric_action":{"metric_name":"example","metric_namespace":"example","metric_value":"1","role_arn":"arn:aws:iam::xxxxxxxxxxxx:role/example"}}'
+    

@@ -1,0 +1,10 @@
+
+      // Crie um stream de vídeo Kinesis
+aws kinesisvideo create-stream --stream-name my-video-stream --data-retention-in-hours 12
+
+// Crie um endpoint de gravação para o stream de vídeo
+aws kinesisvideo create-recording --stream-name my-video-stream --recording-name my-recording
+
+// Crie uma chave de acesso para o stream de vídeo
+aws kinesisvideo create-access-key --stream-name my-video-stream --access-key-name my-access-key --single-master-access
+    

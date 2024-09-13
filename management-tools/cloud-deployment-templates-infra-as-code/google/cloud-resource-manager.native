@@ -1,0 +1,16 @@
+
+      // Crie uma nova organização
+gcloud organizations create --display-name "My Organization" --parent organizations/0 --billing-account billing-account-id
+
+// Crie um novo projeto
+gcloud projects create my-project --organization=organization-id --project-id my-project-id
+
+// Adicione uma IAM policy para o projeto
+gcloud projects add-iam-policy-binding my-project-id --member user:user@example.com --role roles/owner
+
+// Crie uma nova pasta
+gcloud resource-manager folders create --display-name "My Folder" --parent organizations/0 --organization organization-id
+
+// Mova o projeto para a pasta
+gcloud resource-manager projects move my-project-id --destination=folders/folder-id
+    

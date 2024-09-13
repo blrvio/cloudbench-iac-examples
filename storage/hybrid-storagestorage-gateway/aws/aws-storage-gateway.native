@@ -1,0 +1,10 @@
+
+      // Crie um gateway de armazenamento
+aws storagegateway create-gateway --gateway-name my-gateway --gateway-type FILE_GATEWAY --gateway-timezone "America/Los_Angeles" --gateway-location us-east-1
+
+// Crie um volume de gateway
+aws storagegateway create-volume --gateway-arn arn:aws:storagegateway:us-east-1:123456789012:gateway/sgw-xxxxxxxx --volume-type STORED --volume-size-in-bytes 1073741824
+
+// Crie uma associação de endpoint
+aws storagegateway create-endpoint --gateway-arn arn:aws:storagegateway:us-east-1:123456789012:gateway/sgw-xxxxxxxx --endpoint-type FILE_SHARE --target-path /mnt/volume1
+    

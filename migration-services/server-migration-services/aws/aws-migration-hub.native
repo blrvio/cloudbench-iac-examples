@@ -1,0 +1,10 @@
+
+      // Crie um novo Migration Hub Home Region
+aws migrationhub configure-home-region --home-region us-east-1
+
+// Crie um novo Migration Task
+aws migrationhub create-migration-task --migration-task-name example --progress-update-stream us-east-1
+
+// Crie um novo Migration Task
+aws migrationhub put-notification-configuration --notification-event-types DISCOVERY_COMPLETED REFACTOR_SPANS_COMPLETED STOP_ASSESSMENT_COMPLETE
+    

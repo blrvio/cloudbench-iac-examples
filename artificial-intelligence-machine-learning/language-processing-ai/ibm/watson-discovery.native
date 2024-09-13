@@ -1,0 +1,24 @@
+
+      ## Configure IBM Cloud CLI
+# Install IBM Cloud CLI: https://cloud.ibm.com/docs/cli/install
+# Authenticate with IBM Cloud: ibmcloud login
+
+## Create Watson Discovery Environment
+# Replace values below with your desired configuration
+ibmcloud discovery create-environment -n my-discovery-environment -p lite
+
+## Create a Configuration
+# Replace values below with your desired configuration
+# Make sure to upload the data file to the specified Object Storage bucket first
+ibmcloud discovery create-configuration -n my-configuration -e my-discovery-environment -s "{'type': 'file', 'file': {'bucket': 'my-bucket', 'key': 'my-data.csv'}}"
+
+## Create a Collection
+# Replace values below with your desired configuration
+# See documentation for available enrichments: https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-enrichments
+ibmcloud discovery create-collection -n my-collection -e my-discovery-environment -c my-configuration -r "{'enrichments': {'natural_language_understanding': {'enabled': true, 'features': {'entities': {'enabled': true, 'sentiment': {'enabled': true}}}}}}"
+
+## Execute a Query
+# Replace values below with your desired configuration
+ibmcloud discovery query -e my-discovery-environment -c my-collection -q "query text"
+
+    

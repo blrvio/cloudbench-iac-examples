@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Data Lake Analytics
+az adl create -n example-datalakeanalytics -g example-resources -l westus2 -d example-data-lake-store
+
+// Crie uma conta de armazenamento para o Data Lake Store
+az storage account create -n example-datalakestorage -g example-resources -l westus2 -s Standard -r LRS
+    

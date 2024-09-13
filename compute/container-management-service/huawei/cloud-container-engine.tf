@@ -1,38 +1,26 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "gcp-project-id"
 }
 
-# Create a CCE cluster
-resource "huaweicloud_cce_cluster" "main" {
-  name        = "my-cce-cluster"
-  version     = "v1.18.15"
-  node_pool {
-    name       = "default-node-pool"
-    node_count = 2
-    node_type   = "cce.s2.small"
-    # Add more node pools as needed
+# Crie um cluster Kubernetes
+resource "google_container_cluster" "main" {
+  name     = "my-cluster"
+  location = "us-central1"
+
+  initial_node_count = 3
+  node_config {
+    machine_type = "n1-standard-1"
   }
-  # Define the network configuration for the cluster
-  network_config {
-    vpc_id    = "your-vpc-id"
-    subnet_id = "your-subnet-id"
-  }
+
+  # Opções adicionais de configuração podem ser adicionadas aqui
 }
 
-# Create a namespace
-resource "huaweicloud_cce_namespace" "main" {
-  name     = "my-namespace"
-  cluster_id = huaweicloud_cce_cluster.main.id
+# Importe o namespace padrão
+resource "google_container_namespace" "default" {
+  cluster = google_container_cluster.main.name
+  location = google_container_cluster.main.location
+  name     = "default"
 }
-
-# Deploy a container application
-resource "huaweicloud_cce_deployment" "main" {
-  name       = "my-deployment"
-  namespace = huaweicloud_cce_namespace.main.name
-  image      = "nginx:latest"
-  replicas = 2
-}
-
-  
+    

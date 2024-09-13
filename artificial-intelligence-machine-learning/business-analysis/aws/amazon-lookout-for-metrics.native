@@ -1,0 +1,7 @@
+
+      // Crie um AnomaliaDetector
+aws lookoutmetrics create-anomaly-detector --anomaly-detector-name MyAnomalyDetector --anomaly-detector-config '{\"MetricSetConfig\":{\"MetricSetName\":\"MyMetricSet\",\"MetricList\":[{\"MetricName\":\"CPUUtilization\",\"Namespace\":\"AWS/EC2\",\"Statistic\":\"Average\",\"Dimensions\":[{\"Name\":\"InstanceId\",\"Value\":\"i-xxxxxxxx\"}]}]},\"KmsKeyArn\":\"arn:aws:kms:us-east-1:123456789012:key/xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"Tags\":{\"Name\":\"My Anomaly Detector\"}},' --cli-input-json
+
+// Crie um Alerta
+aws lookoutmetrics create-alert --anomaly-detector-arn arn:aws:lookoutmetrics:us-east-1:123456789012:anomalydetector:MyAnomalyDetector --alert-name MyAlert --alert-description "Alerta para anomalias no CPUUtilization" --alert-action '{\"ActionType\":\"sns\",\"SnsConfig\":{\"SnsTopicArn\":\"arn:aws:sns:us-east-1:123456789012:my-topic\"}},' --alert-filter '{\"MetricSetName\":\"MyMetricSet\",\"AnomalySeverity\":\"MEDIUM\"}' --cli-input-json
+    

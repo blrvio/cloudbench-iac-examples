@@ -1,0 +1,10 @@
+
+      // Crie um conjunto de dados do AutoML
+gcloud automl datasets create my_dataset --display-name "My Dataset" --type image-classification
+
+// Treine um modelo AutoML
+gcloud automl models create my_model --dataset my_dataset --display-name "My Model" --type IMAGE_CLASSIFICATION
+
+// Crie um ponto final do AutoML
+gcloud automl endpoints create my_endpoint --model my_model --display-name "My Endpoint"
+    

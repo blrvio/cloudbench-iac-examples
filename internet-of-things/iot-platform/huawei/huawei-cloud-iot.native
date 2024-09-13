@@ -1,0 +1,10 @@
+
+      // Use a CLI para criar um dispositivo IoT
+hc iot device create --device-name my_device --product-id product_id --device-secret device_secret
+
+// Use a CLI para criar um produto IoT
+hc iot product create --product-name my_product --description "My product description"
+
+// Use a CLI para criar um serviço IoT
+hc iot service create --service-name my_service
+    

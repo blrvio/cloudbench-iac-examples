@@ -1,0 +1,13 @@
+
+      // Crie um catálogo de dados
+az data-catalog create --name example-data-catalog --location "West Europe" --resource-group example-resource-group
+
+// Crie um banco de dados no catálogo de dados
+az data-catalog database create --name example-database --location "West Europe" --resource-group example-resource-group --data-catalog-name example-data-catalog
+
+// Crie uma tabela no banco de dados
+az data-catalog table create --name example-table --location "West Europe" --resource-group example-resource-group --data-catalog-name example-data-catalog --database-name example-database
+
+// Crie uma coluna na tabela
+az data-catalog column create --name example-column --location "West Europe" --resource-group example-resource-group --data-catalog-name example-data-catalog --database-name example-database --table-name example-table
+    

@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+azurerm resource-group create -n example-rg -l westus2
+
+// Crie um servidor SQL
+azurerm sql-server create -n example-server -g example-rg -l westus2 -a "admin" -p "P@$$wOrd"
+
+// Crie um data warehouse
+azurerm sql-dw create -n example-dw -g example-rg -l westus2 -e Enterprise -s DW100c -server example-server
+    

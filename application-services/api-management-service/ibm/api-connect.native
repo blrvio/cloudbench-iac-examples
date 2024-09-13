@@ -1,0 +1,16 @@
+
+      # Crie um serviço API Connect
+bom api-connect create -n api_connect -p lite
+
+# Crie um catálogo de APIs
+bom api-connect catalog create -n api_catalog -s api_connect -w workspace
+
+# Importe uma definição de API
+bom api-connect api import -c api_catalog -f path/to/api_definition.yaml -n imported_api
+
+# Crie um plano de API
+bom api-connect plan create -c api_catalog -a imported_api -n api_plan -t open
+
+# Crie uma chave de API
+bom api-connect key create -c api_catalog -p api_plan
+    

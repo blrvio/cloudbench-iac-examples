@@ -1,0 +1,10 @@
+
+      # Create a resource group
+azurerm resource-group create -n my-resource-group -l westus2
+
+# Create an Azure DevOps project
+azurerm devops project create -n my-project -g my-resource-group -v private -t Git
+
+# Create a pipeline (replace with your YAML content)
+azurerm devops pipeline create -n my-pipeline -g my-resource-group -p my-project --yaml "trigger: none\npool: {\n  vmImage: 'ubuntu-latest'\n}\njobs: \n  - job: 'build'\n    steps: \n      - script: echo Hello World\n        displayName: 'Run a simple script'" --auto-cancel-running true
+    

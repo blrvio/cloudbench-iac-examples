@@ -1,0 +1,14 @@
+
+      # Crie um workspace de Machine Learning
+az ml workspace create -n my-ml-workspace -g my-resource-group -l westus2 -s my-storage-account -i my-app-insights -k my-keyvault
+
+# Crie um modelo de Machine Learning
+az ml model create -n my-model -w my-ml-workspace -d "My custom model"
+
+# Crie um pipeline de Machine Learning
+az ml pipeline create -n my-pipeline -w my-ml-workspace -d "My custom pipeline"
+
+# Crie uma versão de modelo
+az ml model-version create -n my-model-version -w my-ml-workspace -m my-model -d "My custom model version"
+
+    

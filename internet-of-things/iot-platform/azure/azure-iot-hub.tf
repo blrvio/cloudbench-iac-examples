@@ -1,37 +1,54 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilita recursos beta
 }
 
-# Create an Azure IoT Hub
-resource "azurerm_iot_hub" "main" {
-  name                = "my-iot-hub"
+# Crie um hub IoT
+resource "azurerm_iot_hub" "example" {
+  name                = "example-hub"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
+  resource_group_name = "example-resources"
   sku {
-    name     = "S1"
-    capacity = 1
+    name = "S1"
   }
-
-  # Optional settings
-  partition_count       = 2
-  public_network_access = "Enabled"
+  partition_count      = 2
+  tags = {
+    environment = "test"
+  }
 }
 
-# Create an IoT Hub Device
-resource "azurerm_iot_hub_device" "main" {
-  device_id        = "my-device"
-  iot_hub_name     = azurerm_iot_hub.main.name
-  connection_string = "HostName=my-iot-hub.azure-devices.net;DeviceId=my-device;SharedAccessKey=your-device-key"
-  # Optional settings
+# Crie uma conexão de dispositivo IoT
+resource "azurerm_iot_hub_device" "example" {
+  name                 = "device-example"
+  iot_hub_name        = azurerm_iot_hub.example.name
+  resource_group_name = azurerm_iot_hub.example.resource_group_name
   authentication {
     type = "sas"
   }
-  # Define tags for the device
-  tags = {
-    Environment = "Production"
-  }
 }
 
-  
+# Crie uma regra de direcionamento para um hub IoT
+resource "azurerm_iot_hub_route" "example" {
+  name                 = "route-example"
+  source               = "DeviceMessages"
+  condition            = "true"
+  endpoint_uri          = "sb://mynamespace.servicebus.windows.net/mytopic"
+  iot_hub_name        = azurerm_iot_hub.example.name
+  resource_group_name = azurerm_iot_hub.example.resource_group_name
+  enabled              = true
+}
+
+# Crie uma chave compartilhada para um hub IoT
+resource "azurerm_iot_hub_shared_access_policy" "example" {
+  name                 = "example-policy"
+  iot_hub_name        = azurerm_iot_hub.example.name
+  resource_group_name = azurerm_iot_hub.example.resource_group_name
+  permissions         = ["serviceConnect"]
+}
+
+# Obtenha a chave primária da chave compartilhada
+output "example_policy_primary_key" {
+  value = azurerm_iot_hub_shared_access_policy.example.primary_key
+}
+    

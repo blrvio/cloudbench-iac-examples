@@ -1,0 +1,18 @@
+
+      # Crie um banco de dados Firestore
+firebase firestore:databases:create default --project my-firebase-project
+
+# Crie um bucket do Cloud Storage
+gsutil mb gs://my-firebase-bucket
+
+# Crie uma função Cloud Functions
+firebase functions:config:set runtime=nodejs16
+firebase functions:config:set entryPoint=helloWorld
+firebase deploy --only functions
+
+# Crie um usuário do Firebase
+firebase auth:create:user --email user@example.com --password password
+
+# Crie um documento no Firestore
+firebase firestore:documents:create users/my-user --data '{\"name\":\"John Doe\",\"age\":30}'
+    

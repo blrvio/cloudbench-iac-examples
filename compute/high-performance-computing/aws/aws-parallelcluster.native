@@ -1,0 +1,8 @@
+
+      // Crie um cluster AWS ParallelCluster
+aws parallelcluster create-cluster --name my-parallelcluster --region us-east-1 --instance-type c5.xlarge --master-instance-type c5.2xlarge --scheduler slurm --version 3.0.0
+
+// Outros parâmetros do cluster
+//...
+
+    

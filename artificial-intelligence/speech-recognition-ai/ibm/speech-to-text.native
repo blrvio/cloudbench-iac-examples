@@ -1,0 +1,7 @@
+
+      // Crie um modelo de linguagem personalizado para transcrição de áudio
+gcloud speech create-custom-class --display-name "My Class" --description "Custom class for transcribing specific vocabulary" --custom-class-item "keyword1:Keyword 1" --custom-class-item "keyword2:Keyword 2" --location "us-central1"
+
+// Transcreva um arquivo de áudio usando o modelo de linguagem personalizado
+gcloud speech transcribe --model "custom-model" --content "gs://your-bucket/audio.wav" --config "gs://your-bucket/config.json" --location "us-central1"
+    

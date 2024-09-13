@@ -1,0 +1,4 @@
+
+      // Criar um sistema de arquivos FSx para NetApp ONTAP
+aws fsx create-volume --fsx-type ONTAP --availability-zone us-east-1a --backup-policy-id fsx-backup-policy-xxxxxxxx --kms-key-id arn:aws:kms:us-east-1:xxxxxxxxxxxxx:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --security-style strict --subnet-ids subnet-xxxxxxxx --throughput-capacity 128 --volume-type ONTAP_STANDARD
+    

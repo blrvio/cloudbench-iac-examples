@@ -1,0 +1,10 @@
+
+      // Example code to create a data stream
+# curl -X POST -H "Content-Type: application/json" -d '{"name":"my-data-stream","description":"My data stream","protocolType":"MQTT","dataFormat":"JSON"}' "https://{your-region}.api.iot.huaweicloud.com/v2/data-streams"
+
+// Example code to create a rule
+# curl -X POST -H "Content-Type: application/json" -d '{"name":"my-rule","description":"My rule","dataStream":"my-data-stream","condition":"{\"field\":\"temperature\",\"operator\":\"gt\",\"value\":25}","action":{"type":"notify","target":"{your-notify-url}"}}' "https://{your-region}.api.iot.huaweicloud.com/v2/rules" 
+
+// Example code to query data
+# curl -X GET "https://{your-region}.api.iot.huaweicloud.com/v2/data-streams/my-data-stream/data?startTime=2023-01-01T00:00:00Z&endTime=2023-01-02T00:00:00Z"  
+    

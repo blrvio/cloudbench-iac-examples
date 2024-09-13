@@ -1,0 +1,16 @@
+
+      // Crie uma instância do serviço DMS
+aws dms create-replication-instance --replication-instance-identifier dms-example --replication-instance-class dms.t2.micro --engine-version 3.4.7 --replication-subnet-group-id dms-example-subnet-group --vpc-security-group-ids sg-xxxxxxxx --availability-zone us-east-1a --apply-immediately
+
+// Crie um grupo de sub-redes para o serviço DMS
+aws dms create-replication-subnet-group --replication-subnet-group-identifier dms-example-subnet-group --replication-subnet-group-description "Example DMS subnet group" --subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx
+
+// Crie uma tarefa de migração
+aws dms create-replication-task --replication-task-identifier dms-example-task --replication-instance-arn arn:aws:dms:us-east-1:xxxxxxxx:replication-instance:dms-example --migration-type full --source-endpoint-arn arn:aws:dms:us-east-1:xxxxxxxx:endpoint:dms-example-source --target-endpoint-arn arn:aws:dms:us-east-1:xxxxxxxx:endpoint:dms-example-target --table-mappings '{ "rules": [ { "rule-type": "selection", "rule-name": "all", "rule-id": "1", "rule-action": "include", "selection-type": "full-table", "logical-operator": "AND", "rule-filters": [ { "filter-type": "source-table-name", "filter-value": "table_name" } ] } ] }'
+
+// Crie um endpoint de origem
+aws dms create-endpoint --endpoint-identifier dms-example-source --endpoint-type source --engine-name mysql --username username --password password --hostname hostname --port 3306
+
+// Crie um endpoint de destino
+aws dms create-endpoint --endpoint-identifier dms-example-target --endpoint-type target --engine-name postgresql --username username --password password --hostname hostname --port 5432
+    

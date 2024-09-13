@@ -1,0 +1,7 @@
+
+      // Crie uma zona DNS
+gcloud dns managed-zones create my-zone.example.com --dns-name my-zone.example.com. --project your-project-id
+
+// Crie um registro DNS
+gcloud dns record-sets create example.com. --type A --ttl 300 --rrdatas 1.2.3.4 --zone my-zone.example.com --project your-project-id
+    

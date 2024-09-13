@@ -1,33 +1,52 @@
 
-    # Configure the Azure provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {}  # Enable all features
+  features {} # habilitar features
 }
 
-# Create a Blockchain Token network
-resource "azurerm_blockchain_token_network" "example" {
-  location                   = "westus2"
-  name                      = "my-blockchain-token-network"
-  resource_group_name     = "my-resource-group"
-  token_network_version  = "v1"
-  token_network_protocol = "ethereum"
+# Criar um novo recurso de blockchain
+resource "azurerm_blockchain_member" "blockchain" {
+  name                    = "my-blockchain"
+  location                = "westus2"
+  resource_group_name      = "my-resource-group"
+  sku                     = "Basic"
+  blockchain_members_count = "2"
+  consensus_mechanism    = "Raft"
 }
 
-# Create a Blockchain Token network service
-resource "azurerm_blockchain_token_service" "example" {
-  location                      = "westus2"
-  name                         = "my-blockchain-token-service"
-  resource_group_name        = "my-resource-group"
-  token_network_network_name = azurerm_blockchain_token_network.example.name
-  token_network_service_type = "default"
+# Criar um novo token
+resource "azurerm_blockchain_token" "token" {
+  name                    = "my-token"
+  blockchain_member_id   = azurerm_blockchain_member.blockchain.id
+  description             = "My custom token"
+  token_type              = "Fungible"
 }
 
-# Create a Blockchain Token network network
-resource "azurerm_blockchain_token_network_network" "example" {
-  location                      = "westus2"
-  name                         = "my-blockchain-token-network-network"
-  resource_group_name        = "my-resource-group"
-  token_network_service_name = azurerm_blockchain_token_service.example.name
+# Criar um novo contrato inteligente
+resource "azurerm_blockchain_smart_contract" "contract" {
+  name                    = "my-contract"
+  blockchain_member_id   = azurerm_blockchain_member.blockchain.id
+  contract_source         = "[your contract source code]"
+  contract_language      = "Solidity"
 }
 
-  
+# Criar um novo usuário
+resource "azurerm_blockchain_user" "user" {
+  blockchain_member_id = azurerm_blockchain_member.blockchain.id
+  name                 = "my-user"
+}
+
+# Adicionar o usuário ao blockchain
+resource "azurerm_blockchain_user_association" "user_association" {
+  blockchain_member_id = azurerm_blockchain_member.blockchain.id
+  user_id              = azurerm_blockchain_user.user.id
+}
+
+# Adicionar um token ao usuário
+resource "azurerm_blockchain_token_user_association" "token_association" {
+  blockchain_member_id   = azurerm_blockchain_member.blockchain.id
+  token_id              = azurerm_blockchain_token.token.id
+  user_id              = azurerm_blockchain_user.user.id
+  initial_amount         = "1000"
+}
+    

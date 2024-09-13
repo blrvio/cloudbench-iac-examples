@@ -1,0 +1,13 @@
+
+      // Crie um agente de descoberta de aplicativos
+aws application-discovery-service create-agent --name "agent"
+
+// Crie um configuração de descoberta de aplicativos
+aws application-discovery-service create-configuration --name "config"
+
+// Configure o agente de descoberta de aplicativos para usar a configuração de descoberta
+aws application-discovery-service associate-configuration --agent-id "xxxxxxxx" --configuration-id "xxxxxxxx"
+
+// Crie um perfil de descoberta
+aws application-discovery-service create-profile --name "profile"
+    

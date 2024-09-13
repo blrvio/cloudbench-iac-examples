@@ -1,0 +1,16 @@
+
+      # Crie um plano de proteção DDoS
+azurerm ddos-protection-plan create -g example-resources -n example-ddos-protection-plan -l westus
+
+# Crie uma rede virtual
+azurerm virtual-network create -g example-resources -n example-vnet -l westus --address-prefixes 10.0.0.0/16 --ddos-protection-plan /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-resources/providers/microsoft.network/ddosprotectionplans/example-ddos-protection-plan
+
+# Crie uma sub-rede na rede virtual
+azurerm subnet create -g example-resources -n example-subnet -v example-vnet -l westus --address-prefixes 10.0.1.0/24
+
+# Crie uma máquina virtual dentro da sub-rede
+azurerm vm create -g example-resources -n example-vm -l westus --size Standard_B2s --nic example-nic --image Canonical/UbuntuServer/18.04-LTS/Latest --os-disk-caching ReadWrite --os-disk-storage-account-type Standard_LRS
+
+# Crie uma interface de rede dentro da sub-rede
+azurerm network-interface create -g example-resources -n example-nic -l westus -v example-vnet -s example-subnet
+    

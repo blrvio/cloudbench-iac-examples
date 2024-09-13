@@ -1,0 +1,20 @@
+
+      // Create a Resource Group
+$resourceGroupName = "example-rg"
+New-AzResourceGroup -Name $resourceGroupName -Location "westus2"
+
+// Create a Virtual Machine
+$vmName = "example-vm"
+$vmSize = "Standard_A2_v2"
+$vmImage = "Canonical/UbuntuServer/18.04-LTS"
+New-AzVm -ResourceGroupName $resourceGroupName -Name $vmName -Location "westus2" -Size $vmSize -AsAdmin -Image $vmImage
+
+// Create an Autoscale Setting
+$autoscaleSettingName = "example-autoscale"
+$profileName = "example-profile"
+New-AzAutoscaleSetting -ResourceGroupName $resourceGroupName -Name $autoscaleSettingName -Location "westus2" -Resource $vmName -ResourceTypeName "Microsoft.Compute/virtualmachines" -ProfileName $profileName -MinimumCapacity 1 -MaximumCapacity 10 -DefaultCapacity 2
+
+// Create a Rule
+$ruleName = "example-rule"
+New-AzAutoscaleRule -ResourceGroupName $resourceGroupName -AutoscaleSettingName $autoscaleSettingName -Name $ruleName -MetricNamespace "Microsoft.Compute/" -MetricName "PercentageCPU" -TimeGrain "PT1M" -Statistic "Average" -TimeWindow "PT5M" -Operator "GreaterThan" -Threshold 70 -CooldownDuration "PT5M" -MetricResourceId $vmName -Direction "Increase" -Type "ChangeCount" -Value 1
+    

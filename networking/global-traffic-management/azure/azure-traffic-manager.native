@@ -1,0 +1,7 @@
+
+      // Crie um perfil do Traffic Manager
+# az network traffic-manager profile create -g example-resources -n example-profile --dns-config relative-name=example --dns-config ttl=30 --monitor-config protocol=HTTP --monitor-config port=80 --monitor-config path=/ --monitor-config interval=30 --monitor-config timeout=10 --monitor-config healthy-threshold=2 --monitor-config unhealthy-threshold=2 --routing-method Performance
+
+// Crie um endpoint do Traffic Manager
+# az network traffic-manager endpoint create -g example-resources -n example-endpoint --profile-name example-profile --type AzureEndpoints --target https://example.azurewebsites.net
+    

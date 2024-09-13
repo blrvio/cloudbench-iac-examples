@@ -1,0 +1,10 @@
+
+      // Crie um plano de backup
+aws backup create-backup-plan --backup-plan-name example-backup-plan
+
+// Crie uma regra de backup
+aws backup create-backup-rule --backup-plan-id arn:aws:backup:us-east-1:123456789012:backup-plan:example-backup-plan --rule-name example-backup-rule --schedule expression="cron(0 0 * * ? *)" --target-vault-name example-vault
+
+// Crie um cofre de backup
+aws backup create-vault --vault-name example-vault
+    

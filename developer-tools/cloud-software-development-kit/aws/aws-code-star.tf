@@ -1,53 +1,78 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1"
 }
 
-# Create a CodeStar Project
-resource "aws_codestar_project" "main" {
-  name = "my-codestar-project"
-  # Optional settings
-  source_code_provider {
-    # Use GitHub as the source code provider
-    type = "GITHUB"
+# Crie um projeto CodeStar
+resource "aws_codestar_project" "my_project" {
+  name = "my-project"
+  source_code {
+    type       = "GitHub"
+    connection_arn = "arn:aws:codestar-connections:us-east-1:xxxxxxxxxxxx:connection:xxxxxxxxxxxx"
+    repository_url = "https://github.com/example/my-repo"
+    branch        = "master"
   }
-  # Define project settings
-  project_settings {
-    # Configure the source code repository
-    source_code {
-      # Use GitHub as the source code provider
-      provider = "GITHUB"
+  template_name = "aws-sam-quickstart"
+  id           = "xxxxxxxxxxxx"
+}
+
+# Crie um pipeline CodePipeline
+resource "aws_codepipeline" "my_pipeline" {
+  name = "my-pipeline"
+  role_arn = "arn:aws:iam::xxxxxxxxxxxx:role/CodeStar-xxxxxxxxxxxx"
+  artifact_store {
+    type = "S3"
+    location = "codestar-artifacts-xxxxxxxxxxxx"
+  }
+  stages {
+    name = "Source"
+    actions {
+      name = "Source"
+      action_type {
+        owner = "AWS"
+        category = "Source"
+        version = "1"
+        provider = "GitHub"
+      }
+      configuration {
+        Owner = "GitHub"
+        Repo  = "my-repo"
+        Branch = "master"
+      }
     }
-    # Configure the AWS CodeBuild project
-    build {
-      # Set the build settings
-      build_type = "DEFAULT"
+  }
+  stages {
+    name = "Build"
+    actions {
+      name = "Build"
+      action_type {
+        owner = "AWS"
+        category = "Build"
+        version = "1"
+        provider = "CodeBuild"
+      }
+      configuration {
+        ProjectName = "my-build-project"
+      }
     }
-    # Configure the AWS CodeDeploy deployment settings
-    deployment {
-      # Set the deployment settings
-      deployment_type = "DEFAULT"
+  }
+  stages {
+    name = "Deploy"
+    actions {
+      name = "Deploy"
+      action_type {
+        owner = "AWS"
+        category = "Deploy"
+        version = "1"
+        provider = "CloudFormation"
+      }
+      configuration {
+        StackName = "my-stack"
+        TemplatePath = "s3://my-bucket/my-template.yaml"
+        Capabilities = ["CAPABILITY_IAM"]
+      }
     }
   }
 }
-
-# Create a CodeStar Project User
-resource "aws_codestar_project_user" "main" {
-  project_id = aws_codestar_project.main.id
-  user_arn   = "arn:aws:iam::<account_id>:user/my-user"
-  # Optional settings
-  role = "USER"
-}
-
-# Create a CodeStar Project Team
-resource "aws_codestar_project_team" "main" {
-  project_id = aws_codestar_project.main.id
-  name       = "my-team"
-  # Optional settings
-  description = "My team"
-  # Add users to the team
-  user_arns = ["arn:aws:iam::<account_id>:user/my-user"]
-}
-
-  
+    

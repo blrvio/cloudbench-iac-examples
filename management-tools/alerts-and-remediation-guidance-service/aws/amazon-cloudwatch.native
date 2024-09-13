@@ -1,0 +1,13 @@
+
+      // Crie um alarme do CloudWatch para monitorar a CPU de uma instância EC2
+aws cloudwatch put-metric-alarm --alarm-name CPUUtilizationAlarm --alarm-description "Alarme para CPU acima de 80%" --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 60 --evaluation-periods 1 --threshold 80 --comparison-operator GreaterThanThreshold --dimensions InstanceId=i-xxxxxxxx
+
+// Crie um log group para armazenar logs do CloudWatch
+aws logs create-log-group --log-group-name my_log_group
+
+// Crie um log stream para enviar logs para o log group
+aws logs create-log-stream --log-group-name my_log_group --log-stream-name my_log_stream
+
+// Crie um recurso para definir a política de retenção de logs
+aws logs put-retention-policy --log-group-name my_log_group --retention-in-days 14
+    

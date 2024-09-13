@@ -1,0 +1,10 @@
+
+      // Create a resource group
+ az group create --name example-resources --location westus2
+
+// Create a container app
+ az containerapp create --resource-group example-resources --name example-container-app --location westus2 --image mcr.microsoft.com/azuredocs/containerapps/python-sample:v1
+
+// Scale the container app
+ az containerapp update --resource-group example-resources --name example-container-app --scale min-replicas 1 --scale max-replicas 1
+    

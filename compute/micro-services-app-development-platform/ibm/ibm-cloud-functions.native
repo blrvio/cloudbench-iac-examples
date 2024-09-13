@@ -1,0 +1,11 @@
+
+      // Crie um namespace para a função
+ibmcloud fn namespace create my-namespace
+
+// Crie uma ação de função
+ibmcloud fn action create my-action --runtime nodejs:16 --code "// Código da função
+console.log('Hello, world!');" --namespace my-namespace
+
+// Crie uma regra de gatilho HTTP
+ibmcloud fn trigger create my-trigger --action my-action --method GET --path /hello --namespace my-namespace
+    

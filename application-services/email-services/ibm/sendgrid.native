@@ -1,0 +1,18 @@
+
+      // Use a API SendGrid para enviar um email
+// Substitua os valores das variáveis pelo seu conteúdo
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey('SG.your_api_key');
+const msg = {
+  to: 'to@example.com',
+  from: 'from@example.com',
+  subject: 'Assunto do email',
+  html: '<h1>Olá, {{name}}</h1><p>Este é um email de teste.</p>',
+  templateId: 'your_template_id',
+  dynamicTemplateData: {
+    name: 'John Doe'
+  }
+};
+sgMail.send(msg).then(() => {}, error => {  console.error(error);  });
+
+    

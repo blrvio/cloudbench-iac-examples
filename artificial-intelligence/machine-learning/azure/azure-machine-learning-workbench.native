@@ -1,0 +1,13 @@
+
+      // Crie um workspace do Azure Machine Learning
+# az ml workspace create -w example-workspace -g example-resources -l westus2 -s example-storage -a example-appinsights -k example-keyvault
+
+// Crie uma máquina virtual para o Workbench
+# az vm create -g example-resources -n example-workbench-vm --size Standard_B2s --location westus2 --nics example-workbench-nic
+
+// Crie uma interface de rede para a máquina virtual
+# az network nic create -g example-resources -n example-workbench-nic --location westus2 --vnet-name example-vnet --subnet-name example-subnet
+
+// Crie um grupo de recursos
+# az group create -n example-resources -l westus2
+    

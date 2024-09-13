@@ -1,0 +1,22 @@
+
+      # Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location westus2
+
+# Crie um aplicativo no App Center
+azurerm appcenter app create --name example-app --resource-group example-rg --platform ios
+
+# Crie um pipeline no App Center
+azurerm appcenter build-pipeline create --name example-pipeline --app-name example-app --resource-group example-rg --platform ios
+
+# Configure o pipeline
+# ...
+
+# Crie um branch para o pipeline
+azurerm appcenter branch create --name main --pipeline-name example-pipeline --app-name example-app --resource-group example-rg
+
+# Crie um build no App Center
+azurerm appcenter build create --branch-name main --pipeline-name example-pipeline --app-name example-app --resource-group example-rg
+
+# Configure o build
+# ...
+    

@@ -1,0 +1,4 @@
+
+      // Criar um ambiente Cloud9
+aws cloud9 create-environment --name dev-env --instance-type t3.micro --user admin --subnet-id subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx
+    

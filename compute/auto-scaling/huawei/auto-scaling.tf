@@ -1,25 +1,37 @@
 
-    # Configure the Huawei Cloud Provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Auto Scaling group
-resource "huaweicloud_as_group" "main" {
-  name     = "my-as-group"
-  launch_configuration_name = aws_launch_configuration.main.name
-  min_size = 1
-  max_size = 3
+# Crie um grupo de Auto Scaling
+resource "aws_autoscaling_group" "web_server_group" {
+  name_prefix  = "web-server-"
+  vpc_zone_identifier = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"] # Substitua pelos IDs das sub-redes desejadas
+  min_size     = 1
+  max_size     = 3
   desired_capacity = 2
-  availability_zones = ["cn-north-1a"] # Add other AZs as needed
+  launch_configuration = aws_launch_configuration.web_server_launch_config.id
+
+  # Define a política de escalonamento
+  # (Exemplo: escalar automaticamente com base na CPU)
+  # (Consulte a documentação do AWS para mais opções de políticas)
+  # scaling_policy {
+  #   adjustment_type = "PercentChangeInCapacity"
+  #   scaling_adjustment = 10
+  #   cooldown = 300
+  # }
 }
 
-# Create a Launch Configuration
-resource "huaweicloud_as_launch_configuration" "main" {
-  name = "my-launch-configuration"
-  image_id  = "centos7.8-x86_64"
-  instance_type = "ecs.c1.medium"
-  # Add other options as needed
+# Crie uma configuração de lançamento
+resource "aws_launch_configuration" "web_server_launch_config" {
+  image_id = "ami-xxxxxxxx" # Substitua pela AMI desejada
+  instance_type = "t2.micro" # Substitua pelo tipo de instância desejado
+  key_name = "key_name" # Substitua pelo nome da chave SSH
+  security_groups = [aws_security_group.allow_ssh.id]
+
+  # Opcional: Adicione tags à instância
+  # user_data = ""
 }
 
-  
+    

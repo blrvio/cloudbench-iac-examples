@@ -1,0 +1,19 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create -n example-rg -l westus2
+
+// Crie uma conta de automação
+azurerm automation account create -n example-automation -g example-rg -l westus2
+
+// Crie um módulo de automação
+azurerm automation module create -n example-module -g example-rg -a example-automation
+
+// Crie um runbook de automação
+azurerm automation runbook create -n example-runbook -g example-rg -a example-automation
+
+// Crie uma credencial de automação
+azurerm automation credential create -n example-credential -g example-rg -a example-automation
+
+// Crie uma variável de automação
+azurerm automation variable create -n example-variable -g example-rg -a example-automation
+    

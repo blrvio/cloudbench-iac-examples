@@ -1,58 +1,38 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  region    = "us-south"
-  api_key  = "YOUR_IBM_CLOUD_API_KEY"
-  account_id = "YOUR_IBM_CLOUD_ACCOUNT_ID"
+  api_key = "YOUR_IBM_CLOUD_API_KEY"
+  region  = "us-south"
 }
 
-# Create a Watson Knowledge Studio project
-resource "ibm_watson_knowledge_studio_project" "main" {
-  name = "my-knowledge-studio-project"
-  # Set optional project settings
-  # description        = "My knowledge studio project"
-  # training_data_type = "text"
-  # training_data_format = "json"
+# Crie um projeto do Watson Knowledge Studio
+resource "ibm_knowledge_studio_project" "example" {
+  name     = "my-knowledge-studio-project"
+  location = "us-south"
+  # O atributo 'description' pode ser configurado com uma descrição do projeto.
 }
 
-# Create a Watson Knowledge Studio document collection
-resource "ibm_watson_knowledge_studio_document_collection" "main" {
-  project_id = ibm_watson_knowledge_studio_project.main.id
-  name        = "my-document-collection"
+# Crie um conjunto de dados do Watson Knowledge Studio
+resource "ibm_knowledge_studio_dataset" "example" {
+  project_id  = ibm_knowledge_studio_project.example.id
+  name       = "my-knowledge-studio-dataset"
+  # O atributo 'description' pode ser configurado com uma descrição do conjunto de dados.
+  # O atributo 'data_source' pode ser configurado com um fonte de dados para o conjunto de dados.
 }
 
-# Create a Watson Knowledge Studio knowledge graph
-resource "ibm_watson_knowledge_studio_knowledge_graph" "main" {
-  project_id = ibm_watson_knowledge_studio_project.main.id
-  name        = "my-knowledge-graph"
-  # Set optional knowledge graph settings
-  # description = "My knowledge graph"
+# Crie um modelo de conhecimento do Watson Knowledge Studio
+resource "ibm_knowledge_studio_knowledge_model" "example" {
+  dataset_id   = ibm_knowledge_studio_dataset.example.id
+  name          = "my-knowledge-studio-knowledge-model"
+  # O atributo 'description' pode ser configurado com uma descrição do modelo de conhecimento.
+  # O atributo 'training_data' pode ser configurado com dados de treinamento para o modelo de conhecimento.
 }
 
-# Create a Watson Knowledge Studio training dataset
-resource "ibm_watson_knowledge_studio_training_dataset" "main" {
-  project_id = ibm_watson_knowledge_studio_project.main.id
-  name        = "my-training-dataset"
-  # Set optional training dataset settings
-  # description = "My training dataset"
+# Crie um endpoint do Watson Knowledge Studio
+resource "ibm_knowledge_studio_endpoint" "example" {
+  knowledge_model_id = ibm_knowledge_studio_knowledge_model.example.id
+  name               = "my-knowledge-studio-endpoint"
+  # O atributo 'description' pode ser configurado com uma descrição do endpoint.
+  # O atributo 'runtime_options' pode ser configurado com opções de runtime para o endpoint.
 }
-
-# Create a Watson Knowledge Studio label set
-resource "ibm_watson_knowledge_studio_label_set" "main" {
-  project_id = ibm_watson_knowledge_studio_project.main.id
-  name        = "my-label-set"
-  # Set optional label set settings
-  # description = "My label set"
-}
-
-# Create a Watson Knowledge Studio document
-resource "ibm_watson_knowledge_studio_document" "main" {
-  project_id      = ibm_watson_knowledge_studio_project.main.id
-  document_collection_id = ibm_watson_knowledge_studio_document_collection.main.id
-  content          = "This is my document."
-  # Set optional document settings
-  # description      = "My document"
-  # source           = "my-source"
-}
-
-  
+    

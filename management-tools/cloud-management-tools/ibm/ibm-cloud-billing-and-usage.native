@@ -1,0 +1,6 @@
+
+      ibmcloud account billing-usage get
+
+// Para consultar o histórico de faturas
+ibmcloud account billing-usage history get
+    

@@ -1,0 +1,10 @@
+
+      // Crie um acelerador global
+aws globalaccelerator create-accelerator --name example --enabled
+
+// Crie um listener
+aws globalaccelerator create-listener --accelerator-arn arn:aws:globalaccelerator:us-east-1:xxxxxxxxxxxxx:accelerator/xxxxxxxxxxxxx --port-ranges FromPort=80,ToPort=80 --protocol TCP
+
+// Crie um endpoint grupo
+aws globalaccelerator create-endpoint-group --listener-arn arn:aws:globalaccelerator:us-east-1:xxxxxxxxxxxxx:listener/xxxxxxxxxxxxx --endpoint-configurations EndpointId=xxxxxxxxxxxxx,Weight=100 --traffic-dial-percentage 100
+    

@@ -1,0 +1,8 @@
+
+      // Código nativo do provedor (ex: AWS CLI, gsutil, az storage)
+# Crie um bucket
+aws s3 mb s3://my-bucket-name
+
+# Crie um objeto no bucket
+aws s3 cp my-object.txt s3://my-bucket-name/my-object.txt
+    

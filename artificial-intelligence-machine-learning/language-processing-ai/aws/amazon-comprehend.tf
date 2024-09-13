@@ -1,64 +1,32 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Amazon Comprehend Language Detector
-resource "aws_comprehend_entity_recognizer" "main" {
-  name         = "my-entity-recognizer"
-  data_source  = "S3"
-  data_source_config {
-    s3_uri = "s3://my-bucket/my-data.csv"
-  }
+# Crie um endpoint do Comprehend
+resource "aws_comprehend_endpoint" "my_endpoint" {
+  name         = "my-comprehend-endpoint"
   language_code = "en"
-  # Optionally configure the training parameters
-  # training_parameters {
-  #   # Add training parameters here if needed
-  # }
+  model_arn    = "arn:aws:comprehend:us-east-1:123456789012:model/my-model"
 }
 
-# Create an Amazon Comprehend Sentiment Detection Job
-resource "aws_comprehend_sentiment_detection_job" "main" {
-  job_name   = "my-sentiment-job"
-  data_source = "S3"
-  data_source_config {
-    s3_uri = "s3://my-bucket/my-text-data.txt"
-  }
+# Crie um modelo de análise de sentimentos
+resource "aws_comprehend_sentiment_detection_model" "my_model" {
+  name       = "my-sentiment-model"
   language_code = "en"
-  # Optional settings
-  #  output_data_config {
-  #    s3_uri = "s3://my-bucket/output"
-  #  }
 }
 
-# Create an Amazon Comprehend Key Phrase Extraction Job
-resource "aws_comprehend_key_phrases_detection_job" "main" {
-  job_name   = "my-key-phrase-job"
-  data_source = "S3"
-  data_source_config {
-    s3_uri = "s3://my-bucket/my-text-data.txt"
+# Use o endpoint do Comprehend para análise de sentimentos
+resource "aws_comprehend_sentiment_detection_job" "my_job" {
+  endpoint_arn = aws_comprehend_endpoint.my_endpoint.arn
+  input_data_config {
+    s3_uri = "s3://my-bucket/my-file.txt"
   }
-  language_code = "en"
-  # Optional settings
-  # output_data_config {
-  #    s3_uri = "s3://my-bucket/output"
-  #  }
-}
-
-# Create an Amazon Comprehend Entity Recognition Job
-resource "aws_comprehend_entity_recognition_job" "main" {
-  job_name   = "my-entity-recognition-job"
-  data_source = "S3"
-  data_source_config {
-    s3_uri = "s3://my-bucket/my-text-data.txt"
+  output_data_config {
+    s3_uri = "s3://my-bucket/output/sentiment-results.json"
   }
-  language_code = "en"
-  # Optional settings
-  # output_data_config {
-  #    s3_uri = "s3://my-bucket/output"
-  #  }
-  # entity_recognizer_arn = aws_comprehend_entity_recognizer.main.arn
+  model_arn = aws_comprehend_sentiment_detection_model.my_model.arn
 }
 
-  
+    

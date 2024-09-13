@@ -1,37 +1,27 @@
 
-    # Configure the HUAWEI CLOUD Provider
+      # Configure o provedor HUAWEI CLOUD
 provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+  region = "cn-north-1" # Substitua pela sua região desejada
 }
 
-# Create an IoT Device
-resource "huaweicloud_iot_device" "main" {
-  product_id     = "your-product-id" # Replace with your product ID
-  device_name   = "your-device-name" # Replace with your device name
-  device_secret = "your-device-secret" # Replace with your device secret
-  # Optional fields
-  # description = "your-description" # Replace with your description
-  # tags = { Key = "your-tag-key", Value = "your-tag-value" } # Replace with your tags
+# Crie um dispositivo IoT
+resource "huaweicloud_iot_device" "my_device" {
+  device_name = "my_device"
+  product_id  = "product_id"
+  device_secret = "device_secret"
+  # ... outros atributos do dispositivo
 }
 
-# Create an IoT Product
-resource "huaweicloud_iot_product" "main" {
-  name = "your-product-name" # Replace with your product name
-  # Optional fields
-  # description = "your-description" # Replace with your description
-  # data_model = "your-data-model" # Replace with your data model
-  # tags = { Key = "your-tag-key", Value = "your-tag-value" } # Replace with your tags
+# Crie um produto IoT
+resource "huaweicloud_iot_product" "my_product" {
+  product_name = "my_product"
+  description  = "My product description"
+  # ... outros atributos do produto
 }
 
-# Create an IoT Rule
-resource "huaweicloud_iot_rule" "main" {
-  product_id = "your-product-id" # Replace with your product ID
-  rule_name   = "your-rule-name" # Replace with your rule name
-  rule_sql    = "your-rule-sql" # Replace with your rule SQL
-  # Optional fields
-  # description = "your-description" # Replace with your description
-  # event_type = "your-event-type" # Replace with your event type
-  # enabled = true # Replace with your enabled status
+# Crie um serviço IoT
+resource "huaweicloud_iot_service" "my_service" {
+  service_name = "my_service"
+  # ... outros atributos do serviço
 }
-
-  
+    

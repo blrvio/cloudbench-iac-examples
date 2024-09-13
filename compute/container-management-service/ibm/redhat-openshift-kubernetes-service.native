@@ -1,0 +1,10 @@
+
+      // Crie um namespace
+ocp create namespace my-namespace
+
+// Crie um deployment
+ocp create deployment my-deployment --image nginx:latest -n my-namespace --replicas=3
+
+// Crie um service
+ocp create service my-service --selector app=my-app -n my-namespace --port=80:80
+    

@@ -1,44 +1,44 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable Azure features for Terraform
+  features {} # Configure recursos adicionais
 }
 
-# Create an Azure Resource Group
-resource "azurerm_resource_group" "main" {
-  name     = "my-resource-group"
-  location = "eastus"
+# Crie um servidor SQL
+source "local-file" "sql_server_config" {
+  filename = "sql_server_config.json"
 }
-
-# Create an Azure SQL Server
 resource "azurerm_sql_server" "main" {
-  name                = "my-sql-server"
+  name                = "sqlserver-${random_id.sqlserver.hex}"
   resource_group_name = azurerm_resource_group.main.name
-  location             = azurerm_resource_group.main.location
-  version              = "12.0"
-  administrator_login  = "myadmin"
-  administrator_password = "MyStrongPassword!" # Replace with a strong password
+  location            = azurerm_resource_group.main.location
+  administrator_login = "admin"
+  administrator_password = local-file.sql_server_config.administrator_password
+  version             = "2019-12"
 }
 
-# Create an Azure SQL Database
+# Crie um banco de dados SQL
 resource "azurerm_sql_database" "main" {
-  name                = "my-sql-database"
+  name                 = "sqldb-${random_id.sqldb.hex}"
   resource_group_name = azurerm_resource_group.main.name
   server_name         = azurerm_sql_server.main.name
-  location             = azurerm_resource_group.main.location
-  # Optional: Define the database edition
-  edition = "Standard"
-  # Optional: Define the database service tier
-  service_tier = "S0"
+  location            = azurerm_resource_group.main.location
 }
 
-# Create an Azure SQL Database Firewall Rule
-resource "azurerm_sql_firewall_rule" "main" {
-  name                = "allow-my-ip"
-  resource_group_name = azurerm_resource_group.main.name
-  server_name         = azurerm_sql_server.main.name
-  start_ip_address     = "127.0.0.1"
-  end_ip_address       = "127.0.0.1"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "main" {
+  name     = "rg-${random_id.rg.hex}"
+  location = "West Europe"
 }
 
-  
+# Crie um ID aleatório para os nomes dos recursos
+resource "random_id" "sqlserver" {
+  byte_length = 4
+}
+resource "random_id" "sqldb" {
+  byte_length = 4
+}
+resource "random_id" "rg" {
+  byte_length = 4
+}
+    

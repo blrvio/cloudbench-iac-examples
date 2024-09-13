@@ -1,0 +1,25 @@
+
+      # Configure o provedor do Google Cloud
+gcloud auth activate-service-account --key-file "path/to/keyfile.json"
+
+# Configure o projeto do Google Cloud
+gcloud config set project "project-id"
+
+# Crie um ambiente do Apigee
+gcloud apigee environments create --name "sense-environment" --description "Ambiente para o Apigee Sense"
+
+# Configure o Apigee Sense
+gcloud apigee sense config --environment "sense-environment" --name "sense-config"
+
+# Crie um conjunto de dados do Apigee Sense
+gcloud apigee sense datasets create --environment "sense-environment" --name "sense-dataset"
+
+# Crie um painel do Apigee Sense
+gcloud apigee sense dashboards create --environment "sense-environment" --name "sense-dashboard"
+
+# Crie uma visualização do Apigee Sense
+gcloud apigee sense visualizations create --environment "sense-environment" --dashboard "sense-dashboard" --name "sense-visualization"
+
+# Acesse o Apigee Sense
+https://console.cloud.google.com/apigee/sense?project=project-id&environment=sense-environment&dashboard=sense-dashboard
+    

@@ -1,0 +1,9 @@
+
+      # Crie um host dedicado
+aws ec2 allocate-hosts --availability-zone us-east-1a --host-type m5.xlarge --auto-placement false
+
+# Crie uma instância EC2 no host dedicado
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type m5.xlarge --dedicated-host-id host-xxxxxxxx # host-xxxxxxxx é o ID do host dedicado
+# ... (outros atributos)
+
+    

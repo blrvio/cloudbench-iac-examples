@@ -1,0 +1,10 @@
+
+      // Crie um Load Balancer
+ibmcloud lb create -n my-load-balancer --location us-south --type PUBLIC --subtype HTTP --listener-protocol HTTP --listener-port 80
+
+// Crie um backend Pool
+ibmcloud lb pool create -n my-pool --location us-south --lb my-load-balancer --protocol HTTP --port 80
+
+// Adicione um servidor ao backend Pool
+ibmcloud lb server create -n my-server --location us-south --pool my-pool --address 192.168.1.100 --port 80
+    

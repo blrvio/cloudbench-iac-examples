@@ -1,0 +1,10 @@
+
+      gcloud iot devices create your-device-id \
+  --project your-gcp-project-id \
+  --region us-central1 \
+  --registry-id your-registry-id \
+  --public-key-format PEM \
+  --public-key "-----BEGIN PUBLIC KEY-----
+...
+-----END PUBLIC KEY-----"
+    

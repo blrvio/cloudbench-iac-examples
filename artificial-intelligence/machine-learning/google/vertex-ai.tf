@@ -1,46 +1,52 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
+  project = "gcp-project-id"
   region  = "us-central1"
 }
 
-# Create a Vertex AI Endpoint
-resource "google_vertex_ai_endpoint" "main" {
-  name     = "my-endpoint"
-  location = google_vertex_ai_endpoint.main.location
+# Crie um recurso de Modelo de Machine Learning no Vertex AI
+resource "google_vertex_ai_model" "my_model" {
+  name     = "my-model"
+  display_name = "My Model"
+  description = "My custom trained model"
+  version_id = "1"
+  
+  artifact_uri = "gs://my-bucket/models/my-model/1"
+}
 
-  # Configure the deployed model
+# Crie um Endpoint para servir o modelo
+resource "google_vertex_ai_endpoint" "my_endpoint" {
+  name     = "my-endpoint"
+  display_name = "My Endpoint"
+  description = "Endpoint para servir o modelo"
+  
+  machine_type = "n1-standard-1"
+  
   deployed_models {
-    model      = "projects/your-project-id/locations/us-central1/models/my-model"
-    display_name = "my-model"
+    model = google_vertex_ai_model.my_model.name
+    model_version_id = google_vertex_ai_model.my_model.version_id
   }
 }
 
-# Create a Vertex AI Model
-resource "google_vertex_ai_model" "main" {
-  name     = "my-model"
-  location = google_vertex_ai_model.main.location
-  display_name = "my-model"
-
-  # Configure the model version
-  version {
-    display_name = "v1"
-    training_specs {
-      # Replace with the appropriate training specs for your model
-      training_input {        
-      }
+# Crie um Job de treinamento de modelo
+resource "google_vertex_ai_training_job" "my_training_job" {
+  name     = "my-training-job"
+  display_name = "My Training Job"
+  description = "Job de treinamento para o meu modelo"
+  
+  training_method {
+    container_spec {
+      image_uri = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+  }
+  
+  model_definition {
+    model {
+      name = google_vertex_ai_model.my_model.name
     }
   }
 }
 
-# Create a Vertex AI Dataset
-resource "google_vertex_ai_dataset" "main" {
-  name      = "my-dataset"
-  location  = google_vertex_ai_dataset.main.location
-  display_name = "my-dataset"
-  metadata_schema_uri = "gs://your-bucket/your-schema.json"
-  description = "My dataset for training a Vertex AI model"
-}
 
-  
+    

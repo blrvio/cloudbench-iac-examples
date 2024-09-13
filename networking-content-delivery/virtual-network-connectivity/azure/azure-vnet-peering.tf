@@ -1,34 +1,33 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilita recursos avançados
 }
 
-# Create a Virtual Network
-resource "azurerm_virtual_network" "main" {
-  name                = "my-vnet"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  address_space       = ["10.0.0.0/16"]
+# Define o peering de VNet
+resource "azurerm_virtual_network_peering" "peering" {
+  name                = "peering"
+  virtual_network_name = "vnet1"
+  resource_group_name  = "rg1"
+  remote_virtual_network_id = azurerm_virtual_network.remote_vnet.id
+  allow_forwarded_traffic  = true
+  allow_gateway_transit  = false
+  use_remote_gateways       = false
 }
 
-# Create a second Virtual Network
-resource "azurerm_virtual_network" "second_vnet" {
-  name                = "my-second-vnet"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  address_space       = ["10.1.0.0/16"]
+# Define o VNet remoto
+resource "azurerm_virtual_network" "remote_vnet" {
+  name                = "vnet2"
+  resource_group_name  = "rg2"
+  location             = "westus2"
+  address_space        = ["10.10.0.0/16"]
 }
 
-# Create a VNet Peering
-resource "azurerm_virtual_network_peering" "main" {
-  name                = "my-vnet-peering"
-  resource_group_name = "my-resource-group"
-  virtual_network_name = azurerm_virtual_network.main.name
-  remote_virtual_network_id = azurerm_virtual_network.second_vnet.id
-  allow_forwarded_traffic = true
-  allow_gateway_transit   = true
-  use_remote_gateways      = true
+# Define o VNet local
+resource "azurerm_virtual_network" "vnet1" {
+  name                = "vnet1"
+  resource_group_name  = "rg1"
+  location             = "westus2"
+  address_space        = ["10.0.0.0/16"]
 }
-
-  
+    

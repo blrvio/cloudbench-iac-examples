@@ -1,0 +1,25 @@
+
+      # Crie um VCN para sua rede
+oci core virtual-network create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --cidr-block 10.0.0.0/16 --display-name My VCN
+
+# Crie uma sub-rede no VCN
+oci core subnet create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name My Subnet --virtual-network-id <VCN ID> --cidr-block 10.0.1.0/24
+
+# Crie um grupo de segurança para sua rede
+oci network security-list create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name My Security List --vcn-id <VCN ID>
+
+# Adicione uma regra de saída para o grupo de segurança
+oci network security-list egress-rule add --security-list-id <SECURITY LIST ID> --protocol all --destination 0.0.0.0/0
+
+# Adicione uma regra de entrada para o grupo de segurança
+oci network security-list ingress-rule add --security-list-id <SECURITY LIST ID> --protocol tcp --source 0.0.0.0/0 --destination 10.0.1.0/24 --port-range 22,80,443
+
+# Crie um grupo de instâncias para seus servidores virtuais
+oci core instance-group create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name My Instance Group --shape VM.Standard.A1.Flex --subnet-id <SUBNET ID> --availability-domain us-ashburn-1a --security-list-ids <SECURITY LIST ID>
+
+# Crie um servidor virtual
+oci core instance create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name My Instance --shape VM.Standard.A1.Flex --availability-domain us-ashburn-1a --subnet-id <SUBNET ID> --instance-group-id <INSTANCE GROUP ID>
+
+# Crie uma imagem de máquina virtual
+oci core image create --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --display-name My Image --source-type instance --source-id <INSTANCE ID>
+    

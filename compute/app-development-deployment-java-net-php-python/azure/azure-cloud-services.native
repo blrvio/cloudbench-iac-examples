@@ -1,0 +1,14 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location "West Europe"
+
+// Crie um serviço de nuvem
+azurerm cloud-service create --resource-group example-rg --name example-cs --location "West Europe"
+
+// Crie um serviço de nuvem com uma instância web
+azurerm cloud-service create --resource-group example-rg --name example-cs --location "West Europe" --os-image-publisher "Canonical" --os-image-offer "UbuntuServer" --os-image-sku "16.04-LTS" --os-image-version "Latest" --size "Standard_A2_v2"
+
+// Crie um serviço de nuvem com configurações personalizadas
+azurerm cloud-service create --resource-group example-rg --name example-cs --location "West Europe" --os-image-publisher "Canonical" --os-image-offer "UbuntuServer" --os-image-sku "16.04-LTS" --os-image-version "Latest" --size "Standard_A2_v2" --os-type "Linux" --network-interface-configuration-name "nic" --ip-configuration-name "ipconfig" --subnet-name "default" --address-prefix "10.0.0.0/24" 
+
+    

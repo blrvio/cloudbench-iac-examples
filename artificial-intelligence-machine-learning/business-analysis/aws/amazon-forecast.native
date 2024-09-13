@@ -1,0 +1,19 @@
+
+      // Crie um dataset de previsão
+aws forecast create-dataset --dataset-name my_dataset --dataset-type TARGET_TIME_SERIES --domain RETAIL --data-source s3://my-bucket/my-data.csv
+
+// Crie um modelo de previsão
+aws forecast create-predictor --predictor-name my_predictor --algorithm-arn arn:aws:forecast:us-east-1:123456789012:algorithm/my-algorithm --forecast-horizon 14 --forecast-types MEAN --dataset-group-arn arn:aws:forecast:us-east-1:123456789012:dataset-group/my_dataset_group
+
+// Crie um grupo de datasets
+aws forecast create-dataset-group --dataset-group-name my_dataset_group --datasets arn:aws:forecast:us-east-1:123456789012:dataset/my_dataset
+
+// Gere previsões
+aws forecast create-forecast --forecast-name my_forecast --predictor-arn arn:aws:forecast:us-east-1:123456789012:predictor/my_predictor
+
+// Crie um recurso de dados de previsão
+aws forecast create-data-source --data-source-name my_data_source --data-source-type S3 --file-path s3://my-bucket/my-data.csv
+
+// Crie um recurso de algoritmo de previsão
+aws forecast create-algorithm --algorithm-name my_algorithm --algorithm-type ARIMA
+    

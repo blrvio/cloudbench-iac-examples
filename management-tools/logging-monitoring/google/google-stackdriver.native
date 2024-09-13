@@ -1,0 +1,12 @@
+
+      # Crie um alerta de monitoramento usando a CLI do Google Cloud
+gcloud monitoring alerts create my_alert \
+    --display-name "My Alert" \
+    --condition '{"conditionThreshold": {"filter": "metric.type = \"compute.googleapis.com/instance/cpu/usage_time\" AND resource.type = \"gce_instance\"", "aggregations": [{ "alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_MEAN", "crossSeriesReducer": "REDUCE_MEAN" }], "thresholdValue": 0.8, "comparisonType": "COMPARISON_GT"}}' \
+    --notification_channels "channels/my_notification_channel"
+
+# Crie um dashboard de monitoramento usando a CLI do Google Cloud
+gcloud monitoring dashboards create my_dashboard \
+    --display-name "My Dashboard" \
+    --widgets '{"widgets": [{ "title": "CPU Usage", "xyChart": {"chart": {"chartType": "LINE", "timeSeries": [{ "metric": "compute.googleapis.com/instance/cpu/usage_time", "resource": {"type": "gce_instance"} }]}}}]}'
+    

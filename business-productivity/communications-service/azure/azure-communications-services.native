@@ -1,0 +1,10 @@
+
+      # Create a Communication Services resource
+azurerm communication create -n example-communication-service -g example-resource-group -l westus2
+
+# Create a Phone Number
+azurerm communication phone-number create -n example -g example-resource-group -l westus2 -c example-communication-service -p "+14255550123" # Replace with a valid phone number
+
+# Create an Email Service
+azurerm communication email-service create -n example-email-service -g example-resource-group -l westus2 -c example-communication-service
+    

@@ -1,0 +1,7 @@
+
+      // Habilite o Security Hub
+aws securityhub enable-security-hub
+
+// Crie uma regra de detecção personalizada
+aws securityhub create-insight --name "My Custom Insight" --filters '[{"FindingTypes": [{"Value": "Software and Configuration Checks/AWS Security Best Practices"}]}, {"Severity": [{"Value": "HIGH"}]}]'
+    

@@ -1,0 +1,16 @@
+
+      // Crie um Ledger
+aws qldb create-ledger --name example-ledger
+
+// Crie uma tabela
+aws qldb create-table --ledger-name example-ledger --name example-table --keys id
+
+// Crie um usuário
+aws qldb create-user --ledger-name example-ledger --user-name example-user --permissions READ WRITE ADMIN
+
+// Crie um driver de conexão
+aws qldb create-driver --ledger-name example-ledger
+
+// Crie um certificado
+aws qldb create-certificate --ledger-name example-ledger --certificate xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    

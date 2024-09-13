@@ -1,29 +1,48 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your tenancy OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaakg5m5i"
-
-  # Replace with your user OCID
-  user_ocid = "ocid1.user.oc1..aaaaaaaaaaaaaaaaw6r47"
-
-  # Replace with your API key
-  api_key_fingerprint = "fingerprint"
-  api_key = "YOUR_API_KEY"
+  region = "us-ashburn-1" # Substitua pela sua região desejada
+  # Credenciais de autenticação devem ser configuradas como variáveis de ambiente
 }
 
-# Create an OS Management Instance
-resource "oci_osmanagement_instance" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaktgc5"
-  # Replace with your Compute Instance OCID
-  instance_ocid = "ocid1.instance.oc1..aaaaaaaaaaaaaaaam7n73"
-  display_name = "OS Management Instance"
-  # Optional: Configure the inventory and security settings
-  inventory_settings {
-    enable_inventory = true
-    enable_security_monitoring = true
-  }
+# Crie um grupo de gerenciamento de sistema operacional
+resource "oci_os_management_management_group" "example" {
+  compartment_id  = "ocid1.compartment.oc1..aaaaaaaaw7g7zq5r"
+  display_name   = "My Management Group"
+  description    = "My Management Group Description"
+  is_default     = false
+  is_system_group = false
+  state          = "ENABLED"
 }
 
-  
+# Crie uma política de gerenciamento de sistema operacional
+resource "oci_os_management_policy" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw7g7zq5r"
+  display_name  = "My Policy"
+  description   = "My Policy Description"
+  management_group_id = oci_os_management_management_group.example.id
+  policy_content = "{}"
+  state = "ENABLED"
+}
+
+# Crie uma tarefa de gerenciamento de sistema operacional
+resource "oci_os_management_task" "example" {
+  compartment_id  = "ocid1.compartment.oc1..aaaaaaaaw7g7zq5r"
+  display_name   = "My Task"
+  description    = "My Task Description"
+  management_group_id = oci_os_management_management_group.example.id
+  policy_id = oci_os_management_policy.example.id
+  state = "ENABLED"
+}
+
+# Crie um agente de gerenciamento de sistema operacional
+resource "oci_os_management_agent" "example" {
+  compartment_id  = "ocid1.compartment.oc1..aaaaaaaaw7g7zq5r"
+  display_name   = "My Agent"
+  description    = "My Agent Description"
+  management_group_id = oci_os_management_management_group.example.id
+  agent_type = "AGENT_TYPE_UNSPECIFIED"
+  state = "ENABLED"
+}
+
+    

@@ -1,0 +1,28 @@
+
+      # Criar um circuito Express Route
+ azurerm expressroute circuit create -g example-resources -n example-circuit -l West Europe --bandwidth 100 --serviceProvider Equinix --peeringLocation London
+
+ # Criar um peering de roteamento
+ azurerm expressroute circuit peering create -g example-resources -n example-peering -e example-circuit --peerType AzurePrivatePeering --advertisedPublicPrefixes 10.0.0.0/16 --asPathSegments 10.0.0.0/16
+
+ # Criar um circuito virtual
+ azurerm expressroute circuit virtual-network-peering create -g example-resources -n example-peering -e example-circuit -v example-network -r example-route-filter
+
+ # Criar uma rota na tabela de roteamento
+ azurerm route-table create -g example-resources -n example-route-table -l West Europe
+
+ # Criar uma rota na tabela de roteamento
+ azurerm route-table route create -g example-resources -n example-route -r example-route-table --addressPrefix 10.0.0.0/16 --nextHopType VirtualAppliance --nextHopIpAddress example-gateway
+
+ # Criar um gateway de rede virtual
+ azurerm virtual-network gateway create -g example-resources -n example-gateway -l West Europe --vnet example-network --type ExpressRoute --vpnType RouteBased --sku Standard --activeActive true --expressRouteCircuit example-circuit
+
+ # Criar uma rede virtual
+ azurerm virtual-network create -g example-resources -n example-network -l West Europe --addressSpace 10.0.0.0/16
+
+ # Criar um filtro de rota
+ azurerm route-filter create -g example-resources -n example-route-filter -l West Europe
+
+ # Criar uma regra de roteamento
+ azurerm route-filter rule create -g example-resources -n example-rule -r example-route-filter --access Allow --routeFilterRuleType Community --community 100:1 --addressPrefix 10.0.0.0/16
+    

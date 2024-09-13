@@ -1,0 +1,7 @@
+
+      // Crie um recurso de tradução
+aws translate translate-text --source-language-code en --target-language-code pt --text "Hello world"
+
+// Exiba o texto traduzido
+# aws translate translate-text --source-language-code en --target-language-code pt --text "Hello world" | jq '.TranslatedText'
+    

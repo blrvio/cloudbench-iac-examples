@@ -1,0 +1,17 @@
+
+      # Criar um modelo do Vertex AI
+gcloud ai models create my-model --display-name "My Model" --description "Modelo de predição" --location us-central1
+
+# Criar um endpoint do Vertex AI
+gcloud ai endpoints create my-endpoint --display-name "My Endpoint" --description "Endpoint de predição" --location us-central1
+
+# Criar uma versão do modelo do Vertex AI
+gcloud ai models versions create my-model-version --display-name "My Model Version" --description "Versão do modelo de predição" --model my-model --location us-central1
+
+# Implantar a versão do modelo no endpoint
+gcloud ai endpoints deploy my-endpoint --model-version my-model-version --location us-central1
+
+# Realizar uma predição
+gcloud ai predictions predict --endpoint my-endpoint --location us-central1 --json-instance "[{"features": {}}]" 
+
+    

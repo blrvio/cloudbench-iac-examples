@@ -1,0 +1,10 @@
+
+      # Crie um aplicativo App Engine
+gcloud app create my-app-engine-app --region us-central1
+
+# Crie um serviço App Engine
+gcloud app services create default --runtime nodejs16 --env standard --project your-project-id
+
+# Implante o aplicativo App Engine
+gcloud app deploy --project your-project-id
+    

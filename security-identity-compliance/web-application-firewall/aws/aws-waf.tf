@@ -1,93 +1,36 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a WAF Web ACL
-resource "aws_wafv2_web_acl" "main" {
-  name = "my-waf-web-acl" # Name of your WAF Web ACL
-  scope = "REGIONAL" # Scope of the Web ACL, can be REGIONAL or CLOUDFRONT
-  # Define the rules to apply to the Web ACL
+# Crie um Web ACL
+resource "aws_wafv2_web_acl" "example" {
+  name     = "example-waf-web-acl"
+  scope    = "REGIONAL"
   default_action {
-    allow {
-    }
+    allow {}
   }
-  rules {
-    name = "allow-https-traffic" # Name of the rule
-    priority = 1 # Priority of the rule
-    # Define the conditions for the rule
-    statement {
-      # Allow traffic from HTTPS connections
-      # This condition matches the connection's protocol
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_Statement.html#WAF-Type-Statement-FieldToMatch
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_FieldToMatch.html#WAF-Type-FieldToMatch-MatchFieldType
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_FieldToMatch.html#WAF-Type-FieldToMatch-MatchTokenType
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-FieldToMatch
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-TextTransformation
-      match_statement {
-        # The match statement can have several field to match, for the full list see the AWS API
-        # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html
-        field_to_match {
-          type = "HEADER"
-          data = "X-Forwarded-Proto"
-        }
-        text_transformation {
-          priority = 0
-          type = "NONE"
-        }
-        # Set the rule action, this action allows the request
-        # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-MatchResult
-        match_result {
-          match_result = "ALLOW"
-        }
-      }
-    }
+  # ... regras adicionais
+}
+
+# Crie um conjunto de regras de WAF
+resource "aws_wafv2_rule_group" "example" {
+  name   = "example-waf-rule-group"
+  scope  = "REGIONAL"
+  # ... regras adicionais
+}
+
+# Adicione um conjunto de regras ao Web ACL
+resource "aws_wafv2_web_acl_rule_statement" "example" {
+  web_acl_id     = aws_wafv2_web_acl.example.id
+  name            = "example-rule-statement"
+  priority        = 1
+  rule_group_reference_statement {
+    arn = aws_wafv2_rule_group.example.arn
   }
 }
 
-# Create a WAF Rule Group
-resource "aws_wafv2_rule_group" "main" {
-  name = "my-waf-rule-group" # Name of your WAF Rule Group
-  scope = "REGIONAL" # Scope of the Rule Group, can be REGIONAL or CLOUDFRONT
-  # Define the rules to apply to the Rule Group
-  rules {
-    name = "allow-https-traffic" # Name of the rule
-    priority = 1 # Priority of the rule
-    # Define the conditions for the rule
-    statement {
-      # Allow traffic from HTTPS connections
-      # This condition matches the connection's protocol
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_Statement.html#WAF-Type-Statement-FieldToMatch
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_FieldToMatch.html#WAF-Type-FieldToMatch-MatchFieldType
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_FieldToMatch.html#WAF-Type-FieldToMatch-MatchTokenType
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-FieldToMatch
-      # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-TextTransformation
-      match_statement {
-        # The match statement can have several field to match, for the full list see the AWS API
-        # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html
-        field_to_match {
-          type = "HEADER"
-          data = "X-Forwarded-Proto"
-        }
-        text_transformation {
-          priority = 0
-          type = "NONE"
-        }
-        # Set the rule action, this action allows the request
-        # https://docs.aws.amazon.com/waf/latest/APIReference/API_MatchStatement.html#WAF-Type-MatchStatement-MatchResult
-        match_result {
-          match_result = "ALLOW"
-        }
-      }
-    }
-  }
-}
+# ... configurações adicionais de WAF
 
-# Create a WAF Web ACL Association
-resource "aws_wafv2_web_acl_association" "main" {
-  web_acl_arn = aws_wafv2_web_acl.main.arn # ARN of the Web ACL
-  resource_arn = "arn:aws:cloudfront::123456789012:distribution/E1234567890ABC123" # ARN of the resource to associate the Web ACL with
-}
-
-  
+    

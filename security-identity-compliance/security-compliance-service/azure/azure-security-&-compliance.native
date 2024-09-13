@@ -1,0 +1,13 @@
+
+      // Enable Azure Security Center Standard
+azurerm securitycenter pricing update --subscription-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --pricing-tier Standard
+
+// Create a security contact
+azurerm securitycenter contact create --subscription-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --email security@example.com --phone 1234567890 --contact-type Primary
+
+// Create an Azure Policy for resource tagging
+azurerm policy definition create --name tag-resources --policy-type BuiltIn --display-name "Resource Tagging" --description "Enforces tagging of resources" --policy-rule '{ "if": { "allOf": [{ "field": "type", "equals": "Microsoft.Compute/virtualMachines" }, { "field": "tags['Environment']", "not": { "exists": true } }] }, "then": { "effect": "audit" } }'
+
+// Assign the Azure Policy to a resource group
+azurerm policy assignment create --name tag-resources-assignment --policy-definition-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Authorization/policyDefinitions/tag-resources --scope /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/rg-xxxxxxxx
+    

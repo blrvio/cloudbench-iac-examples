@@ -1,0 +1,10 @@
+
+      # Create a VCN
+oci core vcn create --display-name example-vcn --cidr-block 10.0.0.0/16
+
+# Create a subnet
+oci core subnet create --vcn-id <VCN_ID> --display-name example-subnet --cidr-block 10.0.1.0/24
+
+# Create an Autonomous Database
+oci database autonomous-database create --admin-password password --admin-username admin --database-edition ENTERPRISE_EDITION --db-name example-db --db-version 19c --hostname example-db --is-auto-scaling-enabled true --is-free-tier false --is-private-network-access-enabled false --license-model LICENSE_INCLUDED --maintenance-window-days MONDAY,TUESDAY --maintenance-window-hours 10:00,12:00 --maintenance-window-type WEEKLY --network-subnet-id <SUBNET_ID> --shape-name VM.Standard.E4.Flex --wait-for-state AVAILABLE
+    

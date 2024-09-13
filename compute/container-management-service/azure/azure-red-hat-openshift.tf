@@ -1,37 +1,36 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {}  # Enable all features
+  features {} # Habilite recursos recentes
 }
 
-# Create a Resource Group
-resource "azurerm_resource_group" "main" {
-  name     = "my-openshift-rg"
-  location = "eastus"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "openshift_rg" {
+  name     = "openshift-rg"
+  location = "westus2" # Substitua pela região desejada
 }
 
-# Create an OpenShift Cluster
-resource "azurerm_openshift_cluster" "main" {
-  name                = "my-openshift-cluster"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  # Set your desired OpenShift version
-  version              = "4.10"
-  # Set the number of worker nodes
-  worker_node_count    = 3
-  # Set the desired worker node size
-  worker_node_size      = "Standard_D2s_v3"
-  # Optional: Configure the Kubernetes API Server
-  kubernetes_api_server_private_base_domain_name = "my-openshift-cluster.hcp.eastus.azmk8s.io"
+# Crie um cluster do Azure Red Hat OpenShift
+resource "azurerm_openshift_cluster" "openshift_cluster" {
+  name                = "openshift-cluster"
+  resource_group_name = azurerm_resource_group.openshift_rg.name
+  location             = azurerm_resource_group.openshift_rg.location
+  version             = "4.9"
+  # ... (outras configurações)
 }
 
-# Output the OpenShift Cluster ID
-output "cluster_id" {
-  value = azurerm_openshift_cluster.main.id
+# Crie um namespace
+resource "azurerm_openshift_project" "my_namespace" {
+  cluster_name     = azurerm_openshift_cluster.openshift_cluster.name
+  resource_group_name = azurerm_resource_group.openshift_rg.name
+  name               = "my-namespace"
 }
 
-# Output the OpenShift Cluster URI
-output "cluster_uri" {
-  value = azurerm_openshift_cluster.main.kubernetes_api_server_uri
+# Importe uma imagem para o cluster
+resource "azurerm_openshift_image" "my_image" {
+  name                = "my-image"
+  cluster_name     = azurerm_openshift_cluster.openshift_cluster.name
+  resource_group_name = azurerm_resource_group.openshift_rg.name
+  # ... (outras configurações)
 }
-  
+    

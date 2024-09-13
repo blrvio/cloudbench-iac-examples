@@ -1,0 +1,34 @@
+
+      // This is an example code snippet for Real-time ASR using the Amazon Transcribe service.
+// Make sure to replace placeholder values with your own.
+
+// Import the necessary libraries.
+import boto3
+
+// Initialize the Transcribe client
+transcribe = boto3.client('transcribe')
+
+// Start a real-time transcription job
+response = transcribe.start_realtime_transcription_job(
+    TranscriptionJobName='my-real-time-asr-job',
+    LanguageCode='en-US', # Replace with your desired language
+    MediaEncoding='pcm',  # Replace with your audio encoding
+    MediaSampleRateHertz=16000, # Replace with your audio sample rate
+    OutputBucketName='my-bucket', # Replace with your S3 bucket
+    OutputKey='my-output-file.json', # Replace with your desired output file name
+    # ... other optional parameters as needed ...
+)
+
+// Get the transcription job ID
+job_id = response['TranscriptionJob']['TranscriptionJobId']
+
+// Print the job ID
+print('Real-time transcription job started with ID:', job_id)
+
+// ... Process the real-time transcription data from the job ...
+
+// End the real-time transcription job
+transcribe.stop_realtime_transcription_job(TranscriptionJobId=job_id)
+
+// ... Optional: wait for the transcription job to finish ...
+    

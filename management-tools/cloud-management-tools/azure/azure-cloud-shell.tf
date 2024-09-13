@@ -1,24 +1,20 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Optional, to enable features
+  features {} # Certifique-se de ter as credenciais configuradas
 }
 
-# Create an Azure Cloud Shell Profile
+# Crie um recurso de Cloud Shell
+resource "azurerm_cloud_shell" "example" {
+  name = "my-cloud-shell"
+  location = "westus2" # Substitua pela sua região desejada
+  storage_account_type = "Standard_LRS" # Escolha o tipo de armazenamento
+}
+
+# Opcionalmente, configure um script de inicialização personalizado
 resource "azurerm_cloud_shell_profile" "example" {
-  name     = "example-profile"
-  location = "westus2"
-  # The Storage Account to store Cloud Shell data
-  storage_account_id = azurerm_storage_account.example.id
+  name = "my-profile"
+  cloud_shell_id = azurerm_cloud_shell.example.id
+  script = "echo 'Hello from Cloud Shell!'"
 }
-
-# Create an Azure Storage Account
-resource "azurerm_storage_account" "example" {
-  name                     = "example-storageaccount"
-  resource_group_name      = "example-resources"
-  location                  = "westus2"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-  
+    

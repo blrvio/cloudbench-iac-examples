@@ -1,0 +1,22 @@
+
+      // Criar um aplicativo Amplify
+amplify apps create --name my-app
+
+// Criar um branch do aplicativo Amplify
+amplify apps update --app my-app --branch main --stage PRODUCTION --enable-basic-auth false
+
+// Adicionar variáveis de ambiente
+amplify apps update --app my-app --branch main --env 'KEY1=VALUE1 KEY2=VALUE2'
+
+// Adicionar um domínio personalizado
+amplify apps update --app my-app --domain my-domain.com --subdomain www
+
+// Criar um backend
+amplify apps update --app my-app --backend environment development
+
+// Adicionar uma API ao backend
+amplify apps update --app my-app --backend api my-api
+
+// Configurar autenticação no backend
+amplify apps update --app my-app --backend auth user-pools
+    

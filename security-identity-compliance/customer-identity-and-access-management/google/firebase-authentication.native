@@ -1,0 +1,10 @@
+
+      // Crie um provedor de autenticação de email/senha
+firebase auth:providers:create email --project my-firebase-project
+
+// Crie um provedor de autenticação do Google
+firebase auth:providers:create google.com --project my-firebase-project
+
+// Crie um provedor de autenticação do Facebook
+firebase auth:providers:create facebook.com --project my-firebase-project --client-id YOUR_FACEBOOK_APP_ID --client-secret YOUR_FACEBOOK_APP_SECRET
+    

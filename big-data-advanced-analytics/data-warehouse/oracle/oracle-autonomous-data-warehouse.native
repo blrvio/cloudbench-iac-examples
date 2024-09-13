@@ -1,0 +1,30 @@
+
+      # Crie um Autonomous Data Warehouse usando o SDK do Oracle Cloud Infrastructure
+# Instale o SDK do Oracle Cloud Infrastructure: https://docs.cloud.oracle.com/en-us/iaas/Content/API/SDKDocs/sdk.htm
+# Importe a biblioteca do SDK do Oracle Cloud Infrastructure
+import oci
+
+# Configure suas credenciais de autenticação
+config = oci.config.from_file("~/.oci/config")
+
+# Crie um objeto de cliente para Autonomous Data Warehouse
+adw_client = oci.database.AutonomousDatabaseClient(config)
+
+# Defina as propriedades do Autonomous Data Warehouse
+create_adw_details = oci.database.models.CreateAutonomousDatabaseDetails(
+  admin_password="password", # Substitua por uma senha forte
+  admin_username="admin", # Substitua pelo nome de usuário desejado
+  compartment_id="ocid1.compartment.oc1..aaaaaaaabbbbbbbbcccccccc", # O ID do compartimento onde o ADW será criado
+  database_edition="ENTERPRISE_EDITION", # Substitua pela edição desejada
+  db_name="myadw", # Nome do ADW
+  db_workload="OLTP" # Substitua pelo tipo de carga de trabalho desejado
+  # ...
+)
+
+# Crie o Autonomous Data Warehouse
+adw_response = adw_client.create_autonomous_database(create_adw_details)
+
+# Imprima o ID do Autonomous Data Warehouse recém-criado
+print(f"Autonomous Data Warehouse criado com sucesso: {adw_response.data.id}")
+
+    

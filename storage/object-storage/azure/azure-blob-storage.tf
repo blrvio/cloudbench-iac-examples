@@ -1,34 +1,42 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Ensure latest features are enabled
+  features {} # Pode conter configurações adicionais
 }
 
-# Create a Storage Account
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
+  location = "West Europe" # Substitua pela localização desejada
+}
+
+# Crie uma conta de armazenamento
 resource "azurerm_storage_account" "example" {
-  name                     = "example-storage-account"
-  resource_group_name     = "example-resource-group"
-  location                 = "westus"
+  name                     = "examplestorage"
+  resource_group_name     = azurerm_resource_group.example.name
+  location                 = azurerm_resource_group.example.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  # Optional: Set the storage account type
-  account_type = "BlobStorage"
+  account_redundancy        = "LRS"
 }
 
-# Create a Container in the Storage Account
+# Crie um contêiner de blob
 resource "azurerm_storage_container" "example" {
-  name                = "example-container"
+  name              = "example-container"
   storage_account_name = azurerm_storage_account.example.name
+  public_access_level = "blob"
 }
 
-# Create a Blob in the Container
+# Crie um blob
 resource "azurerm_storage_blob" "example" {
-  name                = "example-blob"
+  name              = "example-blob.txt"
   storage_account_name = azurerm_storage_account.example.name
-  container_name      = azurerm_storage_container.example.name
-  source               = "example.txt" # Path to your local file
-  # Optional: Set the Content Type
-  content_type = "text/plain"
+  storage_container_name = azurerm_storage_container.example.name
+  source             = "file://path/to/your/file.txt" # Substitua pelo caminho para seu arquivo local
+  type              = "BlockBlob"
+  metadata          = {
+    "key1" = "value1"
+    "key2" = "value2"
+  }
 }
-
-  
+    

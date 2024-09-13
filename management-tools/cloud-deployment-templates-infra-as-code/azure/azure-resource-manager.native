@@ -1,0 +1,22 @@
+
+      # Crie um grupo de recursos
+azurerm resourcegroup create -n example-rg -l westus2
+
+# Crie um armazenamento de blobs
+azurerm storage account create -n example-storage -g example-rg -l westus2 -sk Standard -rl LRS
+
+# Crie uma máquina virtual
+azurerm vm create -n example-vm -g example-rg -l westus2 -s Standard_B2s -i Canonical/UbuntuServer/18.04-LTS/Latest -d Standard_LRS
+
+# Crie uma interface de rede
+azurerm network nic create -n example-nic -g example-rg -l westus2 -s example-subnet -nsg example-nsg
+
+# Crie um grupo de segurança de rede
+azurerm network nsg create -n example-nsg -g example-rg -l westus2
+
+# Crie uma rede virtual
+azurerm network vnet create -n example-vnet -g example-rg -l westus2 -a 10.0.0.0/16
+
+# Crie uma sub-rede
+azurerm network subnet create -n example-subnet -g example-rg -v example-vnet -a 10.0.1.0/24
+    

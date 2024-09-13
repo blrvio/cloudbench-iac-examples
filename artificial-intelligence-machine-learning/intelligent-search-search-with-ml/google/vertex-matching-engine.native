@@ -1,0 +1,7 @@
+
+      # Crie um endpoint do Vertex Matching Engine
+gcloud ai matching-engines endpoints create matching-engine-endpoint --location=us-central1 --display-name=matching-engine-endpoint --model=your-model-name --model-version=your-model-version
+
+# Crie uma tarefa de correspondência
+gcloud ai matching-engines jobs create matching-job --location=us-central1 --display-name=matching-job --endpoint=matching-engine-endpoint --input-bigquery-table=your-project-id.your-dataset.your-table --output-bigquery-table=your-project-id.your-dataset.your-output-table
+    

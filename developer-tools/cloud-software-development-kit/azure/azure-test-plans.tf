@@ -1,47 +1,54 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use o recurso para habilitar as últimas funcionalidades
 }
 
-# Create an Azure DevOps Project
-resource "azurerm_devops_project" "main" {
-  name     = "my-test-project"
-  visibility = "private"
+# Crie um plano de teste
+resource "azurerm_test_plan" "example" {
+  name     = "example-test-plan"
+  project_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Substitua pelo ID do projeto
 }
 
-# Create a Test Plan
-resource "azurerm_devops_test_plan" "main" {
-  project_id = azurerm_devops_project.main.id
-  name       = "my-test-plan"
+# Crie um conjunto de testes
+resource "azurerm_test_suite" "example" {
+  name     = "example-test-suite"
+  plan_id = azurerm_test_plan.example.id
 }
 
-# Create a Test Suite
-resource "azurerm_devops_test_suite" "main" {
-  project_id = azurerm_devops_project.main.id
-  plan_id    = azurerm_devops_test_plan.main.id
-  name       = "my-test-suite"
+# Crie um caso de teste
+resource "azurerm_test_case" "example" {
+  name        = "example-test-case"
+  suite_id    = azurerm_test_suite.example.id
+  area_path   = "example-area"
+  iteration_path = "example-iteration"
 }
 
-# Create a Test Case
-resource "azurerm_devops_test_case" "main" {
-  project_id = azurerm_devops_project.main.id
-  suite_id    = azurerm_devops_test_suite.main.id
-  name       = "my-test-case"
-  # Define the steps of the test case
-  steps = [
-    {
-      action     = "Navigate to a web page"
-      arguments = "https://www.example.com"
-    },
-    {
-      action     = "Click a button"
-      arguments = "Login"
-    },
-    {
-      action     = "Verify text"
-      arguments = "Welcome, user"
-    }
-  ]
+# Crie um ponto de verificação
+resource "azurerm_test_point" "example" {
+  name     = "example-test-point"
+  case_id = azurerm_test_case.example.id
+  result    = "Passed"
 }
-  
+
+# Crie uma execução de teste
+resource "azurerm_test_run" "example" {
+  name         = "example-test-run"
+  plan_id      = azurerm_test_plan.example.id
+  suite_id     = azurerm_test_suite.example.id
+  start_date  = "2023-01-01T00:00:00Z"
+  end_date    = "2023-01-02T00:00:00Z"
+  assigned_to = "example-user"
+  state       = "Completed"
+}
+
+# Crie um resultado de teste
+resource "azurerm_test_result" "example" {
+  run_id      = azurerm_test_run.example.id
+  case_id     = azurerm_test_case.example.id
+  outcome    = "Passed"
+  duration    = 120
+  started_date = "2023-01-01T00:00:00Z"
+  completed_date = "2023-01-01T00:01:00Z"
+}
+    

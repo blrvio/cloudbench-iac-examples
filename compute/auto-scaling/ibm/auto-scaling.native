@@ -1,0 +1,13 @@
+
+      // Crie uma configuração de lançamento
+aws autoscaling create-launch-configuration --launch-configuration-name web_server_lc --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups allow_ssh
+
+// Crie um grupo de auto escalonamento
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name web_server_asg --launch-configuration-name web_server_lc --min-size 1 --max-size 3 --desired-capacity 1 --vpc-zone-identifier subnet-xxxxxxxx subnet-xxxxxxxx
+
+// Adicione uma política de escalonamento (opcional)
+# aws autoscaling put-scaling-policy --auto-scaling-group-name web_server_asg --scaling-policy-name web_server_scaling_policy --adjustment-type ChangeInCapacity --scaling-adjustment 1 --cooldown 300
+
+// Desligue o auto escalonamento
+# aws autoscaling delete-auto-scaling-group --auto-scaling-group-name web_server_asg --force-delete
+    

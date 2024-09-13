@@ -1,0 +1,10 @@
+
+      // Crie um cluster de Cloud Container Instance
+gcloud container clusters create my-cluster --num-nodes=1 --zone us-central1-a --machine-type e2-medium
+
+// Crie um namespace no cluster
+gcloud container namespaces create default --cluster my-cluster
+
+// Importe o serviço do Google Kubernetes Engine
+gcloud container clusters create my-service --cluster my-cluster --namespace default --image nginx:latest --port 80
+    

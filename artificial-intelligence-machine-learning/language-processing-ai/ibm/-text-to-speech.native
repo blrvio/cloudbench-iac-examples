@@ -1,0 +1,7 @@
+
+      // Criar um arquivo de voz com o conteúdo do TTS
+gcloud text-to-speech synthesize --text "Exemplo de texto para ser convertido em fala" --voice "pt-BR-Wavenet-D"
+
+// Baixar o arquivo de voz
+gcloud storage cp gs://bucket-name/sample-audio.mp3 ./sample-audio.mp3
+    

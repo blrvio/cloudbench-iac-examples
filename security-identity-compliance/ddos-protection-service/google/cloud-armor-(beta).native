@@ -1,0 +1,26 @@
+
+      # Create a Cloud Armor Security Policy
+gcloud compute security-policies create default --type CLOUD_ARMOR --description "Security Policy for Cloud Armor"
+
+# Create a Cloud Armor protection rule
+gcloud compute security-policies rules create default --security-policy default --priority 1000 --match-version V1 --layer4-config match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.header-name=X-Forwarded-For --layer4-config http-options request-header-match-options.match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.string-match-options match-criteria=CONTAINS --layer4-config http-options request-header-match-options.string-match-options contains-string="192.168.0.1" --action deny
+
+# Create a Cloud Armor protection resource
+gcloud compute firewall-policies create default --parent projects/your-project-id/global/firewallPolicies --priority 1000 --display-name default --enforcement-order AFTER_CLASSIC_FIREWALL --fingerprint your-fingerprint --security-policy default
+
+# Create a firewall rule
+gcloud compute firewall-policies rules create default --firewall-policy default --priority 1000 --match-version V1 --layer4-config match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.header-name=X-Forwarded-For --layer4-config http-options request-header-match-options.match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.string-match-options match-criteria=CONTAINS --layer4-config http-options request-header-match-options.string-match-options contains-string="192.168.0.1" --action deny
+
+# Create a Cloud Armor protection resource
+gcloud compute firewall-policies rules enforcement-order create default --firewall-policy default --priority 1000 --enforcement-order AFTER_CLASSIC_FIREWALL
+
+# Create a Cloud Armor protection resource
+gcloud compute firewall-policies rules match create default --firewall-policy default --priority 1000 --match-version V1 --layer4-config match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.header-name=X-Forwarded-For --layer4-config http-options request-header-match-options.match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.string-match-options match-criteria=CONTAINS --layer4-config http-options request-header-match-options.string-match-options contains-string="192.168.0.1"
+
+# Create a Cloud Armor protection resource
+gcloud compute firewall-policies rules action create default --firewall-policy default --priority 1000 --action deny
+
+# Create a Cloud Armor protection resource
+gcloud compute firewall-policies rules layer4-config create default --firewall-policy default --priority 1000 --layer4-config match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.header-name=X-Forwarded-For --layer4-config http-options request-header-match-options.match-criteria=ANY_MATCH --layer4-config http-options request-header-match-options.string-match-options match-criteria=CONTAINS --layer4-config http-options request-header-match-options.string-match-options contains-string="192.168.0.1"
+
+    

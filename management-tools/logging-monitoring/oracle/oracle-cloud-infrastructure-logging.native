@@ -1,0 +1,10 @@
+
+      // Crie um log group
+oci logging log-group create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --display-name my-log-group
+
+// Crie um log
+oci logging log create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --display-name my-log --log-group-id ocid1.loggroup.oc1..aaaaaaaaxxxxxxxxxxxxxx
+
+// Crie uma regra de log
+oci logging log-rule create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --display-name my-log-rule --log-group-id ocid1.loggroup.oc1..aaaaaaaaxxxxxxxxxxxxxx --log-id ocid1.log.oc1..aaaaaaaaxxxxxxxxxxxxxx --action WRITE --lifecycle-state ENABLED --description "My log rule"
+    

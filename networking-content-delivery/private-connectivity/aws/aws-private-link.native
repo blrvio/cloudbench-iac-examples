@@ -1,0 +1,9 @@
+
+      // Crie um endpoint de serviço para o Amazon S3
+aws ec2 create-vpc-endpoint --service-name com.amazonaws.us-east-1.s3 --vpc-id vpc-xxxxxxxx --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx --security-groups sg-xxxxxxxx
+
+// Crie um grupo de segurança para permitir o acesso ao endpoint de serviço
+aws ec2 create-security-group --group-name allow_s3 --description "Allow S3 access" --vpc-id vpc-xxxxxxxx
+
+aws ec2 authorize-security-group-ingress --group-name allow_s3 --protocol tcp --port 443 --cidr 10.0.0.0/16
+    

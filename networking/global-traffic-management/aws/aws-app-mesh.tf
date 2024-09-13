@@ -1,82 +1,56 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS App Mesh Virtual Node
-resource "aws_appmesh_virtual_node" "main" {
-  mesh_name = "my-appmesh"
-  name      = "my-virtual-node"
-  spec {
-    backend {
-      virtual_service {
-        virtual_service_name = "my-virtual-service"
-      }
-    }
-    listener {
-      port_mapping {
-        port     = 8080
-        protocol = "http"
-      }
-    }
-    service_discovery {
-      aws_cloud_map {
-        namespace_name = "my-namespace"
-        service_name   = "my-service"
-      }
-    }
-  }
-  tags = {
-    Name = "My Virtual Node"
-  }
+# Crie uma malha do App Mesh
+resource "aws_appmesh_mesh" "example" {
+  name = "example"
+  # ...
 }
 
-# Create an AWS App Mesh Virtual Router
-resource "aws_appmesh_virtual_router" "main" {
-  mesh_name = "my-appmesh"
-  name      = "my-virtual-router"
-  spec {
-    listener {
-      port_mapping {
-        port     = 8080
-        protocol = "http"
-      }
-    }
-    route {
-      http_route {
-        action {
-          weighted_targets {
-            weighted_target {
-              virtual_node = aws_appmesh_virtual_node.main.name
-              weight       = 100
-            }
-          }
-        }
-        match {
-          prefix = "/my-path"
-        }
-      }
-    }
-  }
-  tags = {
-    Name = "My Virtual Router"
-  }
+# Crie um virtual service
+resource "aws_appmesh_virtual_service" "example" {
+  mesh_name = aws_appmesh_mesh.example.name
+  name      = "example"
+  # ...
 }
 
-# Create an AWS App Mesh Virtual Service
-resource "aws_appmesh_virtual_service" "main" {
-  mesh_name = "my-appmesh"
-  name      = "my-virtual-service"
-  spec {
-    provider {
-      virtual_node {
-        virtual_node_name = aws_appmesh_virtual_node.main.name
-      }
-    }
-  }
-  tags = {
-    Name = "My Virtual Service"
-  }
+# Crie um virtual router
+resource "aws_appmesh_virtual_router" "example" {
+  mesh_name = aws_appmesh_mesh.example.name
+  name      = "example"
+  virtual_service_name = aws_appmesh_virtual_service.example.name
+  # ...
 }
-  
+
+# Crie uma rota
+resource "aws_appmesh_route" "example" {
+  mesh_name = aws_appmesh_mesh.example.name
+  name      = "example"
+  virtual_router_name = aws_appmesh_virtual_router.example.name
+  # ...
+}
+
+# Crie um virtual node
+resource "aws_appmesh_virtual_node" "example" {
+  mesh_name = aws_appmesh_mesh.example.name
+  name      = "example"
+  # ...
+}
+
+# Crie um listener
+resource "aws_appmesh_virtual_node_listener" "example" {
+  mesh_name     = aws_appmesh_mesh.example.name
+  virtual_node_name = aws_appmesh_virtual_node.example.name
+  # ...
+}
+
+# Crie um backend
+resource "aws_appmesh_virtual_node_backend" "example" {
+  mesh_name     = aws_appmesh_mesh.example.name
+  virtual_node_name = aws_appmesh_virtual_node.example.name
+  # ...
+}
+    

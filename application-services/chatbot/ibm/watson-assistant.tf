@@ -1,61 +1,50 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region  = "us-south"
+  api_key     = "your_api_key" # Substitua pela sua API key
+  region       = "us-south" # Substitua pela região desejada
+  service_name = "watson-assistant" # Nome do serviço Watson Assistant
 }
 
-# Create a Watson Assistant service
-resource "ibm_watson_assistant_service" "main" {
-  name     = "my-watson-assistant"
-  plan     = "lite"
-  location = "us-south"
+# Crie um assistente
+resource "ibm_watson_assistant_assistant" "my_assistant" {
+  name = "My Assistant"
+  description = "My first assistant"
+  language = "en"
 }
 
-# Create a Watson Assistant workspace
-resource "ibm_watson_assistant_workspace" "main" {
-  assistant_id = ibm_watson_assistant_service.main.id
-  name        = "my-watson-workspace"
+# Crie um intent
+resource "ibm_watson_assistant_intent" "my_intent" {
+  assistant_id = ibm_watson_assistant_assistant.my_assistant.id
+  name         = "Welcome Intent"
+  description  = "Welcome the user"
+  examples      = ["Hello", "Hi", "Good morning"]
 }
 
-# Create an intent for the Watson Assistant workspace
-resource "ibm_watson_assistant_intent" "main" {
-  workspace_id = ibm_watson_assistant_workspace.main.id
-  name         = "greeting"
-  description  = "A greeting intent"
-  examples     = ["Hello", "Hi", "Good morning"]
+# Crie uma entidade
+resource "ibm_watson_assistant_entity" "my_entity" {
+  assistant_id = ibm_watson_assistant_assistant.my_assistant.id
+  name         = "Location"
+  description  = "Location of the user"
+  values        = ["New York", "London", "Tokyo"]
 }
 
-# Create an entity for the Watson Assistant workspace
-resource "ibm_watson_assistant_entity" "main" {
-  workspace_id = ibm_watson_assistant_workspace.main.id
-  name         = "location"
-  description  = "A location entity"
-  values       = ["New York", "London", "Tokyo"]
-}
-
-# Create a dialog node for the Watson Assistant workspace
-resource "ibm_watson_assistant_dialog_node" "main" {
-  workspace_id = ibm_watson_assistant_workspace.main.id
-  name         = "greeting_node"
-  conditions   = ["#greeting"]
+# Crie uma ação de diálogo
+resource "ibm_watson_assistant_dialog_node" "my_dialog_node" {
+  assistant_id = ibm_watson_assistant_assistant.my_assistant.id
+  name         = "Welcome Node"
+  description  = "Welcome the user and ask for their location"
+  conditions    = "$welcome_intent"
   output        = {
-    text = "Hello there! How can I help you today?"
+    text = "Hello! What is your location?"
   }
 }
 
-# Create a skill for the Watson Assistant workspace
-resource "ibm_watson_assistant_skill" "main" {
-  workspace_id = ibm_watson_assistant_workspace.main.id
-  name         = "my-skill"
-  description  = "A sample skill"
+# Crie um exemplo de treinamento
+resource "ibm_watson_assistant_training_example" "my_training_example" {
+  assistant_id = ibm_watson_assistant_assistant.my_assistant.id
+  intent_id   = ibm_watson_assistant_intent.my_intent.id
+  text        = "Hello, I'm in New York"
+  entities     = [{"entity": "Location", "value": "New York"}]
 }
-
-# Create a webhook for the Watson Assistant workspace
-resource "ibm_watson_assistant_webhook" "main" {
-  workspace_id = ibm_watson_assistant_workspace.main.id
-  name         = "my-webhook"
-  url          = "https://example.com/webhook"
-}
-
-  
+    

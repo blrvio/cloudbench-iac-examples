@@ -1,0 +1,19 @@
+
+      // Configure o AWS Snowmobile
+aws snowmobile create-job --job-name "my-snowmobile-job" --region us-east-1 --storage-capacity 1000TB
+
+// Prepare a physical device for shipping
+aws snowmobile prepare-device --job-name "my-snowmobile-job"
+
+// Ship the device to AWS
+// ... (ship the device to the AWS facility)
+
+// Upload the data to the device
+// ... (upload the data to the device)
+
+// Return the device to AWS
+// ... (ship the device back to the AWS facility)
+
+// Finish the job
+aws snowmobile finish-job --job-name "my-snowmobile-job"
+    

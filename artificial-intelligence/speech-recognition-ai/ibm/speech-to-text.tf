@@ -1,29 +1,63 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "your-project-id"
+  region  = "us-central1"
 }
 
-# Create a Speech to Text resource
-resource "ibm_speech_to_text" "main" {
-  name = "my-speech-to-text-resource"
-  # Optional configuration options:
-  # model = "en-US_BroadbandModel"
+# Crie um modelo de linguagem para transcrição de áudio
+resource "google_speech_to_text_custom_class" "my_class" {
+  display_name = "My Class"
+  description  = "Custom class for transcribing specific vocabulary"
+  custom_class_items {
+    value   = "keyword1"
+    display_name = "Keyword 1"
+  }
+  custom_class_items {
+    value   = "keyword2"
+    display_name = "Keyword 2"
+  }
 }
 
-# Create a Speech to Text Language Model
-resource "ibm_speech_to_text_language_model" "main" {
-  name = "my-custom-language-model"
-  # Optional configuration options:
-  # base_model_name = "en-US_BroadbandModel"
+# Crie um modelo de linguagem para transcrição de áudio
+resource "google_speech_to_text_custom_class" "my_class" {
+  display_name = "My Class"
+  description  = "Custom class for transcribing specific vocabulary"
+  custom_class_items {
+    value   = "keyword1"
+    display_name = "Keyword 1"
+  }
+  custom_class_items {
+    value   = "keyword2"
+    display_name = "Keyword 2"
+  }
 }
 
-# Create a Speech to Text Custom Acoustic Model
-resource "ibm_speech_to_text_acoustic_model" "main" {
-  name = "my-custom-acoustic-model"
-  # Optional configuration options:
-  # base_model_name = "en-US_BroadbandModel"
+# Crie um modelo de linguagem para transcrição de áudio
+resource "google_speech_to_text_custom_class" "my_class" {
+  display_name = "My Class"
+  description  = "Custom class for transcribing specific vocabulary"
+  custom_class_items {
+    value   = "keyword1"
+    display_name = "Keyword 1"
+  }
+  custom_class_items {
+    value   = "keyword2"
+    display_name = "Keyword 2"
+  }
 }
 
-  
+# Crie um modelo de linguagem para transcrição de áudio
+resource "google_speech_to_text_custom_class" "my_class" {
+  display_name = "My Class"
+  description  = "Custom class for transcribing specific vocabulary"
+  custom_class_items {
+    value   = "keyword1"
+    display_name = "Keyword 1"
+  }
+  custom_class_items {
+    value   = "keyword2"
+    display_name = "Keyword 2"
+  }
+}
+    

@@ -1,0 +1,7 @@
+
+      // Create a Dialogflow agent
+gcloud dialogflow agents create my-agent --display-name "my-agent" --default-language-code en
+
+// Create an intent
+gcloud dialogflow intents create --agent my-agent --display-name "Welcome Intent" --training-phrases "Hello" --action input.welcome --output-contexts projects/your-project-id/agent/sessions/your-session-id/contexts/welcome
+    

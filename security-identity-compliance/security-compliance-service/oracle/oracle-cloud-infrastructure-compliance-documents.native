@@ -1,0 +1,20 @@
+
+      // Create a Compliance Document
+# ocid for compartment
+COMPARTMENT_OCID="ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+# Create a compliance document
+ocr compliance document create --compartment-id $COMPARTMENT_OCID --display-name "My Compliance Document" --description "This is a compliance document for my environment" --document-type "CUSTOM" --document-content "[{"id": "CUSTOM-1", "name": "Custom Compliance Requirement", "description": "My custom compliance requirement", "status": "ENABLED", "type": "CUSTOM", "compliance_rule_type": "CUSTOM"}]"
+
+# View Compliance Documents
+ocr compliance document list --compartment-id $COMPARTMENT_OCID
+
+# View a compliance document
+ocr compliance document get --document-id "ocid1.compliancedocument.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+# Update a compliance document
+ocr compliance document update --document-id "ocid1.compliancedocument.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa" --display-name "My Updated Compliance Document"
+
+# Delete a compliance document
+ocr compliance document delete --document-id "ocid1.compliancedocument.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    

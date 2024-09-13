@@ -1,53 +1,53 @@
 
-    # Configure the Alibaba Cloud Provider
-provider "alicloud" {
-  region = "cn-hangzhou" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a VPN Gateway
-resource "alicloud_vpn_gateway" "main" {
-  name           = "my-vpn-gateway" # Name of the VPN Gateway
-  vpc_id         = "vpc-abc12345" # ID of the VPC
-  bandwidth       = 5 # Bandwidth in Mbps
-  instance_charge_type = "PostPaid" # Charging type (PostPaid or PrePaid)
-  description     = "My VPN Gateway"
-}
-
-# Create a VPN Connection
-resource "alicloud_vpn_connection" "main" {
-  name         = "my-vpn-connection" # Name of the VPN Connection
-  local_subnet = "192.168.1.0/24" # Local subnet IP range
-  remote_subnet = "172.16.0.0/16" # Remote subnet IP range
-  vpn_gateway_id = alicloud_vpn_gateway.main.id # ID of the VPN Gateway
-  type         = "ipsec" # Connection type (ipsec)
-  # Optional: Set the VPN Connection policy
-  # ike_config {
-  #   pfs = "true"
-  #   encryption = "aes-256-cbc"
-  #   authentication = "sha1"
-  # }
-  # ipsec_config {
-  #   encryption = "aes-256-cbc"
-  #   authentication = "sha1"
-  #   pfs = "true"
-  # }
-}
-
-# Create a Customer Gateway
-resource "alicloud_vpn_customer_gateway" "main" {
-  name           = "my-customer-gateway" # Name of the Customer Gateway
-  ip_address     = "10.10.10.10" # Public IP address of the customer gateway
-  description     = "My Customer Gateway"
-  # Optional: Set the Customer Gateway policy
-  # ike_config {
-  #   pfs = "true"
-  #   encryption = "aes-256-cbc"
-  #   authentication = "sha1"
-  # }
-  # ipsec_config {
-  #   encryption = "aes-256-cbc"
-  #   authentication = "sha1"
-  #   pfs = "true"
-  # }
-}
+# Crie um VPN Gateway
+resource "aws_vpn_gateway" "main" {
+  type = "ipsec.1"
   
+  # Substitua pela ID da sua VPC
+  vpc_id = "vpc-xxxxxxxx"
+}
+
+# Crie um VPN Connection
+resource "aws_vpn_connection" "main" {
+  vpn_gateway_id = aws_vpn_gateway.main.id
+  
+  # Substitua pelo endereço IP público da sua VPN
+  customer_gateway_ip = "x.x.x.x"
+  
+  # Substitua pela sua política de VPN
+  type = "ipsec.1"
+
+  # Substitua pelos detalhes da sua VPN
+  # tunnel_options {
+  #   # Substitua pela sua rede local
+  #   pre_shared_key = "your_pre_shared_key"
+  #   # Substitua pelo algoritmo de criptografia
+  #   # ike_versions = ["ikev2"]
+  #   # Substitua pelos algoritmos de criptografia
+  #   # phase1_algorithms = ["aes-256-cbc", "aes-128-cbc", "aes-192-cbc", "aes-256-gcm", "aes-128-gcm"]
+  #   # Substitua pelos algoritmos de criptografia
+  #   # phase2_algorithms = ["aes-256-cbc", "aes-128-cbc", "aes-192-cbc", "aes-256-gcm", "aes-128-gcm"]
+  #   # Substitua pelos números de port
+  #   # ike_port = "500"
+  #   # Substitua pelos números de port
+  #   # ipsec_port = "4500"
+  # }
+}
+
+# Crie um VPN Connection Route
+resource "aws_vpn_connection_route" "main" {
+  vpn_connection_id = aws_vpn_connection.main.id
+  
+  # Substitua pelo prefixo de rede
+  destination_cidr_block = "10.0.0.0/16"
+  
+  # Substitua pelo ID da sua subnet
+  #  target_subnet_id = "subnet-xxxxxxxx"
+}
+
+    

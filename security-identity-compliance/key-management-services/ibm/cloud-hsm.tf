@@ -1,32 +1,21 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  region = "us-south"
-  api_key = "your_ibm_cloud_api_key"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Cloud HSM instance
-resource "ibm_cloud_hsm" "main" {
-  name = "my-hsm-instance"
-  plan = "standard"
-  # Optional: Specify the data center to deploy the HSM in
-  location = "dal10"
+# Crie um cluster do Cloud HSM
+resource "aws_cloudhsm_v2_cluster" "example" {
+  hsm_type = "hsm1.medium"
+  subnet_ids = ["subnet-xxxxxxxx"] # Substitua pelo ID da sua sub-rede
+  source_backup_id = "backup-xxxxxxxx" # Substitua pelo ID do backup (opcional)
 }
 
-# Create a Cloud HSM cluster
-resource "ibm_cloud_hsm_cluster" "main" {
-  name = "my-hsm-cluster"
-  hsm_instance_id = ibm_cloud_hsm.main.id
-  # Optional: Specify a custom subnet to deploy the cluster in
-  subnet_id = "your_subnet_id"
+# Crie um HSM no cluster
+resource "aws_cloudhsm_v2_hsm" "example" {
+  cluster_id  = aws_cloudhsm_v2_cluster.example.id
+  eni_id       = "eni-xxxxxxxx" # Substitua pelo ID da sua interface de rede elástica
+  subnet_id   = "subnet-xxxxxxxx" # Substitua pelo ID da sua sub-rede
+  external_ip = "x.x.x.x" # Substitua pelo IP externo do HSM
 }
-
-# Create a Cloud HSM client
-resource "ibm_cloud_hsm_client" "main" {
-  name = "my-hsm-client"
-  hsm_cluster_id = ibm_cloud_hsm_cluster.main.id
-  # Optional: Specify a custom security group to use for the client
-  security_group_id = "your_security_group_id"
-}
-
-  
+    

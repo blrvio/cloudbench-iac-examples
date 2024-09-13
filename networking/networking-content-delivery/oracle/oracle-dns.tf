@@ -1,37 +1,25 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+      # Configure o provedor do Oracle Cloud
 provider "oci" {
-  region = "us-ashburn-1" # Replace with your desired region
-  # Authenticate using your API key and secret
-  # You can set these variables in your environment or in a separate file
-  api_key = var.oci_api_key
-  api_secret = var.oci_api_secret
+  region = "us-ashburn-1"
+  # Substitua pela sua região desejada
 }
 
-# Create a DNS zone
-resource "oci_dns_zone" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  name           = "example.com"
-  # Define the DNS zone type
-  # "PRIMARY" for a hosted zone
-  # "SECONDARY" for a secondary zone
-  zone_type = "PRIMARY"
-  # Set the DNSSEC flags
-  # "TRUE" to enable DNSSEC
-  dnssec_enabled = false
-}
+# Crie um serviço de DNS
+resource "oci_dns_service" "my_dns_service" {
+  name = "my-dns-service"
+  # Crie uma zona DNS
+  resource "oci_dns_zone" "my_zone" {
+    name = "example.com"
+    # Substitua pelo nome da zona desejado
+  }
 
-# Create a DNS record
-resource "oci_dns_record" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  zone_id        = oci_dns_zone.main.id
-  name           = "www"
-  # Define the record type
-  # "A", "AAAA", "CNAME", "TXT", "SRV", etc.
-  record_type = "A"
-  # Define the record data
-  data            = ["1.2.3.4"]
-  # Set the TTL (time to live) for the record
-  ttl              = 300
+  # Crie um registro DNS
+  resource "oci_dns_record" "my_record" {
+    zone_id = oci_dns_zone.my_zone.id
+    name = "www"
+    type = "A"
+    # Substitua pelo nome do registro desejado
+  }
 }
-  
+    

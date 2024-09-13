@@ -1,0 +1,13 @@
+
+      // Crie um registro de dispositivo
+gcloud iot registries create my-device-registry --region=us-central1
+
+// Crie um dispositivo
+gcloud iot devices create my-device --registry=my-device-registry --region=us-central1
+
+// Crie um dispositivo para receber dados
+gcloud iot devices patch my-device --registry=my-device-registry --region=us-central1 --config-version='{"binary_data": "base64:your-configuration-data"}'
+
+// Publique dados para o dispositivo
+gcloud iot devices patch my-device --registry=my-device-registry --region=us-central1 --state-version='{"binary_data": "base64:your-data"}'
+    

@@ -1,0 +1,13 @@
+
+      // Create a DMS replication instance
+aws dms create-replication-instance --replication-instance-identifier dms-replication-instance --replication-instance-class dms.t2.small --engine-version 1.2.0
+
+// Create a DMS replication task
+aws dms create-replication-task --replication-task-identifier dms-replication-task --replication-instance-arn arn:aws:dms:us-east-1:123456789012:replication-instance:dms-replication-instance --source-endpoint-arn arn:aws:dms:us-east-1:123456789012:endpoint:dms-source-endpoint --target-endpoint-arn arn:aws:dms:us-east-1:123456789012:endpoint:dms-target-endpoint
+
+// Create a DMS endpoint for the source database
+aws dms create-endpoint --endpoint-identifier dms-source-endpoint --endpoint-type source --engine-name mysql --username username --password password --hostname hostname --port 3306
+
+// Create a DMS endpoint for the target database
+aws dms create-endpoint --endpoint-identifier dms-target-endpoint --endpoint-type target --engine-name postgres --username username --password password --hostname hostname --port 5432
+    

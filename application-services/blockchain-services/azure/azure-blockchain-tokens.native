@@ -1,0 +1,19 @@
+
+      // Criar um novo recurso de blockchain
+az blockchain create -g my-resource-group -n my-blockchain -l westus2 -s Basic --members 2 --consensus Raft
+
+// Criar um novo token
+az blockchain token create -g my-resource-group -n my-blockchain -t my-token --description "My custom token" --token-type Fungible
+
+// Criar um novo contrato inteligente
+az blockchain smart-contract create -g my-resource-group -n my-blockchain -c my-contract --contract-source "[your contract source code]" --contract-language Solidity
+
+// Criar um novo usuário
+az blockchain user create -g my-resource-group -n my-blockchain -u my-user
+
+// Adicionar o usuário ao blockchain
+az blockchain user associate -g my-resource-group -n my-blockchain -u my-user
+
+// Adicionar um token ao usuário
+az blockchain token-user-associate -g my-resource-group -n my-blockchain -t my-token -u my-user --initial-amount 1000
+    

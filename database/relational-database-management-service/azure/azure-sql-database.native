@@ -1,0 +1,10 @@
+
+      // Create a resource group
+ az group create --name rg-example --location westus
+
+// Create a SQL server
+ az sql server create --resource-group rg-example --name sqlserver-example --location westus --administrator-login admin --administrator-password <your_password> --version 2019-12
+
+// Create a SQL database
+ az sql db create --resource-group rg-example --server-name sqlserver-example --name sqldb-example --location westus
+    

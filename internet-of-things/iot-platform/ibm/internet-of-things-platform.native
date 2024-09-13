@@ -1,0 +1,10 @@
+
+      // Crie um certificado de IoT
+aws iot create-certificate --certificate-pem "..."
+
+// Crie uma coisa do IoT
+aws iot create-thing --thing-name "my_thing"
+
+// Adicione o certificado à coisa
+aws iot attach-thing-principal --thing-name "my_thing" --principal "arn:aws:iot:us-east-1:123456789012:cert/xxxxxxxxxxxxxxxxxxxxxxxxx" // Substitua pelo ARN do certificado
+    

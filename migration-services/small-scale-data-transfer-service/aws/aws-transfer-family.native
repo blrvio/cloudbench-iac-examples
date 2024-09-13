@@ -1,0 +1,10 @@
+
+      // Crie um servidor de transferência
+aws transfer create-server --server-id example-server --endpoint-type SFTP --hostname example.com --# ...
+
+// Crie um usuário de transferência
+aws transfer create-user --server-id example-server --user-name example-user --# ...
+
+// Crie uma chave de segurança
+aws transfer create-ssh-key --server-id example-server --ssh-public-key "# ..."
+    

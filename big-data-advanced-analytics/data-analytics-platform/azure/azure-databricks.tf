@@ -1,34 +1,34 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use recursos preview
 }
 
-# Create a Databricks Workspace
-resource "azurerm_databricks_workspace" "main" {
-  name     = "my-databricks-workspace"
-  location = "westus2"
-  resource_group_name = "my-resource-group"
-  # Configure optional settings
+# Crie um workspace do Databricks
+resource "azurerm_databricks_workspace" "example" {
+  name                = "example-databricks-workspace"
+  resource_group_name = "example-resource-group"
+  location            = "westus2"
   # ...
 }
 
-# Create a Databricks Cluster
-resource "azurerm_databricks_cluster" "main" {
-  workspace_id = azurerm_databricks_workspace.main.id
-  name         = "my-databricks-cluster"
-  # Define node configuration
-  node_type_id = "Standard_DS3_v2"
-  # Configure cluster settings
+# Crie um cluster do Databricks
+resource "azurerm_databricks_cluster" "example" {
+  name                 = "example-databricks-cluster"
+  workspace_id         = azurerm_databricks_workspace.example.id
+  spark_version         = "11.3.x-scala2.12"
+  node_type            = "Standard_DS3_v2"
+  driver_node_count    = 1
+  worker_node_count    = 2
   # ...
 }
 
-# Create a Databricks Job
-resource "azurerm_databricks_job" "main" {
-  workspace_id = azurerm_databricks_workspace.main.id
-  name         = "my-databricks-job"
-  # Define job settings
+# Crie uma tabela de dados no workspace do Databricks
+resource "azurerm_databricks_table" "example" {
+  name                = "example-table"
+  workspace_id         = azurerm_databricks_workspace.example.id
+  storage_path        = "dbfs:/example/table.parquet"
+  data_format         = "parquet"
   # ...
 }
-
-  
+    

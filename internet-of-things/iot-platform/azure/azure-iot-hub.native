@@ -1,0 +1,16 @@
+
+      // Crie um hub IoT
+azurerm iot hub create --name example-hub --resource-group example-resources --location westus2 --sku S1 --partition-count 2 --tags environment=test
+
+// Crie uma conexão de dispositivo IoT
+azurerm iot hub device create --name device-example --hub-name example-hub --resource-group example-resources --auth-type sas
+
+// Crie uma regra de direcionamento para um hub IoT
+azurerm iot hub route create --name route-example --source DeviceMessages --condition true --endpoint-uri sb://mynamespace.servicebus.windows.net/mytopic --hub-name example-hub --resource-group example-resources --enabled true
+
+// Crie uma chave compartilhada para um hub IoT
+azurerm iot hub policy create --name example-policy --hub-name example-hub --resource-group example-resources --permissions serviceConnect
+
+// Obtenha a chave primária da chave compartilhada
+azurerm iot hub policy show --name example-policy --hub-name example-hub --resource-group example-resources --output primaryKey
+    

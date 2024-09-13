@@ -1,0 +1,7 @@
+
+      // Crie uma configuração de implantação
+gcloud deployment-manager deployments create my-deployment --config=deployment.yaml
+
+// Implante a configuração
+gcloud deployment-manager deployments update my-deployment --config=deployment.yaml
+    

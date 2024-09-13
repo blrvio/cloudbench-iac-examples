@@ -1,0 +1,10 @@
+
+      // Criar um fluxo de mídia
+aws mediaconnect create-flow --name example-flow --source "[{"description": "example-source", "ingest_port": 10000, "max_bitrate": 100000000, "transport": "rtp", "protocol": "udp", "decryption": "none"}]" --outputs "[{"description": "example-output", "destination": "example-destination", "transport": "rtp", "protocol": "udp", "decryption": "none", "max_bitrate": 100000000, "encoding_name": "MPEG-TS"}]"
+
+// Criar uma conexão de fluxo VPC
+aws mediaconnect create-flow-vpc-interface --flow-arn arn:aws:mediaconnect:us-east-1:123456789012:flow/example-flow --encapsulation "udp" --subnet-id subnet-xxxxxxxx --network-interface-id eni-xxxxxxxx
+
+// Criar uma saída de fluxo
+aws mediaconnect create-flow-output --flow-arn arn:aws:mediaconnect:us-east-1:123456789012:flow/example-flow --destination "example-destination" --transport "rtp" --protocol "udp" --decryption "none" --max_bitrate 100000000 --encoding_name "MPEG-TS"
+    

@@ -1,0 +1,6 @@
+
+      // Create a database VM using the OCI CLI
+oci db vm create-db-system --availability-domain AD-1 --compartment-id ocid1.compartment.oc1..aaaaaaaau56z7j5 --db-system-name example-db-system --db-version 19.0.0.0.0 --edition ENTERPRISE_EDITION --shape VM.Standard2.1 --admin-password password
+
+// (Suppressed) other CLI commands to configure the database VM
+    

@@ -1,0 +1,7 @@
+
+      // Criar um cluster do RDS para PostgreSQL
+aws rds create-db-instance --db-name postgres --db-instance-identifier postgres_db --db-instance-class db.t3.micro --engine postgres --engine-version 13.5 --master-username postgres --master-user-password password --db-subnet-group-name default
+
+// Opções de configuração adicionais
+// ...
+    

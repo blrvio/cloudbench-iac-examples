@@ -1,0 +1,19 @@
+
+      # Criar um plano de teste
+azurerm test-plan create -n example-test-plan -g example-resource-group -p example-project
+
+# Criar um conjunto de testes
+azurerm test-suite create -n example-test-suite -g example-resource-group -p example-project -pl example-test-plan
+
+# Criar um caso de teste
+azurerm test-case create -n example-test-case -g example-resource-group -p example-project -s example-test-suite -ap example-area -ip example-iteration
+
+# Criar um ponto de verificação
+azurerm test-point create -n example-test-point -g example-resource-group -p example-project -c example-test-case -r Passed
+
+# Criar uma execução de teste
+azurerm test-run create -n example-test-run -g example-resource-group -p example-project -pl example-test-plan -s example-test-suite -sd 2023-01-01T00:00:00Z -ed 2023-01-02T00:00:00Z -at example-user -st Completed
+
+# Criar um resultado de teste
+azurerm test-result create -g example-resource-group -p example-project -r example-test-run -c example-test-case -o Passed -d 120 -sd 2023-01-01T00:00:00Z -cd 2023-01-01T00:00:00Z
+    

@@ -1,75 +1,58 @@
 
-    # Configure the Google Cloud Provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1" # Replace with your desired region
+      # Configure o provedor Firebase
+provider "firebase" {
+  project = "my-firebase-project"
 }
 
-# Create a Firebase Hosting Site
-resource "google_firebase_hosting_site" "main" {
-  name    = "my-firebase-site"
-  project = google_project.default.project_id
+# Crie um banco de dados Firestore
+resource "firebase_firestore_database" "default" {
+  name = "default"
 }
 
-# Create a Firebase Hosting Release
-resource "google_firebase_hosting_release" "main" {
-  site_name = google_firebase_hosting_site.main.name
-  project   = google_project.default.project_id
-  config     = <<EOF
-    {"public": "public/*", "ignore": ["**/.*", "node_modules/**", "firebase.json", "*.git", "*.md", "*.txt", "*.json"], "rewrites": [{"source": "**", "destination": "/index.html"}]}
-EOF
+# Crie um bucket do Cloud Storage
+resource "google_storage_bucket" "default" {
+  name = "my-firebase-bucket"
+  location = "US"
+  force_destroy = true
 }
 
-# Create a Google Project (for authentication)
-resource "google_project" "default" {
-  project_id = "your-gcp-project-id"
-  name        = "my-gcp-project"
-  org_id       = "your-org-id" # Optional
+# Crie uma função Cloud Functions
+resource "google_cloudfunctions2_function" "default" {
+  name     = "my-function"
+  runtime  = "nodejs16"
+  entry_point = "helloWorld"
+  source_archive_bucket = google_storage_bucket.default.name
+  source_archive_object = "functions.zip"
+  trigger_http = true
+  region  = "us-central1"
 }
 
-# Create a Firebase App
-resource "google_firebase_app" "default" {
-  project    = google_project.default.project_id
-  display_name = "my-firebase-app"
-  # Optional, if you are using Firestore or Realtime Database
-  # data_location = "us-central1"
+# Crie um projeto do Firebase
+resource "firebase_project" "default" {
+  project_id = "my-firebase-project"
 }
 
-# Create a Firebase Hosting File
-resource "google_storage_bucket_object" "main" {
-  name      = "index.html"
-  source    = "index.html" # Path to your index.html file
-  bucket    = google_storage_bucket.main.name
-  cache_control = "max-age=3600"
+# Crie um aplicativo do Firebase
+resource "firebase_app" "default" {
+  project = firebase_project.default.project_id
+  display_name = "my-app"
 }
 
-# Create a Google Cloud Storage Bucket
-resource "google_storage_bucket" "main" {
-  name          = "my-firebase-site-bucket"
-  location      = "US"
-  force_destroy = true # Destroy the bucket even if it contains objects
-  # Optional, if you want to enable versioning
-  # versioning   = true
+# Crie um usuário do Firebase
+resource "firebase_user" "default" {
+  email    = "user@example.com"
+  password = "password"
+  project = firebase_project.default.project_id
 }
 
-# Optionally, you can use a GCP Service Account for Authentication
-# Create a Service Account
-# resource "google_service_account" "default" {
-#   account_id   = "your-service-account-id"
-#   display_name = "my-service-account"
-#   project      = google_project.default.project_id
-# }
-# 
-# Create a Key for the Service Account
-# resource "google_service_account_key" "default" {
-#   service_account_id = google_service_account.default.account_id
-#   project              = google_project.default.project_id
-#   private_key_type    = "TYPE_GOOGLE_CREDENTIALS_FILE"
-#   # You can control the expiration of the key here
-#   # expire_time = "0001-01-01T00:00:00Z"
-# }
-
-# Set the path to your service account key
-# export GOOGLE_APPLICATION_CREDENTIALS="path/to/your/service_account_key.json"
-
-  
+# Crie um documento no Firestore
+resource "firebase_firestore_document" "default" {
+  database = firebase_firestore_database.default.name
+  collection = "users"
+  document_id = "my-user"
+  data = {
+    name = "John Doe"
+    age  = 30
+  }
+}
+    

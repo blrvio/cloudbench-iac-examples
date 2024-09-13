@@ -1,0 +1,13 @@
+
+      // Crie um pipeline do CodePipeline
+aws codepipeline create-pipeline --name example-pipeline --role-arn arn:aws:iam::123456789012:role/codepipeline-role --artifact-store-type s3 --artifact-store-location s3://example-bucket
+
+// Adicione um estágio 'Source' ao pipeline
+aws codepipeline put-job-failure-result --pipeline-name example-pipeline --stage-name Source --action-name Source --job-id job-id --failure-type SYSTEM --failure-details '{"message":"Falha ao processar o estágio Source"}'
+
+// Adicione um estágio 'Build' ao pipeline
+aws codepipeline put-job-success-result --pipeline-name example-pipeline --stage-name Build --action-name Build --job-id job-id --output-artifacts '{"BuildArtifact":{"location":"s3://example-bucket/build-artifact"}}'
+
+// Adicione um estágio 'Deploy' ao pipeline
+aws codepipeline put-job-success-result --pipeline-name example-pipeline --stage-name Deploy --action-name Deploy --job-id job-id --output-artifacts '{"DeployArtifact":{"location":"s3://example-bucket/deploy-artifact"}}'
+    

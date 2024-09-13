@@ -1,46 +1,32 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Fault Injection Simulator Experiment Template
-resource "aws_fis_experiment_template" "example" {
-  name        = "my-experiment-template"
-  description = "Example fault injection experiment template"
+# Crie um experimento de injeção de falhas
+resource "aws_fis_experiment" "my_experiment" {
+  name = "My Experiment"
+  description = "My experiment description"
   targets {
-    # Target type can be "ecs", "lambda", "eks", "ec2"
-    type = "ecs"
-    # Specify the ECS cluster and task definition where the fault will be injected
-    ecs_targets {
-      cluster_arn         = "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster"
-      task_definition_arn = "arn:aws:ecs:us-east-1:123456789012:task-definition/my-task-definition:1"
-    }
+    resource_type = "aws:ec2:instance"
+    resource_id = "i-xxxxxxxx" # Substitua pelo ID da sua instância EC2
   }
   actions {
-    # Actions can be "network-partition", "resource-contention", "network-latency", "cpu-utilization", "memory-utilization", "http-error"
-    type = "network-partition"
-    # Specify the fault parameters
-    network_partition {
-      duration     = 30    # Duration of the fault in seconds
-      percentage   = 20    # Percentage of traffic affected
-      egress_only  = false # If true, only outbound traffic will be affected
-      ingress_only = false # If true, only inbound traffic will be affected
+    action_type = "aws:ec2:terminate"
+    parameters = {
+      instance_id = "i-xxxxxxxx" # Substitua pelo ID da sua instância EC2
     }
   }
 }
 
-# Create a Fault Injection Simulator Experiment
-resource "aws_fis_experiment" "example" {
-  name                   = "my-experiment"
-  description            = "Example fault injection experiment"
-  experiment_template_id = aws_fis_experiment_template.example.id
-  # Schedule the experiment to run at a specific time
-  schedule {
-    start_time = "2024-01-01T00:00:00Z"
-    end_time   = "2024-01-01T01:00:00Z"
-    frequency  = "ONCE"
-  }
+# Crie um cronograma para executar o experimento
+resource "aws_fis_schedule" "my_schedule" {
+  name = "My Schedule"
+  experiment_arn = aws_fis_experiment.my_experiment.arn
+  start_time = "2023-12-31T23:59:59Z"
+  end_time = "2024-01-01T00:00:00Z"
+  frequency = "onetime"
 }
 
-  
+    

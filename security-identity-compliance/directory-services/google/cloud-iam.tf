@@ -1,32 +1,58 @@
 
-    # Configure the Google Cloud Provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a service account
-resource "google_service_account" "main" {
-  account_id   = "your-service-account-id"
-  display_name = "My Service Account"
-  # Add a description to the service account
-  description = "Service account for Terraform example"
-  # Define a role for the service account
-  role = "roles/iam.serviceAccountTokenCreator"
+# Crie um usuário IAM
+resource "aws_iam_user" "example" {
+  name = "example-user"
 }
 
-# Create a key for the service account
-resource "google_service_account_key" "main" {
-  service_account_id = google_service_account.main.account_id
-  # Suppressing this string for brevity
-  # You should replace it with your own string
-  #  private_key_type = "TYPE_GOOGLE_CREDENTIALS_FILE"
-  # Suppressing this string for brevity
-  # You should replace it with your own string
-  #  private_key_algorithm = "ALGORITHM_RSA_2048"
-  # Suppressing this string for brevity
-  # You should replace it with your own string
-  #  private_key_data = "YOUR_PRIVATE_KEY_DATA"
+# Crie uma política IAM
+resource "aws_iam_policy" "example" {
+  name = "example-policy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject"
+        ],
+        "Resource": "arn:aws:s3:::example-bucket/*"
+      }
+    ]
+  })
 }
 
-  
+# Adicione a política ao usuário IAM
+resource "aws_iam_user_policy" "example" {
+  user  = aws_iam_user.example.name
+  policy = aws_iam_policy.example.id
+}
+
+# Crie um papel IAM
+resource "aws_iam_role" "example" {
+  name = "example-role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Adicione a política ao papel IAM
+resource "aws_iam_role_policy_attachment" "example" {
+  role   = aws_iam_role.example.name
+  policy = aws_iam_policy.example.id
+}
+    

@@ -1,0 +1,13 @@
+
+      // Crie um perfil de amostragem do X-Ray
+aws xray create-sampling-rule --name default --sampling-rule '{"rule": {
+  # Regras de amostragem customizadas
+  # Consulte a documentação do X-Ray para obter mais informações
+}}'
+
+// Crie uma regra de instrumentação do X-Ray
+aws xray create-encryption-config --name default --encryption-config '{"encryptionConfig": {
+  # Configurações de criptografia customizadas
+  # Consulte a documentação do X-Ray para obter mais informações
+}}'
+    

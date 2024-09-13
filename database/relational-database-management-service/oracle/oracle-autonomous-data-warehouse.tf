@@ -1,53 +1,48 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+      # Configure o provedor do Oracle Cloud
 provider "oci" {
-  region = "us-ashburn-1" # Replace with your desired region
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaagzn56kja7b6h5x7y5y2j37462w57a2h"
-  user_ocid = "ocid1.user.oc1..aaaaaaaagxzz6p3t4z5r2434x4h456434x67a3n"
-  fingerprint = "<fingerprint>"
-  # Set the compartment OCID for your resources
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaagz7a3g455r5y3t3x547543x6y5a2a"
+  region = "us-ashburn-1"
+  # Substitua pela sua região desejada
 }
 
-# Create an Autonomous Data Warehouse
-resource "oci_database_autonomous_database" "main" {
-  display_name = "my-autonomous-database"
-  # Choose a database edition
-  edition = "ENTERPRISE_EDITION"
-  # Select a database version
-  database_version = "19.0.0.0.0"
-  # Select a compute shape
-  compute_shape = "VM.Standard.E4.Flex"
-  # Choose a storage size
+# Crie uma rede virtual privada (VPC)
+resource "oci_core_vcn" "main_vcn" {
+  cidr_block = "10.0.0.0/16"
+  # Substitua pelo bloco CIDR desejado
+  display_name = "main-vcn"
+  # Substitua pelo nome desejado
+}
+
+# Crie uma sub-rede na VPC
+resource "oci_core_subnet" "main_subnet" {
+  vcn_id = oci_core_vcn.main_vcn.id
+  cidr_block = "10.0.1.0/24"
+  # Substitua pelo bloco CIDR desejado
+  display_name = "main-subnet"
+  # Substitua pelo nome desejado
+}
+
+# Crie uma instância do Autonomous Data Warehouse
+resource "oci_database_autonomous_database" "main_adb" {
+  admin_password = "<password>"
+  # Substitua por uma senha forte
+  # Substitua pela edição desejada (Standard ou Enterprise)
+  edition = "ENTERPRISE"
+  # Substitua pela versão desejada (19c ou 21c)
+  database_version = "19c"
+  # Substitua pelo tipo de banco de dados (shared ou dedicated)
+  database_type = "DEDICATED"
+  # Substitua pelo tamanho da instância desejado
   data_storage_size_in_tbs = 100
-  # Select a network configuration
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaagz7a3g455r5y3t3x547543x6y5a2a"
-  # Add a free-form tag to the database
-  freeform_tags = {
-    "Created by" = "Terraform"
-  }
-  # Configure the database backups
-  backup_config {
-    # Define the backup retention policy
-    retention_policy = "DAILY"
-    backup_retention_duration = 7 # Days
-  }
+  # Substitua pelo nome desejado
+  display_name = "main-adb"
+  # Substitua pelo nome do compartimento desejado
+  compartment_id = "ocid1.compartment.oc1...."
+  # Substitua pelo nome do grupo de segurança desejado
+  # Pode ser necessário criar um grupo de segurança primeiro
+  # Caso contrário, deixe vazio para usar o padrão
+  nsg_ids = ["<nsg_id>"]
+  # Substitua pelo nome da sub-rede desejada
+  subnet_id = oci_core_subnet.main_subnet.id
 }
-
-# Create a database user
-resource "oci_database_user" "main" {
-  database_id = oci_database_autonomous_database.main.id
-  username  = "my_user"
-  # Set the user password
-  password = "MyP@sswOrd1"
-  # Define the user's default role
-  default_role = "DBA"
-}
-
-# Create a database schema
-resource "oci_database_schema" "main" {
-  database_id = oci_database_autonomous_database.main.id
-  schema_name = "my_schema"
-}
-
-  
+    

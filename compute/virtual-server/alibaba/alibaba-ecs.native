@@ -1,0 +1,16 @@
+
+      // Create a security group
+ali ecs create-security-group --security-group-name allow_ssh --vpc-id vpc-xxxxxxxx --description "Allow SSH access"
+
+// Add an ingress rule to the security group
+ali ecs authorize-security-group --security-group-id sg-xxxxxxxx --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+// Create an ECS instance
+ali ecs create-instance --image-id centos_7_04_64_20G_alibase_20211122.vhd --instance-type ecs.n1.small --security-group-id sg-xxxxxxxx --key-name key_name --tag Name=Web Server
+
+// Create an Elastic IP address
+ali ecs allocate-public-ip --bandwidth 5 --internet-charge-type PayByTraffic
+
+// Associate the Elastic IP address to the ECS instance
+ali ecs associate-eip --instance-id i-xxxxxxxx --allocation-id eip-xxxxxxxx
+    

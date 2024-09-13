@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+azurerm deployment group create -g example-rg -n example-rg --location westus2
+
+// Crie um aplicativo de contêiner
+azurerm containerapp create -g example-rg -n example-app --location westus2 --os linux --revision-template '{"containers":[{"name":"my-app","image":"mcr.microsoft.com/azuredocs/containerapps/sample"}]}'
+
+// Crie um registro de contêiner
+azurerm containerregistry create -g example-rg -n example-registry --location westus2 --sku Basic
+    

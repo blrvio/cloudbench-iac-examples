@@ -1,52 +1,55 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use AzureRM features
+  features {} # Substitua pelas características desejadas
 }
 
-# Create a Key Vault
+# Crie um Key Vault
 resource "azurerm_key_vault" "example" {
-  name                = "my-key-vault"
+  name                = "example-keyvault"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  # Use existing vault access policy
-  enable_soft_delete = true
-  # Enable purging of deleted objects
-  enable_purge_protection = false
-  # Specify the tenant id to associate with the key vault
-  tenant_id = "${data.azurerm_client_config.current.tenant_id}"
+  resource_group_name = "example-resources"
+  sku_name            = "standard"
+  soft_delete_enabled  = true
 }
 
-# Create a Key Vault Secret
-resource "azurerm_key_vault_secret" "example" {
-  name                = "my-secret"
-  value               = "my-secret-value"
-  key_vault_id        = azurerm_key_vault.example.id
-  content_type         = "application/json"
-}
-
-# Create a Key Vault Certificate
-resource "azurerm_key_vault_certificate" "example" {
-  name                    = "my-certificate"
-  key_vault_id            = azurerm_key_vault.example.id
-  subject                 = "example.com"
-  dns_names              = ["example.com", "*.example.com"]
-  duration_in_months      = 12
-  deletion_protection_enabled = false
-}
-
-# Create a Key Vault Key
+# Crie uma chave
 resource "azurerm_key_vault_key" "example" {
-  name                = "my-key"
-  key_vault_id        = azurerm_key_vault.example.id
-  key_type            = "RSA"
-  key_size             = 2048
-  key_ops              = ["sign", "verify", "wrapKey", "unwrapKey"]
-  # Create the key in a specific version
-  key_version           = "2.0.0"
-  deletion_protection_enabled = false
-  # Set the key usage to a custom value
-  key_usage           = "My Key Usage"
+  name         = "example-key"
+  key_vault_id = azurerm_key_vault.example.id
+  key_type     = "RSA"
+  key_size     = 2048
+  key_operations = ["sign", "verify", "wrapKey", "unwrapKey", "encrypt", "decrypt"]
 }
 
-  
+# Crie um segredo
+resource "azurerm_key_vault_secret" "example" {
+  name         = "example-secret"
+  key_vault_id = azurerm_key_vault.example.id
+  value        = "secret-value"
+}
+
+# Crie um certificado
+resource "azurerm_key_vault_certificate" "example" {
+  name              = "example-certificate"
+  key_vault_id       = azurerm_key_vault.example.id
+  password          = "secret-password"
+  subject            = "CN=example-cert"
+  valid_from         = "2023-01-01T00:00:00Z"
+  valid_to           = "2024-01-01T00:00:00Z"
+  certificate_policy {
+    issuer_parameters {
+      name = "Self"
+    }
+    key_properties {
+      exportable             = true
+      key_type               = "RSA"
+      key_size               = 2048
+      key_usage_properties {
+        digital_signature = true
+        key_encipherment   = true
+      }
+    }
+  }
+}
+    

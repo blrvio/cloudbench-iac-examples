@@ -1,37 +1,30 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Eventarc Trigger
-resource "google_eventarc_trigger" "default" {
-  name     = "my-trigger"
-  event_filter {
-    event_type = "google.cloud.audit.log.v1.write"
+# Crie um EventBus
+resource "aws_eventarc_eventbus" "example" {
+  name = "example"
+}
+
+# Crie uma regra de evento
+resource "aws_eventarc_rule" "example" {
+  name   = "example"
+  event_bus_name = aws_eventarc_eventbus.example.name
+  event_pattern = <<EOF
+{"source": ["aws.s3"], "detail-type": ["AWS API Call","AWS Service Event"]}
+EOF
+}
+
+# Configure uma ação para a regra de evento
+resource "aws_eventarc_action" "example" {
+  name   = "example"
+  rule_name = aws_eventarc_rule.example.name
+  target {
+    function_arn = "arn:aws:lambda:us-east-1:123456789012:function:my-function"
   }
-  destination {
-    cloud_function {
-      function = "projects/your-project-id/locations/us-central1/functions/my-function"
-    }
-  }
 }
 
-# Create a Cloud Function
-resource "google_cloudfunctions2_function" "default" {
-  name     = "my-function"
-  runtime  = "nodejs16"
-  entry_point = "helloHTTP"
-  source_archive_bucket = "your-bucket-name"
-  source_archive_object = "my-function.zip"
-}
-
-# Create a Storage Bucket (if needed)
-resource "google_storage_bucket" "default" {
-  name          = "your-bucket-name"
-  force_destroy = true
-  location = "US"
-  uniform_bucket_level_access = true
-}
-  
+    

@@ -1,25 +1,28 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  # Your IBM Cloud API key and region should be set as environment variables
-  # or defined in a separate file for security reasons.
-  api_key  = var.ibm_api_key
-  region   = "us-south"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Security and Compliance Center account
-resource "ibm_scc_account" "main" {
-  name = "my-scc-account"
+# Crie um Security Hub padrão
+resource "aws_securityhub_account" "default" {
+  enable_default_standards = true
 }
 
-# Create a finding for the account
-resource "ibm_scc_finding" "main" {
-  account_id = ibm_scc_account.main.id
-  # ... other finding attributes
+# Crie uma regra de avaliação personalizada
+resource "aws_securityhub_insight" "example_insight" {
+  name = "Example Insight"
+  filters = <<EOF
+    { "key": "aws:securityhub:ProductName", "values": ["Amazon S3"] }
+    { "key": "aws:securityhub:Severity", "values": ["High"] }
+  EOF
 }
 
-# Get the account details
-output "scc_account_details" {
-  value = ibm_scc_account.main
+# Crie uma regra de avaliação personalizada
+resource "aws_securityhub_standards_subscription" "example_standards_subscription" {
+  standards_subscription_arns = ["arn:aws:securityhub:us-east-1:123456789012:standards/pci_dss_v3_2"] # Substitua pelo ARN do padrão desejado
+  standards_input {
+    standards_arn = "arn:aws:securityhub:us-east-1:123456789012:standards/pci_dss_v3_2"
+  }
 }
-  
+    

@@ -1,0 +1,14 @@
+
+      // Example code to create an IBM Cloud Shell session
+# Install the IBM Cloud CLI
+# ...
+
+# Login to IBM Cloud
+# ...
+
+# Create a new Cloud Shell session
+ibmcloud ks create --name my-cloud-shell-session
+
+# Access the Cloud Shell session
+ibmcloud ks open --name my-cloud-shell-session
+    

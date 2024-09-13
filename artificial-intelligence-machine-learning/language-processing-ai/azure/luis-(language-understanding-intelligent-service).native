@@ -1,0 +1,10 @@
+
+      # Crie um recurso de LUIS
+azurerm account create --name my-luis-account --location westus2 --resource-group my-resource-group --kind luis --sku F0 --tier Free --capacity 1
+
+# Crie um aplicativo LUIS
+azurerm luis app create --name my-luis-app --location westus2 --resource-group my-resource-group --cognitive-services-account-id <ID do recurso de LUIS>
+
+# Crie um endpoint LUIS
+azurerm luis endpoint create --name my-luis-endpoint --location westus2 --resource-group my-resource-group --cognitive-services-account-id <ID do recurso de LUIS> --luis-app-id <ID do aplicativo LUIS> --endpoint-type authoring
+    

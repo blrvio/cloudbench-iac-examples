@@ -1,0 +1,7 @@
+
+      // Crie um modelo de tradução
+gcloud translate models create my-translation-model --source-language en --target-language fr
+
+// Traduza um texto
+gcloud translate translate --model my-translation-model --source en --target fr "Hello world"
+    

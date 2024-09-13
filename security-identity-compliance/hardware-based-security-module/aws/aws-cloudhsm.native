@@ -1,0 +1,13 @@
+
+      // Crie um cluster HSM
+aws cloudhsm --region us-east-1 create-cluster --hsm-type hsm1.medium --subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx --source-backup-id backup-xxxxxxxx --tag-name Name --tag-value "My HSM Cluster"
+
+// Crie um HSM no cluster
+aws cloudhsm --region us-east-1 create-hsm --cluster-id cluster-xxxxxxxx --eni-id eni-xxxxxxxx --subnet-id subnet-xxxxxxxx --hsm-type hsm1.medium --ssh-key ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --tag-name Name --tag-value "My HSM"
+
+// Crie uma chave HSM
+aws cloudhsm --region us-east-1 create-key --cluster-id cluster-xxxxxxxx --label my-key --value xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+// Crie uma política HSM
+aws cloudhsm --region us-east-1 create-policy --cluster-id cluster-xxxxxxxx --policy "{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": "*", "Action": "*", "Resource": "*"} ]}"
+    

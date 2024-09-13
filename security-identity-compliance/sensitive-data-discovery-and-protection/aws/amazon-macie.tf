@@ -1,36 +1,39 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1"
 }
 
-# Create a Macie Custom Data Identifier
-resource "aws_macie2_custom_data_identifier" "example" {
-  name             = "MyCustomDataIdentifier"
-  description      = "This is my custom data identifier for sensitive information"
-  regex            = "(\d{3}-\d{3}-\d{4})"
-  ignore_case      = true
-  finding_type    = "CUSTOM_DATA_IDENTIFIER_FINDING"
-  detections_status = "ACTIVE"
+# Crie um perfil de segurança
+resource "aws_macie_member_account" "example" {
+  account_id = "123456789012"
 }
 
-# Create a Macie Member Account
-resource "aws_macie2_member_account" "example" {
-  account_id = "123456789012" # Replace with the account ID of the member account
-  # Optional settings for the member account
-  # invitation_disabled = false
-  # invitation_message = "Welcome to Macie!"
+# Ative o Amazon Macie
+resource "aws_macie_session" "example" {
+  status = "ENABLED"
 }
 
-# Create a Macie Classification Job
-resource "aws_macie2_classification_job" "example" {
-  name    = "MyClassificationJob"
-  # Specify the S3 bucket to classify
-  s3_job {
+# Crie um detector de ameaças
+resource "aws_macie_findings_filter" "example" {
+  name = "example-filter"
+  description = "Exemplo de filtro de descobertas"
+  finding_criteria {
+    criterion {
+      field     = "s3Bucket"
+      operator  = "EQUALS"
+      value     = "my-bucket"
+    }
+  }
+}
+
+# Crie um trabalho de classificação
+resource "aws_macie_classification_job" "example" {
+  job_name = "example-job"
+  s3_resources {
     bucket_name = "my-bucket"
   }
-  # Define the custom data identifiers to use
-  custom_data_identifiers = [aws_macie2_custom_data_identifier.example.id]
+  job_type = "ONE_TIME"
 }
 
-  
+    

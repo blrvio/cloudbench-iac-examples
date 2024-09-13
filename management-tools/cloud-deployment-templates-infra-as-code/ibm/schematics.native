@@ -1,0 +1,16 @@
+
+      // Define o blueprint do Schematics
+{ "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Example blueprint para criar uma instância EC2",
+  "Resources": {
+    "MyEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-08c40744a4d16d959",
+        "InstanceType": "t2.micro",
+        "KeyName": "my-key-pair"
+      }
+    }
+  }
+}
+    

@@ -1,0 +1,11 @@
+
+      // Criar um recurso de Data Box
+# az storage account create --name example-storage --resource-group example-resources --location westus --sku Standard_LRS --access-tier Hot
+# az storage account keys list --resource-group example-resources --account-name example-storage
+
+// Criar um recurso de Data Box Edge
+# az databoxedge device create --resource-group example-resources --name example-databoxedge --location westus --sku Edge
+
+// Criar um recurso de Data Box Gateway
+# az databoxgateway create --resource-group example-resources --name example-databoxgateway --location westus --sku Standard
+    

@@ -1,41 +1,39 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "my-gcp-project"
-  region  = "us-central1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create an Analytics Hub Data Exchange
-resource "google_analyticshub_data_exchange" "main" {
-  name             = "my-data-exchange"
-  display_name     = "My Data Exchange"
-  data_exchange_id = "my-data-exchange-id"
-  description      = "Data Exchange for sharing analytics data"
+# Crie um Data Hub
+resource "aws_analytics_hub_data_hub" "example" {
+  name = "example-data-hub"
+
+  tags = {
+    Name = "example-data-hub"
+  }
 }
 
-# Create an Analytics Hub Data Exchange Listing
-resource "google_analyticshub_data_exchange_listing" "main" {
-  data_exchange_id  = google_analyticshub_data_exchange.main.data_exchange_id
-  display_name       = "My Data Exchange Listing"
-  data_exchange_type = "DATA_EXCHANGE"
+# Crie um Data Source
+resource "aws_analytics_hub_data_source" "example" {
+  data_hub_id    = aws_analytics_hub_data_hub.example.id
+  data_source_id = "example-data-source"
+  data_source_type = "example-data-source-type"
+  description    = "example-data-source-description"
+
+  tags = {
+    Name = "example-data-source"
+  }
 }
 
-# Create an Analytics Hub Data Source
-resource "google_analyticshub_data_source" "main" {
-  data_exchange_id = google_analyticshub_data_exchange.main.data_exchange_id
-  data_source_id   = "my-data-source"
-  display_name       = "My Data Source"
-  description      = "A data source for the data exchange"
-}
+# Crie um Data Set
+resource "aws_analytics_hub_data_set" "example" {
+  data_hub_id   = aws_analytics_hub_data_hub.example.id
+  data_set_id  = "example-data-set"
+  description  = "example-data-set-description"
+  data_source_id = aws_analytics_hub_data_source.example.id
 
-# Create an Analytics Hub Data Source Listing
-resource "google_analyticshub_data_source_listing" "main" {
-  data_exchange_id = google_analyticshub_data_exchange.main.data_exchange_id
-  data_source_id   = google_analyticshub_data_source.main.data_source_id
-  display_name       = "My Data Source Listing"
-  data_exchange_type = "DATA_SOURCE"
-  # Use the default data source schema
-  schema = "projects/my-gcp-project/locations/us-central1/datasets/default/tables/default_dataset_schema"
+  tags = {
+    Name = "example-data-set"
+  }
 }
-
-  
+    

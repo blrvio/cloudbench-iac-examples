@@ -1,25 +1,58 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a FunctionGraph function
-resource "huaweicloud_functiongraph_function" "main" {
-  name     = "my-function"
-  runtime  = "python3.9"
-  handler  = "main.handler"
-  code_uri = "s3://my-bucket/my-function.zip" # Replace with your S3 bucket and function code
-  memory   = 128
-  timeout  = 60
-  # Define the triggers for the function
-  trigger {
-    type = "http"
-  }
-  # Add tags to the function
-  tags = {
-    Name = "My FunctionGraph Function"
-  }
+# Crie uma função FunctionGraph
+resource "aws_lambda_function" "my_function" {
+  function_name = "my-function"
+  runtime       = "nodejs18.x"
+  handler       = "index.handler"
+  role          = aws_iam_role.lambda_role.arn
+  code          = templatefile("lambda.zip", {})
 }
 
-  
+# Crie uma função de IAM para a função FunctionGraph
+resource "aws_iam_role" "lambda_role" {
+  name = "lambda_role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }]
+  })
+}
+
+# Crie uma política de IAM para a função FunctionGraph
+resource "aws_iam_policy" "lambda_policy" {
+  name = "lambda_policy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:CreateLogGroup",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }]
+  })
+}
+
+# Adicione a política à função de IAM
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
+  role       = aws_iam_role.lambda_role.id
+  policy_arn = aws_iam_policy.lambda_policy.arn
+}
+
+# Define o arquivo zip do código da função (não implementado no exemplo)
+template "lambda.zip" {
+  ""
+}
+    

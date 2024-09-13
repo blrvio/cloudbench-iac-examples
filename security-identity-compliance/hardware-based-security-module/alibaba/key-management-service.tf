@@ -1,28 +1,18 @@
 
-    # Configure the Alibaba Cloud Provider
-provider "alicloud" {
-  region  = "cn-hangzhou"
-  # Add your credentials and other configurations
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a KMS Key
-resource "alicloud_kms_key" "example" {
-  description = "Example Key"
-  # Other options for creating the key
+# Crie um novo chave KMS
+resource "aws_kms_key" "example" {
+  description = "Chave KMS para exemplo"
+  enable_key_rotation = true
 }
 
-# Encrypt a String
-output "encrypted_string" {
-  value = alicloud_kms_key.example.encrypt_data(plain_text = "hello world")
+# Crie uma alias para a chave KMS
+resource "aws_kms_alias" "example" {
+  name = "alias/example"
+  target_key_id = aws_kms_key.example.key_id
 }
-
-# Decrypt a String
-output "decrypted_string" {
-  value = alicloud_kms_key.example.decrypt_data(ciphertext = var.ciphertext)
-}
-
-# Define ciphertext for decryption
-variable "ciphertext" {
-  default = "your-ciphertext-value"
-}
-  
+    

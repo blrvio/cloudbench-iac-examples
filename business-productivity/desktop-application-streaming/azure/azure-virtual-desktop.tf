@@ -1,51 +1,70 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use este bloco para habilitar recursos experimentais
 }
 
-# Create a resource group for your Azure Virtual Desktop resources
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "example" {
-  name     = "rg-azure-virtual-desktop"
-  location = "westus2"
+  name     = "example-rg"
+  location = "West Europe" # Substitua pela região desejada
 }
 
-# Create an Azure Virtual Desktop host pool
+# Crie uma máquina virtual do Azure Virtual Desktop
+resource "azurerm_virtual_machine" "example" {
+  name                 = "example-vm"
+  resource_group_name = azurerm_resource_group.example.name
+  location             = azurerm_resource_group.example.location
+  size                 = "Standard_B2s"
+  network_interface_ids = [azurerm_network_interface.example.id]
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "Latest"
+  }
+  # Outros atributos da máquina virtual, como usuário, senha, etc.
+  # ...
+}
+
+# Crie uma interface de rede
+resource "azurerm_network_interface" "example" {
+  name                 = "example-nic"
+  resource_group_name = azurerm_resource_group.example.name
+  location             = azurerm_resource_group.example.location
+  # ...
+}
+
+# Crie um host pool do Azure Virtual Desktop
 resource "azurerm_virtual_desktop_host_pool" "example" {
-  name             = "my-host-pool"
-  location         = azurerm_resource_group.example.location
+  name                 = "example-hostpool"
   resource_group_name = azurerm_resource_group.example.name
-  # Additional options for the host pool can be added here
+  location             = azurerm_resource_group.example.location
+  # ...
 }
 
-# Create an Azure Virtual Desktop workspace
-resource "azurerm_virtual_desktop_workspace" "example" {
-  name             = "my-workspace"
-  location         = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  # Additional options for the workspace can be added here
-}
-
-# Create an Azure Virtual Desktop application group
+# Crie um aplicativo do Azure Virtual Desktop
 resource "azurerm_virtual_desktop_application_group" "example" {
-  name             = "my-app-group"
-  location         = azurerm_resource_group.example.location
+  name                 = "example-appgroup"
   resource_group_name = azurerm_resource_group.example.name
-  # Additional options for the application group can be added here
+  location             = azurerm_resource_group.example.location
+  # ...
 }
 
-# Associate the application group to the host pool
+# Adicione a máquina virtual ao host pool
+resource "azurerm_virtual_desktop_host_pool_assignment" "example" {
+  host_pool_id  = azurerm_virtual_desktop_host_pool.example.id
+  virtual_machine_id = azurerm_virtual_machine.example.id
+  # ...
+}
+
+# Adicione o aplicativo ao grupo de aplicativos
 resource "azurerm_virtual_desktop_application_group_assignment" "example" {
   application_group_id = azurerm_virtual_desktop_application_group.example.id
-  host_pool_id          = azurerm_virtual_desktop_host_pool.example.id
-  # Additional options for the assignment can be added here
+  # ...
 }
-
-# Associate the workspace to the application group
-resource "azurerm_virtual_desktop_workspace_application_group_assignment" "example" {
-  application_group_id = azurerm_virtual_desktop_application_group.example.id
-  workspace_id          = azurerm_virtual_desktop_workspace.example.id
-  # Additional options for the assignment can be added here
-}
-
-  
+    

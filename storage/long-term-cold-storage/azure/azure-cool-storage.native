@@ -1,0 +1,13 @@
+
+      # Crie um grupo de recursos
+ az group create --name example-rg --location "West Europe"
+
+# Crie uma conta de armazenamento
+ az storage account create --name example-storage --resource-group example-rg --location "West Europe" --sku Standard --replication LRS
+
+# Crie um contêiner de armazenamento
+ az storage container create --account-name example-storage --name example-container
+
+# Crie um blob de armazenamento frio
+ az storage blob upload --account-name example-storage --container-name example-container --name example-blob --file path/to/your/file --content-type text/plain --tier Cool
+    

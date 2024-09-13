@@ -1,26 +1,37 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  region = "us-south"
-  account_id = "YOUR_IBM_CLOUD_ACCOUNT_ID"
-  api_key    = "YOUR_IBM_CLOUD_API_KEY"
+  api_key = "YOUR_IBM_CLOUD_API_KEY" # Substitua pela sua chave de API do IBM Cloud
+  region   = "us-south" # Substitua pela sua região desejada
 }
 
-# Create a Code Engine project
-resource "ibm_codeengine_project" "example" {
-  name     = "my-codeengine-project"
+# Crie um namespace do Code Engine
+resource "ibm_codeengine_namespace" "example" {
+  name     = "my-namespace"
   location = "us-south"
 }
 
-# Create a Code Engine application
-resource "ibm_codeengine_application" "example" {
-  name = "my-codeengine-app"
-  project_id = ibm_codeengine_project.example.id
-  runtime = "nodejs:16"
-  # Create a deployment for the application
-  deployment {
-    image = "us-south.icr.io/my-namespace/my-image:latest"
+# Crie uma aplicação no Code Engine
+resource "ibm_codeengine_app" "example" {
+  namespace = ibm_codeengine_namespace.example.id
+  name      = "my-app"
+
+  runtime  = "nodejs-16"
+  git_source {
+    url = "https://github.com/your-username/your-repository.git"
   }
 }
 
-  
+# Crie um serviço no Code Engine
+resource "ibm_codeengine_service" "example" {
+  app_name    = ibm_codeengine_app.example.name
+  namespace   = ibm_codeengine_namespace.example.id
+  name       = "my-service"
+  route       = "my-route"
+  port        = 3000
+  autoscaling {
+    min_replicas = 1
+    max_replicas = 3
+  }
+}
+    

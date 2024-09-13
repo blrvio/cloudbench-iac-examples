@@ -1,0 +1,7 @@
+
+      // Crie um job de transcrição
+aws transcribe start-transcription-job --language-code en-US --media-file-uri s3://my-bucket/my-audio-file.mp3 --output-bucket my-bucket --job-name my_job
+
+// Obtenha o resultado da transcrição
+aws transcribe get-transcription-job --job-name my_job
+    

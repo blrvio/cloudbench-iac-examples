@@ -1,0 +1,15 @@
+
+      # Crie um grupo de sub-rede para o RDS
+aws rds create-db-subnet-group --db-subnet-group-name mysql-subnet --db-subnet-group-description "Subnet group for MySQL RDS instance" --subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx
+
+# Crie um grupo de segurança para o RDS
+aws rds create-db-security-group --db-security-group-name mysql-sg --db-security-group-description "Security group for MySQL RDS instance"
+
+aws rds authorize-db-security-group-ingress --db-security-group-name mysql-sg --cidr 0.0.0.0/0 --port 3306
+
+# Crie uma instância RDS para MySQL
+aws rds create-db-instance --db-name mydb --db-instance-identifier mysql-db --engine mysql --engine-version 5.7.33 --instance-class db.t3.micro --db-subnet-group-name mysql-subnet --master-username admin --master-user-password password
+
+# Crie um usuário para o RDS
+aws rds create-db-user --db-name mydb --username app_user --password password --db-instance-identifier mysql-db
+    

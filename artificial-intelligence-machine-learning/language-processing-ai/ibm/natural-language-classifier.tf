@@ -1,26 +1,20 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region  = "us-south"
+      # Configure o provedor do AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Natural Language Classifier
-resource "ibm_natural_language_classifier" "main" {
-  name     = "my-classifier"
-  language = "en"
-  training_data = <<EOF
-  [ 
-    {
-      "text": "I love this product!",
-      "class": "positive"
-    },
-    {
-      "text": "This product is terrible!",
-      "class": "negative"
-    }
-  ]
-  EOF
+# Crie um classificador de linguagem natural
+resource "aws_natural_language_understanding_classifier" "my_classifier" {
+  name = "my-classifier"
+  version_name = "my-classifier-v1"
+  language_code = "en"
+  classifier_metadata {
+    description = "This is a classifier for my data"
+  }
+  training_data_uri = "s3://my-bucket/my-classifier-training-data.json"
+  # Define a lista de classes e as entidades correspondentes
+  classes = [{"name": "Class 1", "entities": [{"entity": "Entity 1"}, {"entity": "Entity 2"}]}, {"name": "Class 2", "entities": [{"entity": "Entity 3"}, {"entity": "Entity 4"}]}]
 }
 
-  
+    

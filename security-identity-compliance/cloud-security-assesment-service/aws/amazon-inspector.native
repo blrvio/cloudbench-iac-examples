@@ -1,0 +1,10 @@
+
+      # Criar um perfil de avaliação do Inspector
+aws inspector create-assessment-target --assessment-target-name example --resource-group-arn arn:aws:ec2:us-east-1:123456789012:instance/i-xxxxxxxx
+
+# Criar uma avaliação
+aws inspector create-assessment-template --assessment-target-arn arn:aws:inspector:us-east-1:123456789012:target/example --assessment-template-name example --duration 3600 --rules-package-arns arn:aws:inspector:us-east-1:770794393483:rulespackage/0-AmznManagedRules-Linux-1.0
+
+# Executar uma avaliação
+aws inspector start-assessment-run --assessment-template-arn arn:aws:inspector:us-east-1:123456789012:template/example --assessment-run-name example
+    

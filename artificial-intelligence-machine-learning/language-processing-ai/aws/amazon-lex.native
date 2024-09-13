@@ -1,0 +1,16 @@
+
+      // Criar um bot do Amazon Lex
+aws lex create-bot --name my_bot --locale en-US --child-directed false
+
+// Criar uma intenção do Amazon Lex
+aws lex create-intent --name GreetingIntent --bot-name my_bot --sample-utterances "Hello","Hi","Good morning" --fulfillment-activity-type ReturnIntent
+
+// Criar um slot do Amazon Lex
+aws lex create-slot-type --name NameSlot --slot-type-name AMAZON.US_FIRST_NAME --intent-name GreetingIntent --bot-name my_bot --priority 1
+
+// Criar um ponto final do Amazon Lex
+aws lex create-bot-alias --name my_bot_alias --bot-name my_bot --bot-version $BOT_VERSION
+
+// Criar um slot tipo personalizado do Amazon Lex
+aws lex create-slot-type --name CustomSlotType --enumeration-values '[{"value":"Value1","synonyms":["Syn1","Syn2"]},{"value":"Value2","synonyms":["Syn3"]}]'
+    

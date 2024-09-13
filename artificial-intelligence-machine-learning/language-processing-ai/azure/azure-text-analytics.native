@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Text Analytics
+azurerm account create -n "text-analytics-resource" -l westus2 -g "resource-group-name" -k TextAnalytics --sku F0
+
+// Crie um endpoint para o recurso de Text Analytics
+azurerm account endpoint create -n "text-analytics-endpoint" -g "resource-group-name" -l westus2 -a "text-analytics-resource"
+    

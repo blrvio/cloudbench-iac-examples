@@ -1,0 +1,7 @@
+
+      // Crie um sistema de arquivos FSx for OpenZFS
+aws fsx create-file-system --file-system-type OPENZFS --storage-capacity-gib 1024 --subnet-ids subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx --kms-key-id arn:aws:kms:us-east-1:xxxxxxxx:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --throughput-capacity-mibps 128 --user-data "# Aqui você pode adicionar scripts de inicialização"
+
+// Crie uma montagem do sistema de arquivos FSx for OpenZFS
+aws fsx create-mount-target --file-system-id fsx-xxxxxxxx --subnet-id subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx
+    

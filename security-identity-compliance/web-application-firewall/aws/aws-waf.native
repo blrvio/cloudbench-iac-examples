@@ -1,0 +1,12 @@
+
+      // Crie um Web ACL
+aws wafv2 create-web-acl --name example-waf-web-acl --scope REGIONAL --default-action Allow --id 'arn:aws:wafv2:us-east-1:123456789012:webacl/example-waf-web-acl'
+
+// Crie um conjunto de regras de WAF
+aws wafv2 create-rule-group --name example-waf-rule-group --scope REGIONAL --id 'arn:aws:wafv2:us-east-1:123456789012:rulegroup/example-waf-rule-group'
+
+// Adicione um conjunto de regras ao Web ACL
+aws wafv2 update-web-acl --web-acl-id 'arn:aws:wafv2:us-east-1:123456789012:webacl/example-waf-web-acl' --name example-rule-statement --priority 1 --rule-type RULE_GROUP_REFERENCE_STATEMENT --rule-group-reference-statement-arn 'arn:aws:wafv2:us-east-1:123456789012:rulegroup/example-waf-rule-group'
+
+// ... configurações adicionais de WAF
+    

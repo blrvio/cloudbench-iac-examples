@@ -1,0 +1,17 @@
+
+      // Crie um grupo de recursos
+# az group create --name example-rg --location eastus
+
+// Crie um cluster Kubernetes no Azure Arc
+# az arc kubernetes cluster create --name example-cluster --resource-group example-rg --location eastus --kubernetes-version 1.20.8
+
+// Adicione uma conectividade do Azure Arc
+# az arc kubernetes connected-cluster create --name example-connected-cluster --resource-group example-rg --location eastus --kubernetes-cluster-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-rg/providers/microsoft.containerservice/connectedclusters/example-cluster
+
+// Crie um namespace no cluster Kubernetes no Azure Arc
+# az arc kubernetes namespace create --name example-namespace --resource-group example-rg --location eastus --kubernetes-cluster-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-rg/providers/microsoft.containerservice/connectedclusters/example-cluster
+
+// Crie um Deployment no cluster Kubernetes no Azure Arc
+# az arc kubernetes deployment create --name example-deployment --resource-group example-rg --location eastus --kubernetes-cluster-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-rg/providers/microsoft.containerservice/connectedclusters/example-cluster --namespace example-namespace
+
+    

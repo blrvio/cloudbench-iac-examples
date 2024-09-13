@@ -1,0 +1,7 @@
+
+      // Crie um bucket de armazenamento de objetos
+oci os create-bucket --namespace my-namespace --bucket-name my-bucket
+
+// Carregue um objeto para o bucket
+oci os upload-object --namespace my-namespace --bucket-name my-bucket --object-name my-object --source path/to/my-object
+    

@@ -1,0 +1,13 @@
+
+      // Crie uma organização Apigee
+gcloud apigee organizations create your-organization-name
+
+// Crie um ambiente Apigee
+gcloud apigee environments create your-environment-name --organization your-organization-name --location us-central1
+
+// Crie uma API Proxy
+gcloud apigee apiproxies create your-api-proxy-name --organization your-organization-name --environment your-environment-name --revision 1
+
+// Crie um endpoint de backend
+gcloud apigee backends create your-backend-name --organization your-organization-name --environment your-environment-name
+    

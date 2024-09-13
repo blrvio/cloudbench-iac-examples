@@ -1,0 +1,40 @@
+
+      // This example demonstrates a basic configuration for an Exadata Cloud@Customer system
+// You need to provide the required parameters for your specific environment
+
+# Define Exadata Cloud@Customer variables
+exadata_cloud_customer_name = "my-exadata-cloud-customer"
+
+exadata_cloud_customer_version = "21c"
+
+exadata_cloud_customer_shape = "X8M.24"
+
+exadata_cloud_customer_storage_size = "100TB"
+
+exadata_cloud_customer_network_subnet = "10.0.0.0/24"
+
+exadata_cloud_customer_network_gateway = "10.0.0.1"
+
+exadata_cloud_customer_network_cidr = "10.0.0.0/16"
+
+# Define network settings
+network_settings = {
+  "subnet": exadata_cloud_customer_network_subnet,
+  "gateway": exadata_cloud_customer_network_gateway,
+  "cidr": exadata_cloud_customer_network_cidr
+}
+
+# Define Exadata Cloud@Customer configuration
+configuration = {
+  "name": exadata_cloud_customer_name,
+  "version": exadata_cloud_customer_version,
+  "shape": exadata_cloud_customer_shape,
+  "storage": {
+    "size": exadata_cloud_customer_storage_size
+  },
+  "network": network_settings
+}
+
+# Create Exadata Cloud@Customer instance
+create-exadata-cloud-customer-instance --configuration configuration
+    

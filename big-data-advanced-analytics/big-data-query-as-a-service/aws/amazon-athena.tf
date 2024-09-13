@@ -1,45 +1,44 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Athena database
-resource "aws_athena_database" "main" {
-  name = "my_database" # Name of your Athena database
+# Crie uma base de dados
+resource "aws_athena_database" "example" {
+  name = "my_database"
 }
 
-# Create an Athena table
-resource "aws_athena_table" "main" {
-  database = aws_athena_database.main.name
-  name     = "my_table"
-  # Define the table schema
-  table_definition = <<EOF
-CREATE EXTERNAL TABLE my_table(
-  column_name1 STRING,
-  column_name2 INT
-)
-STORED AS PARQUET
-LOCATION 's3://my-bucket/data/'
-EOF
-}
+# Crie uma tabela
+resource "aws_athena_table" "example" {
+  name = "my_table"
+  database = aws_athena_database.example.name
 
-# Create an Athena workgroup
-resource "aws_athena_workgroup" "main" {
-  name = "my_workgroup"
-  # Configure the workgroup properties
-  configuration {
-    # Set the result configuration
-    result_configuration {
-      # Configure the output location for query results
-      output_location = "s3://my-bucket/results/"
-    }
+  partition_by = ["year", "month"]
+
+  location = "s3://my-bucket/my-prefix"
+
+  columns {
+    name = "id"
+    type = "int"
   }
-  # Add the database to the workgroup
-  state="ENABLED"
-  tags = {
-    Name = "My Athena Workgroup"
+
+  columns {
+    name = "name"
+    type = "string"
+  }
+
+  columns {
+    name = "date"
+    type = "date"
   }
 }
 
-  
+# Execute uma consulta
+resource "aws_athena_query" "example" {
+  query = "SELECT * FROM my_database.my_table"
+  result_configuration {
+    output_location = "s3://my-bucket/my-output-prefix"
+  }
+}
+    

@@ -1,37 +1,33 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "your-project-id" # Substitua pelo ID do seu projeto
 }
 
-# Create a Firestore database
-resource "google_firestore_database" "default" {
-  name = "my-firestore-database"
+# Crie um banco de dados do Firestore
+resource "google_firestore_database" "main" {
+  name    = "default"
+  project = google_project.default.project_id
 }
 
-# Create a Firestore document
-resource "google_firestore_document" "my-document" {
-  database = google_firestore_database.default.name
-  collection = "my-collection"
-  name       = "my-document"
+# Crie uma coleção no Firestore
+resource "google_firestore_document" "users" {
+  collection  = "users"
+  document_id = "user1"
+  project     = google_project.default.project_id
+  database    = google_firestore_database.main.name
+
   fields = {
-    "name"    = "My Document"
-    "age"    = 25
-    "active" = true
+    "name" = "John Doe"
+    "email" = "john.doe@example.com"
   }
 }
 
-# Create a Firestore index
-resource "google_firestore_index" "index_on_name" {
-  database  = google_firestore_database.default.name
-  collection = "my-collection"
-  fields = [
-    {
-      field_path = "name"
-      order       = "ASCENDING"
-    }
-  ]
+# Crie um índice no Firestore
+resource "google_firestore_index" "users_by_email" {
+  collection_group = "users"
+  fields           = [{"field_path": "email", "order": "ASCENDING"}]
+  project          = google_project.default.project_id
+  database         = google_firestore_database.main.name
 }
-
-  
+    

@@ -1,0 +1,7 @@
+
+      // Crie uma rede virtual
+az network vnet create -g example-rg -n example-vnet -l West Europe -a 10.0.0.0/16
+
+// Crie um sub-rede
+az network vnet subnet create -g example-rg -v example-vnet -n example-subnet -a 10.0.1.0/24
+    

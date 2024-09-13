@@ -1,30 +1,33 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {}  # Enable all features, you can select specific features if needed.
+  features {} #  Para usar recursos mais recentes
 }
 
-# Create an Azure Analysis Services Server
-resource "azurerm_analysis_services_server" "main" {
-  name                     = "my-analysis-services-server"
-  location                 = "westus2"
-  resource_group_name     = "my-resource-group"
-  sku {
-    name = "Standard"
-    tier = "Standard"
-  }
-  # Use `azurerm_analysis_services_server_admin` to manage server admins.
+# Crie um servidor do Azure Analysis Services
+resource "azurerm_analysis_services_server" "example" {
+  name                = "example-aas-server"
+  location            = "westus2"
+  resource_group_name = "example-resources"
+  sku                  = "Standard"
+  administrator_contact_email = "admin@example.com"
 }
 
-# Create an Azure Analysis Services Database
-resource "azurerm_analysis_services_database" "main" {
-  name                 = "my-analysis-services-database"
-  location             = "westus2"
-  resource_group_name = "my-resource-group"
-  server_name         = azurerm_analysis_services_server.main.name
-  # Use `azurerm_analysis_services_database_admin` to manage database admins.
+# Crie uma base de dados do Azure Analysis Services
+resource "azurerm_analysis_services_database" "example" {
+  name                = "example-aas-database"
+  server_name          = azurerm_analysis_services_server.example.name
+  resource_group_name = azurerm_analysis_services_server.example.resource_group_name
+  edition              = "Enterprise"
+  compatibility_level  = "1400"
 }
 
-# You can create other resources like storage accounts, key vaults and other Azure resources that interact with your Analysis Services server.
+# Crie uma tabela dentro da base de dados
+resource "azurerm_analysis_services_table" "example" {
+  name                = "example-table"
+  database_name        = azurerm_analysis_services_database.example.name
+  server_name          = azurerm_analysis_services_server.example.name
+  resource_group_name = azurerm_analysis_services_server.example.resource_group_name
+}
 
-  
+    

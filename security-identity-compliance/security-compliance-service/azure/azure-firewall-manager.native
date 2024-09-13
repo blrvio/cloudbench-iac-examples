@@ -1,0 +1,10 @@
+
+      # Crie um Firewall Manager
+ az network firewall-manager create -n example-firewall-manager -g example-resources -l West Europe
+
+ # Crie uma política de Firewall Manager
+ az network firewall-manager policy create -n example-firewall-manager-policy -g example-resources -l West Europe -f example-firewall-manager-policy.json
+
+ # Crie uma regra de política do Firewall Manager
+ az network firewall-manager policy rule create -n example-firewall-manager-policy-rule -g example-resources -p example-firewall-manager-policy -a Allow -P TCP -s 10.0.0.0/16 -d 192.168.0.0/16 -sp 80 -dp 80
+    

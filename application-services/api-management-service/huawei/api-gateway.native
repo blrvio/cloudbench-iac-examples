@@ -1,0 +1,16 @@
+
+      // Crie um API Gateway REST API
+aws apigateway create-rest-api --name example-api --description "API Gateway REST API example"
+
+// Crie um recurso de API Gateway
+aws apigateway create-resource --rest-api-id xxxxxxxxx --parent-id xxxxxxxxx --path-part items
+
+// Crie um método de API Gateway
+aws apigateway put-method --rest-api-id xxxxxxxxx --resource-id xxxxxxxxx --http-method GET --authorizationType NONE
+
+// Crie uma integração de API Gateway
+aws apigateway put-integration --rest-api-id xxxxxxxxx --resource-id xxxxxxxxx --http-method GET --integration-type AWS_PROXY --integration-uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:my-lambda-function:123456789012/invocations
+
+// Crie um deployment de API Gateway
+aws apigateway create-deployment --rest-api-id xxxxxxxxx --stage-name prod
+    

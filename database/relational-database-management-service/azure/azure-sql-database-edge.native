@@ -1,0 +1,16 @@
+
+      // Crie um grupo de recursos
+azurerm resource-group create --name example-rg --location westus2
+
+// Crie um servidor SQL Database Edge
+azurerm sql-server create --name example-server --resource-group example-rg --location westus2 --administrator-login admin --administrator-password <your-password> --version v12 --edition Standard --license-type BasePrice
+
+// Crie um banco de dados SQL Database Edge
+azurerm sql-database create --name example-database --resource-group example-rg --server-name example-server --edition Standard --max-size-gb 10 --collation SQL_Latin1_General_CP1_CI_AS
+
+// Crie um usuário do banco de dados SQL Database Edge
+azurerm sql-user create --name example-user --resource-group example-rg --server-name example-server --login user --password <your-password>
+
+// Crie uma regra de firewall para o servidor SQL Database Edge
+azurerm sql-firewall-rule create --name example-firewall-rule --resource-group example-rg --server-name example-server --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+    

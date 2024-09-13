@@ -1,0 +1,16 @@
+
+      # Crie um repositório de código-fonte
+gcloud source repos create my-repo
+
+# Crie um usuário com permissão para acessar o repositório
+gcloud iam service-accounts create repo-user --display-name "Cloud Source Repositories User"
+
+# Conceda permissões ao usuário
+gcloud projects add-iam-member roles/source.repo.reader --member serviceAccount:repo-user@project-id.iam.gserviceaccount.com --project project-id
+
+# Crie um webhook
+gcloud source repos create-webhook my-webhook --repo my-repo --url "https://example.com/webhook" --event PULL_REQUEST --config '{\"secret\": \"my-secret\"}'
+
+# Crie um branch dentro do repositório
+gcloud source repos create-branch main --repo my-repo
+    

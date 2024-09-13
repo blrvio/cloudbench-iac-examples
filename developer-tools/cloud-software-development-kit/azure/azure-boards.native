@@ -1,0 +1,8 @@
+
+      // Create a new Azure DevOps Project
+ az devops project create --name "example-project" --visibility private --process template "tfs/DefaultProcess/1"
+
+// Create a new work item
+az devops workitems create --project "example-project" --type "Task" --title "My first task"
+
+    

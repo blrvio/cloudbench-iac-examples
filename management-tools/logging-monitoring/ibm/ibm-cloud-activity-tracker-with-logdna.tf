@@ -1,41 +1,26 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  region  = "us-south"
-  account_id = "YOUR_IBM_ACCOUNT_ID"
-  api_key    = "YOUR_IBM_API_KEY"
+  api_key = "YOUR_API_KEY"
 }
 
-# Create a LogDNA Account
-resource "ibm_logdna_account" "main" {
-  name = "my-logdna-account"
-  plan = "free"
+# Crie um recurso de rastreamento de atividades
+resource "ibm_activity_tracker_tracker" "my_tracker" {
+  name     = "my_tracker"
+  location = "us-south"
 }
 
-# Create an Activity Tracker Instance
-resource "ibm_activity_tracker_instance" "main" {
-  name                  = "my-activity-tracker"
-  logdna_account_id     = ibm_logdna_account.main.id
-  activity_type         = "all"
-  resource_group_id       = "YOUR_RESOURCE_GROUP_ID"
-  resource_group_name     = "YOUR_RESOURCE_GROUP_NAME"
+# Crie um recurso de LogDNA
+resource "ibm_logdna_logdna" "my_logdna" {
+  name      = "my_logdna"
+  region     = "us-south"
+  plan      = "basic"
+  retention = 30
 }
 
-# Create an Activity Tracker Rule
-resource "ibm_activity_tracker_rule" "main" {
-  name                  = "my-activity-tracker-rule"
-  activity_tracker_id = ibm_activity_tracker_instance.main.id
-  activity_type         = "all"
-  resource_group_id       = "YOUR_RESOURCE_GROUP_ID"
-  resource_group_name     = "YOUR_RESOURCE_GROUP_NAME"
-  # Use tags to filter activities
-  tags = {
-    "environment" = "dev"
-  }
-  # Define the rule's severity level
-  severity_level      = "INFO"
-  # Enable the rule
-  enabled               = true
+# Configure o LogDNA para receber os eventos de rastreamento
+resource "ibm_activity_tracker_logdna_integration" "my_integration" {
+  tracker_id = ibm_activity_tracker_tracker.my_tracker.id
+  logdna_id  = ibm_logdna_logdna.my_logdna.id
 }
-
-  
+    

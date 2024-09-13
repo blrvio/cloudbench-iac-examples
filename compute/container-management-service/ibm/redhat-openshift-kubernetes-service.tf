@@ -1,38 +1,65 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
+      # Configure o provedor do OpenShift
+provider "openshift" {
+  # Substitua pelos seus valores
+  api_url  = "https://api.openshift.com"
+  token    = "your_access_token"
+  namespace = "your_namespace"
 }
 
-# Create an IBM Cloud Kubernetes Service cluster
-resource "ibm_container_cluster" "main" {
-  name         = "my-openshift-cluster"
-  location     = "us-south"
-  worker_count = 3
-  # Choose the Openshift version
-  version = "4.10"
-  # Select the worker machine type
-  worker_machine_type = "bx2.16x32"
-  # Add a service account to the cluster
-  service_account {
-    name = "my-service-account"
+# Crie um namespace
+resource "openshift_namespace" "my_namespace" {
+  metadata {
+    name = "my-namespace"
   }
 }
 
-# Create a namespace for your applications
-resource "ibm_container_namespace" "main" {
-  cluster_id = ibm_container_cluster.main.id
-  name       = "my-namespace"
+# Crie um deployment
+resource "openshift_deployment" "my_deployment" {
+  metadata {
+    name = "my-deployment"
+    namespace = openshift_namespace.my_namespace.metadata.0.name
+  }
+  spec {
+    replicas = 3 # Número de réplicas
+    selector {
+      match_labels = {
+        app = "my-app"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "my-app"
+        }
+      }
+      spec {
+        containers {
+          name = "my-app"
+          image = "nginx:latest"
+          ports {
+            container_port = 80
+          }
+        }
+      }
+    }
+  }
 }
 
-# Create a deployment of your application
-resource "ibm_container_deployment" "main" {
-  cluster_id    = ibm_container_cluster.main.id
-  namespace_id = ibm_container_namespace.main.id
-  name          = "my-application"
-  image         = "nginx:latest"
-  # Configure the replica count
-  replicas = 3
+# Crie um service
+resource "openshift_service" "my_service" {
+  metadata {
+    name = "my-service"
+    namespace = openshift_namespace.my_namespace.metadata.0.name
+  }
+  spec {
+    selector = {
+      app = "my-app"
+    }
+    ports {
+      port       = 80
+      target_port = 80
+    }
+  }
 }
-
-  
+    

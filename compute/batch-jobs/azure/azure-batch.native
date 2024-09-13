@@ -1,0 +1,17 @@
+
+      // Criar um grupo de recursos
+azurerm resource-group create --name example-rg --location westus
+
+// Criar uma conta de Batch
+azurerm batch account create --name example-batch-account --resource-group example-rg --location westus --storage-account-type Standard_LRS
+
+// Criar uma pool de computação
+azurerm batch pool create --name example-pool --resource-group example-rg --account-name example-batch-account --vm-size Standard_A2_v2 --target-dedicated-nodes 2 --allocation-mode BatchService --user-account name=admin password=password
+
+// Criar um trabalho de Batch
+azurerm batch job create --name example-job --resource-group example-rg --account-name example-batch-account --pool-id example-pool
+
+// Criar uma tarefa de Batch
+azurerm batch task create --name example-task --resource-group example-rg --account-name example-batch-account --job-id example-job --command-line "echo Hello from Azure Batch"
+
+    

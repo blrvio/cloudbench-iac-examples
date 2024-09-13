@@ -1,60 +1,38 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
+  api_key = "YOUR_IBM_API_KEY"
   region = "us-south"
-  ibmcloud_api_key = "your_ibmcloud_api_key"
 }
 
-# Create a Load Balancer
-resource "ibm_is_load_balancer" "main" {
-  name = "my-load-balancer"
+# Crie um Load Balancer
+resource "ibm_lb_load_balancer" "main" {
+  name    = "my-load-balancer"
   location = "us-south"
-  resource_group = "your_resource_group_id"
+  type    = "PUBLIC"
+  sub_type = "HTTP"
 
-  # Define the listeners for the load balancer
   listener {
-    protocol = "http"
-    port = 80
-  }
-  listener {
-    protocol = "https"
-    port = 443
-  }
-
-  # Define the backend targets for the load balancer
-  backend_target {
-    instance_id = "your_instance_id"
-    port = 8080
-  }
-
-  # Configure the health check for the load balancer
-  health_check {
-    type = "tcp"
-    port = 8080
-    interval = 5
-    timeout = 2
-    retries = 3
+    protocol = "HTTP"
+    port     = 80
   }
 }
 
-# Create a Security Group
-resource "ibm_is_security_group" "main" {
-  name = "my-security-group"
+# Crie um backend Pool
+resource "ibm_lb_pool" "main" {
+  name     = "my-pool"
   location = "us-south"
-  resource_group = "your_resource_group_id"
-  # Define the rules for the security group
-  rule {
-    direction = "ingress"
-    protocol = "tcp"
-    port = 80
-    cidr = "0.0.0.0/0"
-  }
-  rule {
-    direction = "ingress"
-    protocol = "tcp"
-    port = 443
-    cidr = "0.0.0.0/0"
-  }
+  lb_id    = ibm_lb_load_balancer.main.id
+  protocol = "HTTP"
+  port     = 80
 }
 
-  
+# Adicione um servidor ao backend Pool
+resource "ibm_lb_server" "main" {
+  name     = "my-server"
+  location = "us-south"
+  pool_id  = ibm_lb_pool.main.id
+  address = "192.168.1.100"
+  port    = 80
+}
+    

@@ -1,0 +1,7 @@
+
+      ibmcloud codeengine service create my-service --location us-south
+
+ibmcloud codeengine application create my-app --service my-service --runtime nodejs-16 --build-command "npm install" --start-command "npm start" --source https://github.com/your-username/your-repo.git
+
+ibmcloud codeengine route create my-route --service my-service --application my-app --rules '{"path":"/*","application":"my-app"}'
+    

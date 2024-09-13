@@ -1,0 +1,7 @@
+
+      // Criar um serviço de Key Protect
+ibmcloud resource create key-protect-service --name key-protect-instance --location us-south --resource-group YOUR_RESOURCE_GROUP
+
+// Criar uma chave criptográfica
+ibmcloud key-protect create-key --instance key-protect-instance --name my-key --type SYMMETRIC --algorithm AES_256 --usage ENCRYPT_DECRYPT --rotation-policy AUTOMATIC
+    

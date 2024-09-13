@@ -1,66 +1,56 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Amazon MQ Broker
+# Crie um broker Amazon MQ
 resource "aws_mq_broker" "main" {
-  broker_name  = "my-mq-broker" # Name of the broker
-  engine       = "activemq" # Broker engine (ActiveMQ, RabbitMQ)
-  engine_version = "5.15.11" # Engine version
-  # Create an instance with a specific configuration
-  host_instance_type = "mq.t2.medium" # Instance type (see https://aws.amazon.com/amazon-mq/pricing/)
-  # Optional settings
-  publicly_accessible  = true # Make the broker publicly accessible (not recommended for security)
-  # Configure broker security
-  user_name = "admin" # Username for accessing the broker
-  password = "my-password" # Password for accessing the broker (replace with a strong password)
-  # Configure a security group for the broker
-  security_groups = [aws_security_group.main.id]
-  # Optional configurations
-  # maintenance_window_start_time = "03:00" # Start time for maintenance window
-  # maintenance_window_duration = "120" # Duration of maintenance window (in minutes)
+  broker_name = "my-mq-broker"
+  engine       = "ActiveMQ"
+  engine_version = "5.15.10"
+  host_instance_type = "mq.t2.medium"
+  publicly_accessible = true
+  security_groups = ["sg-xxxxxxxx"] # Substitua pelo ID do seu grupo de segurança
+  user            = "admin"
+  password          = "my-password" # Substitua por uma senha forte
+  deployment_mode = "SINGLE_INSTANCE"
 }
 
-# Create a security group for the broker
-resource "aws_security_group" "main" {
-  name   = "sg-mq-broker"
-  # Define inbound and outbound rules
-  ingress {
-    from_port   = 61613
-    to_port     = 61613
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie uma senha para o usuário do broker
+resource "aws_mq_user" "admin" {
+  broker_id = aws_mq_broker.main.id
+  username  = "admin"
+  password  = "my-password" # Substitua por uma senha forte
 }
 
-# Create an Amazon MQ Configuration
+# Crie uma configuração de segurança
 resource "aws_mq_configuration" "main" {
-  name            = "my-mq-configuration" # Name of the configuration
-  engine          = "activemq" # Broker engine (ActiveMQ, RabbitMQ)
-  engine_version  = "5.15.11" # Engine version
-  # Define the configuration properties
+  broker_id = aws_mq_broker.main.id
+  name       = "my-mq-configuration"
+  description = "Configuração de segurança do broker"
+  engine       = "ActiveMQ"
+  engine_version = "5.15.10"
+
   configuration_properties = <<EOF
-# Configure the broker for your specific needs
+# Configure as propriedades do broker aqui
 EOF
 }
 
-# Create a user for the Amazon MQ Broker
+# Crie um acesso de usuário
 resource "aws_mq_user" "main" {
-  broker_id = aws_mq_broker.main.broker_id # Broker ID
-  username  = "my-user" # Username for accessing the broker
-  password  = "my-password" # Password for accessing the broker (replace with a strong password)
-  # Define user permissions
-  # This example grants full permissions to the user
-  # You can customize this based on your security needs
-  console_access  = true # Allow access through the AWS Management Console
+  broker_id = aws_mq_broker.main.id
+  username  = "my-user"
+  password  = "my-password" # Substitua por uma senha forte
 }
 
-  
+# Crie uma política de acesso para o usuário
+resource "aws_mq_user_policy" "main" {
+  broker_id = aws_mq_broker.main.id
+  user_name  = aws_mq_user.main.username
+  policy     = <<EOF
+# Configure a política de acesso aqui
+EOF
+}
+
+    

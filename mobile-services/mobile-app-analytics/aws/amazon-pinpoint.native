@@ -1,0 +1,13 @@
+
+      // Crie um aplicativo Pinpoint
+aws pinpoint create-app --application-id 'my-app'
+
+// Crie um segmento de usuários
+aws pinpoint create-segment --application-id 'my-app' --name 'my-segment' --dimensions '{"SegmentType":"INCLUSIVE","Dimensions":{"Attributes":{"custom:attribute1":{"AttributeType":"INCLUSIVE","Values":["value1","value2"]}}}}'
+
+// Crie um template SMS
+aws pinpoint create-template --template-name 'my-sms-template' --template-type SMS --template-body 'Olá, este é um teste de mensagem SMS do Amazon Pinpoint.'
+
+// Crie uma campanha SMS
+aws pinpoint create-campaign --application-id 'my-app' --campaign-name 'my-sms-campaign' --segment-id 'segment-id' --schedule '{"Frequency":"ONCE","IsScheduleStartTimeInPST":false,"ScheduleStartTime":"2023-12-19T18:00:00"}' --message-configuration '{"SMSMessage":{"Body":"Olá, este é um teste de mensagem SMS do Amazon Pinpoint.","TemplateName":"my-sms-template"}}'
+    

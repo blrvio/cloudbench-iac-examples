@@ -1,36 +1,36 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a QLDB ledger
-resource "aws_qldb_ledger" "main" {
-  name = "my-qldb-ledger" # Name of your QLDB ledger
-  # Optional settings
-  permissions_mode = "ALLOW_ALL" # Allow access to all users in the account by default
+# Crie um Ledger
+resource "aws_qldb_ledger" "example" {
+  name = "example-ledger"
 }
 
-# Create a QLDB journal export
-resource "aws_qldb_journal_export" "main" {
-  name = "my-qldb-journal-export"
-  ledger_name = aws_qldb_ledger.main.name # Name of the QLDB ledger
-  # Optional settings
-  export_configuration {
-    s3_export_configuration {
-      bucket = "my-s3-bucket" # Name of the S3 bucket for export
-      prefix = "my-qldb-journal-export" # Prefix for the exported journal files
-    }
-  }
+# Crie uma tabela
+resource "aws_qldb_table" "example" {
+  name     = "example-table"
+  ledger_name = aws_qldb_ledger.example.name
+  keys = ["id"]
 }
 
-# Create a QLDB stream
-resource "aws_qldb_stream" "main" {
-  name = "my-qldb-stream"
-  ledger_name = aws_qldb_ledger.main.name # Name of the QLDB ledger
-  # Optional settings
-  kms_key_id = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012" # KMS key ID for encryption
-  # If you want to use default KMS key, leave this field empty
+# Crie um usuário
+resource "aws_qldb_user" "example" {
+  ledger_name = aws_qldb_ledger.example.name
+  user_name  = "example-user"
+  permissions = ["READ", "WRITE", "ADMIN"]
 }
 
-  
+# Crie um driver de conexão
+resource "aws_qldb_driver" "example" {
+  ledger_name = aws_qldb_ledger.example.name
+}
+
+# Crie um certificado
+resource "aws_qldb_certificate" "example" {
+  ledger_name = aws_qldb_ledger.example.name
+  certificate = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # Substitua pelo certificado
+}
+    

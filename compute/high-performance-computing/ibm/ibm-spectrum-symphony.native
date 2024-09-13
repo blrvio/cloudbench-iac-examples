@@ -1,0 +1,11 @@
+
+      // This is an example code snippet for creating a Symphony cluster using the CLI
+# Create a cluster with a single master and two workers
+./create-cluster.sh -n myCluster -m 1 -w 2
+
+# Start the cluster
+./start-cluster.sh -n myCluster
+
+# Submit a job
+./submit-job.sh -n myJob -f myJob.sh
+    

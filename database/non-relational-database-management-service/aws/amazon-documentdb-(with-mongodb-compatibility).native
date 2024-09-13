@@ -1,0 +1,10 @@
+
+      // Crie um cluster DocumentDB
+aws docdb create-db-cluster --db-cluster-identifier docdb-cluster --engine mongodb --engine-version 4.0 --...
+
+// Crie um usuário DocumentDB
+aws docdb create-db-user --db-cluster-identifier docdb-cluster --username admin --password password --...
+
+// Crie um endpoint DocumentDB
+aws docdb create-db-cluster-endpoint --db-cluster-identifier docdb-cluster --endpoint-type READER --...
+    

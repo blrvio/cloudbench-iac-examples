@@ -1,58 +1,52 @@
 
-    # Configure the Google Cloud Provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a VPC network
-resource "google_compute_network" "main" {
-  name    = "my-vpc-network"
-  auto_create_subnetworks = false
-}
-
-# Create a subnet
-resource "google_compute_subnetwork" "main" {
-  name    = "my-subnet"
-  ip_cidr_range = "10.128.0.0/20"
-  region = "us-central1"
-  network = google_compute_network.main.name
-}
-
-# Create a firewall rule
-resource "google_compute_firewall" "default" {
-  name    = "allow-ssh"
-  network = google_compute_network.main.name
-  allow {
-    protocol = "tcp"
-    ports = ["22"]
-  }
-  source_ranges = ["0.0.0.0/0"]
-}
-
-# Create an instance
-resource "google_compute_instance" "default" {
-  name = "my-instance"
-  machine_type = "n1-standard-1"
-  zone = "us-central1-a"
-  boot_disk {
-    initialize_params {
-      image = "centos-cloud/centos-7"
-    }
-    auto_delete  = true
-    disk_size_gb = 100
-  }
-  network_interface {
-    network = google_compute_network.main.name
-    subnetwork = google_compute_subnetwork.main.name
-  }
-  network_performance_config {
-    total_egress_bandwidth_tier = "DEFAULT"
-  }
-  can_ip_forward = false
-  metadata {
-    "startup-script" = "echo 'Hello from Terraform!' > /home/centos/test.txt"
+# Crie uma VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  tags = {
+    Name = "Main VPC"
   }
 }
 
-  
+# Crie uma sub-rede
+resource "aws_subnet" "subnet_public" {
+  vpc_id = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "Public Subnet"
+  }
+}
+
+# Crie uma tabela de roteamento
+resource "aws_route_table" "main_route_table" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "Main Route Table"
+  }
+}
+
+# Crie uma rota para a Internet
+resource "aws_route" "internet_route" {
+  route_table_id = aws_route_table.main_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.main_internet_gateway.id
+}
+
+# Crie um gateway de Internet
+resource "aws_internet_gateway" "main_internet_gateway" {
+  vpc_id = aws_vpc.main.id
+}
+
+# Associe a sub-rede à tabela de roteamento
+resource "aws_route_table_association" "subnet_association" {
+  subnet_id     = aws_subnet.subnet_public.id
+  route_table_id = aws_route_table.main_route_table.id
+}
+    

@@ -1,0 +1,10 @@
+
+      // Crie uma exchange
+rabbitmqadmin -u guest -p guest declare exchange my_exchange type=direct durable=true
+
+// Crie uma fila
+rabbitmqadmin -u guest -p guest declare queue my_queue durable=true
+
+// Crie uma ligação entre a exchange e a fila
+rabbitmqadmin -u guest -p guest declare binding my_queue source=my_exchange routing_key=my_key
+    

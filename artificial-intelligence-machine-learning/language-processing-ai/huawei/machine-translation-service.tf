@@ -1,57 +1,18 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Machine Translation Service Instance
-resource "huaweicloud_mts_instance" "main" {
-  name = "my-mts-instance"
-  # Optional settings
-  # description = "My Machine Translation Instance"
-  # tags = {
-  #   Name = "my-mts-instance"
-  # }
+# Crie um recurso de tradução
+resource "aws_translate_text" "translate_text" {
+  source_language_code = "en"
+  target_language_code = "pt"
+  text = "Hello world"
 }
 
-# Create a Machine Translation Service Project
-resource "huaweicloud_mts_project" "main" {
-  name = "my-mts-project"
-  # Optional settings
-  # description = "My Machine Translation Project"
-  # tags = {
-  #   Name = "my-mts-project"
-  # }
+# Exiba o texto traduzido
+output "translated_text" {
+  value = aws_translate_text.translate_text.translated_text
 }
-
-# Create a Machine Translation Service Model
-resource "huaweicloud_mts_model" "main" {
-  name = "my-mts-model"
-  # Optional settings
-  # description = "My Machine Translation Model"
-  # tags = {
-  #   Name = "my-mts-model"
-  # }
-}
-
-# Create a Machine Translation Service Task
-resource "huaweicloud_mts_task" "main" {
-  name = "my-mts-task"
-  # Optional settings
-  # description = "My Machine Translation Task"
-  # tags = {
-  #   Name = "my-mts-task"
-  # }
-}
-
-# Create a Machine Translation Service Corpus
-resource "huaweicloud_mts_corpus" "main" {
-  name = "my-mts-corpus"
-  # Optional settings
-  # description = "My Machine Translation Corpus"
-  # tags = {
-  #   Name = "my-mts-corpus"
-  # }
-}
-
-  
+    

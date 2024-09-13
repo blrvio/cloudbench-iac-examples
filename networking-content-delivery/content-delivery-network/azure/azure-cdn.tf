@@ -1,38 +1,33 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use recursos de preview
 }
 
-# Create an Azure CDN Profile
+# Crie um perfil de CDN
 resource "azurerm_cdn_profile" "example" {
-  name                = "example-cdn-profile"
-  resource_group_name = "example-resource-group"
-  location            = "westus2"
+  name     = "my-cdn-profile"
+  resource_group_name = "my-resource-group"
+  location = "westus"
   sku {
-    name = "Standard_Verizon"
+    name  = "Standard_Verizon"
+    tier = "Standard"
+  }
+  tags = {
+    Environment = "Production"
   }
 }
 
-# Create an Azure CDN Endpoint
+# Crie um endpoint de CDN
 resource "azurerm_cdn_endpoint" "example" {
-  name                = "example-cdn-endpoint"
+  name                 = "my-cdn-endpoint"
   profile_name         = azurerm_cdn_profile.example.name
   resource_group_name = azurerm_cdn_profile.example.resource_group_name
   origin {
-    hostname = "example.com"
+    name = "my-origin"
+    host_name = "www.example.com"
   }
 }
 
-# Create an Azure CDN Origin
-resource "azurerm_cdn_origin" "example" {
-  endpoint_name      = azurerm_cdn_endpoint.example.name
-  profile_name        = azurerm_cdn_profile.example.name
-  resource_group_name = azurerm_cdn_profile.example.resource_group_name
-  name                = "example-origin"
-  hostname            = "example.com"
-  http_port           = 80
-  https_port          = 443
-}
 
-  
+    

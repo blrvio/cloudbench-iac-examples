@@ -1,0 +1,13 @@
+
+      # Crie um remetente de email
+oci email sender create --compartment-id ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc --display-name "Example Sender" --sender-type STANDARD
+
+# Crie uma campanha de email
+oci email campaign create --compartment-id ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc --sender-id ocid1.sender.oc1..aaaaaaaabbbbbbbbbbcccccccc --display-name "Example Campaign" --subject "Example Subject" --content-type TEXT --content "Example content"
+
+# Crie um grupo de destinatários
+oci email recipient-group create --compartment-id ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc --display-name "Example Recipient Group" --recipient-type EMAIL --recipient example@example.com
+
+# Crie um envio de email
+oci email send create --compartment-id ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc --campaign-id ocid1.campaign.oc1..aaaaaaaabbbbbbbbbbcccccccc --recipient-group-id ocid1.recipient-group.oc1..aaaaaaaabbbbbbbbbbcccccccc
+    

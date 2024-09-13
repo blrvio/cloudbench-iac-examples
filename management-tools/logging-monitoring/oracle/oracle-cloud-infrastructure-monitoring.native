@@ -1,0 +1,4 @@
+
+      // Crie um monitoramento
+oci monitoring create-monitoring-definition --compartment-id ocid1.compartment.oc1..aaaaaaaaw76w377533665455d66y76a --display-name "My Monitoring Definition" --monitoring-rule '{\"description\":\"Monitor the CPU utilization of the instance\",\"context\":{\"namespace\":\"oci_compute\",\"resource_type\":\"instance\",\"resource_id\":\"ocid1.instance.oc1.us-ashburn-1.aaaaaaaaw76w377533665455d66y76a\"},\"criteria\":{\"condition\":\"GREATER_THAN\",\"threshold\":80,\"metric\":\"cpu_utilization\",\"aggregation_type\":\"AVERAGE\",\"period\":\"1m\"}}'
+    

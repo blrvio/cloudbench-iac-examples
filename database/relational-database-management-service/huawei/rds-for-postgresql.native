@@ -1,0 +1,11 @@
+
+      // Crie um grupo de segurança para o banco de dados
+aws ec2 create-security-group --group-name postgres_sg --description "Allow PostgreSQL access" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name postgres_sg --protocol tcp --port 5432 --cidr 0.0.0.0/0
+
+// Crie o banco de dados RDS
+aws rds create-db-instance --db-name postgres_db --db-instance-identifier postgres_db --engine postgres --engine-version 13.7 --db-instance-class db.t3.micro --master-username admin --master-user-password password123 --allocated-storage 10 --db-subnet-group-name default --vpc-security-group-ids sg-xxxxxxxx # Substitua pelo ID do grupo de segurança
+
+    

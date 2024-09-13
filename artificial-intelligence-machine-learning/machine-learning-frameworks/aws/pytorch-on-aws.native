@@ -1,0 +1,25 @@
+
+      // Crie uma instância EC2 com GPU
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type p3.2xlarge --key-name key_name --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=PyTorch Instance}]'
+
+// Instale o PyTorch na instância
+# (Requer acesso SSH à instância)
+# sudo apt-get update && sudo apt-get install python3-pip && pip3 install torch torchvision torchaudio
+
+// Crie um bucket S3
+aws s3api create-bucket --bucket pytorch-data-bucket --region us-east-1 --create-bucket-configuration LocationConstraint=us-east-1
+
+// Configure o IAM para acesso ao bucket S3
+aws iam create-role --role-name pytorch_role --assume-role-policy '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "ec2.amazonaws.com" }, "Action": "sts:AssumeRole" } ] }'
+
+aws iam attach-role-policy --role-name pytorch_role --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+// Crie um perfil de instância EC2
+aws iam create-instance-profile --instance-profile-name pytorch_profile
+
+aws iam add-role-to-instance-profile --instance-profile-name pytorch_profile --role-name pytorch_role
+
+// Associe o perfil de instância ao EC2
+# (Requer o ID da instância EC2 criada)
+aws ec2 associate-iam-instance-profile --instance-id i-xxxxxxxx --instance-profile-name pytorch_profile
+    

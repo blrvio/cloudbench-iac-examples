@@ -1,0 +1,10 @@
+
+      // Crie um conexão Direct Connect
+aws directconnect create-connection --location eqdc2 --bandwidth 1Gbps --connection-type dedicated --name example --vlan 100
+
+// Crie uma virtual interface
+aws directconnect create-virtual-interface --connection-id dxcon-xxxxxxxx --vlan 101 --name example --address-family ipv4 --mtu 1500
+
+// Crie uma rota para a virtual interface
+aws ec2 create-route --destination-cidr-block 10.0.0.0/16 --gateway-id dxif-xxxxxxxx
+    

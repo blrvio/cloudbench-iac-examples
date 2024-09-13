@@ -1,63 +1,19 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an S3 bucket
-resource "aws_s3_bucket" "main" {
-  bucket = "my-s3-bucket" # Name of your S3 bucket
-  # Define the bucket's access control list (ACL)
-  acl = "private" # Set the default ACL to "private"
-  # Configure versioning for the bucket
-  versioning {
-    enabled = true
-  }
-  # Set the bucket's tags
-  tags = {
-    Name = "My S3 Bucket"
-  }
+# Crie um bucket S3
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "my-bucket-name" # Substitua pelo nome do seu bucket
+  acl    = "private" # Defina a ACL do bucket
 }
 
-# Create an S3 bucket policy
-resource "aws_s3_bucket_policy" "main" {
-  bucket = aws_s3_bucket.main.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "AllowPublicRead",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": [
-        "s3:GetObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::my-s3-bucket/*"
-      ]
-    }
-  ]
+# Crie um objeto S3
+resource "aws_s3_bucket_object" "my_object" {
+  bucket = aws_s3_bucket.my_bucket.id
+  key    = "my-object.txt" # Substitua pelo nome do seu objeto
+  source = "my-object.txt" # Substitua pelo caminho para o seu arquivo local
 }
-EOF
-}
-
-# Create an S3 object
-resource "aws_s3_object" "main" {
-  bucket = aws_s3_bucket.main.id
-  key    = "my-object.txt"
-  source = "my-object.txt" # Path to the file you want to upload
-  # Set the object's Content-Type
-  content_type = "text/plain"
-}
-
-# Create an S3 object version
-resource "aws_s3_object_version" "main" {
-  bucket = aws_s3_bucket.main.id
-  key    = "my-object.txt"
-  source = "my-object.txt" # Path to the file you want to upload
-  # Define the object's version ID
-  version_id = "my-object.txt-version-id"
-}
-
-  
+    

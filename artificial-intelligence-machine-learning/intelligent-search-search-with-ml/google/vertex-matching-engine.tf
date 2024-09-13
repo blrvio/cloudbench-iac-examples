@@ -1,83 +1,35 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "gcp-project-id"
-  region  = "us-central1"
+  project = "your-project-id" # Substitua pelo seu ID do projeto
+  region  = "us-central1" # Substitua pela sua região desejada
 }
 
-# Create a Vertex AI Matching Engine Index
-resource "google_vertex_ai_matching_engine_index" "main" {
-  name     = "my-matching-engine-index"
-  location = google_vertex_ai_matching_engine_index.main.location
-  # Define the Matching Engine's features
-  matching_engine_features {
-    feature {
-      feature_id = "user_id"
-      type        = "INT64"
-    }
-    feature {
-      feature_id = "item_id"
-      type        = "INT64"
-    }
-  }
-  # Define the Matching Engine's distance metric
-  distance_metric {
-    metric = "COSINE"
-  }
-  # Define the Matching Engine's deployment
-  deployment {
-    dedicated_resources {
-      machine_type = "n1-standard-1"
-      # Specify the number of replicas of the Matching Engine
-      replica_count = 1
-    }
+# Crie um endpoint do Vertex Matching Engine
+resource "google_vertex_ai_matching_engine_endpoint" "default" {
+  display_name = "matching-engine-endpoint"
+  location     = "us-central1" # Substitua pela sua região desejada
+  matching_engine {
+    model = "your-model-name" # Substitua pelo nome do seu modelo
+    model_version = "your-model-version" # Substitua pela versão do seu modelo
   }
 }
 
-# Create a Vertex AI Matching Engine Dataset
-resource "google_vertex_ai_matching_engine_dataset" "main" {
-  name     = "my-matching-engine-dataset"
-  location = google_vertex_ai_matching_engine_index.main.location
-  # Define the Matching Engine's dataset's source
-  dataset_source {
-    # Option 1: Use an existing BigQuery table as the source
+# Crie uma tarefa de correspondência
+resource "google_vertex_ai_matching_engine_matching_job" "default" {
+  display_name = "matching-job"
+  location     = "us-central1" # Substitua pela sua região desejada
+  endpoint     = google_vertex_ai_matching_engine_endpoint.default.name
+  input_config {
     bigquery_source {
-      table = "my-project.my-dataset.my-table"
+      table = "your-project-id.your-dataset.your-table" # Substitua pelo caminho da sua tabela BigQuery
     }
-    # Option 2: Use a local file as the source
-    # local_source {
-    #   path  = "path/to/local/file"
-    #   format = "CSV"
-    # }
   }
-}
-
-# Create a Vertex AI Matching Engine Featurestore
-resource "google_vertex_ai_matching_engine_featurestore" "main" {
-  name     = "my-matching-engine-featurestore"
-  location = google_vertex_ai_matching_engine_index.main.location
-  # Define the Matching Engine's featurestore's features
-  features {
-    feature {
-      feature_id = "user_id"
-      type        = "INT64"
-    }
-    feature {
-      feature_id = "item_id"
-      type        = "INT64"
+  output_config {
+    bigquery_destination {
+      table = "your-project-id.your-dataset.your-output-table" # Substitua pelo caminho da sua tabela de saída BigQuery
     }
   }
 }
 
-# Create a Vertex AI Matching Engine Featurestore Online Serving Config
-resource "google_vertex_ai_matching_engine_featurestore_online_serving_config" "main" {
-  name     = "my-matching-engine-featurestore-online-serving-config"
-  location = google_vertex_ai_matching_engine_index.main.location
-  # Define the Matching Engine's featurestore's online serving configuration
-  online_serving_config {
-    # Specify the number of replicas of the online serving instance
-    replica_count = 1
-  }
-}
-
-  
+    

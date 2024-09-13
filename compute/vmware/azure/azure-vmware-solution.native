@@ -1,0 +1,10 @@
+
+      az group create --name example-rg --location westus2
+
+az vmware private-cloud create --name example-private-cloud --resource-group example-rg --location westus2 --size Small --offer Standard --location-type ExpressRoute --extended-location westus2 --identity type=SystemAssigned
+
+az vmware network create --name example-network --resource-group example-rg --private-cloud example-private-cloud --network-type Management --address-prefixes 10.100.0.0/16
+
+az vmware vcenter create --name example-vcenter --resource-group example-rg --private-cloud example-private-cloud --size Small --network example-network
+
+    

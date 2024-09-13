@@ -1,61 +1,130 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
+  project = "your-project-id"
   region  = "us-central1"
 }
 
-# Create a Cloud Armor security policy
+# Crie um recurso Cloud Armor Security Policy
 resource "google_compute_security_policy" "default" {
-  name     = "my-security-policy"
-  description = "Security policy for my application"
-  # Define the security policy rules
-  rule {
-    # Define a match rule to identify traffic based on the destination URL path
-    match {
-      # Match if the request path starts with `/api/`
-      full_path_match {
-        prefix_match = "\/api\/"
-      }
-    }
-    # Define the action to take on matching traffic
-    action {
-      # Allow access for matching traffic
-      allow {}
-    }
-  }
+  name     = "default"
+  description = "Security Policy for Cloud Armor"
+  type     = "CLOUD_ARMOR"
 }
 
-# Create a Cloud Armor security policy rule
+# Crie uma regra de proteção para o recurso Cloud Armor
 resource "google_compute_security_policy_rule" "default" {
   security_policy = google_compute_security_policy.default.id
-  priority       = 1000
-  match {
-    # Match if the request path starts with `/admin/`
-    full_path_match {
-      prefix_match = "\/admin\/"
+  priority        = 1000
+  match           = <<MATCH
+  match_version = "V1"
+  layer4_config {
+    match_criteria = "ANY_MATCH"
+    http_options {
+      request_header_match_options {
+        header_name        = "X-Forwarded-For"
+        match_criteria = "ANY_MATCH"
+        string_match_options {
+          match_criteria  = "CONTAINS"
+          contains_string = "192.168.0.1"
+        }
+      }
     }
   }
-  action {
-    # Allow access for matching traffic
-    allow {}
+  action = "deny"
+  MATCH
+}
+
+# Crie um recurso de proteção de Cloud Armor
+resource "google_compute_firewall_policy" "default" {
+  name         = "default"
+  description  = "Firewall Policy for Cloud Armor"
+  parent        = "projects/your-project-id/global/firewallPolicies"
+  priority      = 1000
+  display_name = "default"
+  enforcement_order = "AFTER_CLASSIC_FIREWALL"
+  fingerprint = "your-fingerprint"
+  security_policy {
+    name = google_compute_security_policy.default.name
   }
 }
 
-# Create a Cloud Armor security policy rule
-resource "google_compute_security_policy_rule" "deny_by_default" {
-  security_policy = google_compute_security_policy.default.id
-  priority       = 10000
-  match {
-    # Match all traffic by default
-    full_path_match {
-      prefix_match = "\/"
+# Crie uma regra de firewall
+resource "google_compute_firewall_policy_rule" "default" {
+  firewall_policy = google_compute_firewall_policy.default.id
+  priority        = 1000
+  match           = <<MATCH
+  match_version = "V1"
+  layer4_config {
+    match_criteria = "ANY_MATCH"
+    http_options {
+      request_header_match_options {
+        header_name        = "X-Forwarded-For"
+        match_criteria = "ANY_MATCH"
+        string_match_options {
+          match_criteria  = "CONTAINS"
+          contains_string = "192.168.0.1"
+        }
+      }
     }
   }
-  action {
-    # Deny access for matching traffic
-    deny {}
+  action = "deny"
+  MATCH
+}
+
+# Crie um recurso de proteção de Cloud Armor
+resource "google_compute_firewall_policy_rule_enforcement_order" "default" {
+  firewall_policy = google_compute_firewall_policy.default.id
+  priority        = 1000
+  enforcement_order = "AFTER_CLASSIC_FIREWALL"
+}
+
+# Crie um recurso de proteção de Cloud Armor
+resource "google_compute_firewall_policy_rule_match" "default" {
+  firewall_policy = google_compute_firewall_policy.default.id
+  priority        = 1000
+  match           = <<MATCH
+  match_version = "V1"
+  layer4_config {
+    match_criteria = "ANY_MATCH"
+    http_options {
+      request_header_match_options {
+        header_name        = "X-Forwarded-For"
+        match_criteria = "ANY_MATCH"
+        string_match_options {
+          match_criteria  = "CONTAINS"
+          contains_string = "192.168.0.1"
+        }
+      }
+    }
+  }
+  MATCH
+}
+
+# Crie um recurso de proteção de Cloud Armor
+resource "google_compute_firewall_policy_rule_action" "default" {
+  firewall_policy = google_compute_firewall_policy.default.id
+  priority        = 1000
+  action           = "deny"
+}
+
+# Crie um recurso de proteção de Cloud Armor
+resource "google_compute_firewall_policy_rule_layer4_config" "default" {
+  firewall_policy = google_compute_firewall_policy.default.id
+  priority        = 1000
+  layer4_config {
+    match_criteria = "ANY_MATCH"
+    http_options {
+      request_header_match_options {
+        header_name        = "X-Forwarded-For"
+        match_criteria = "ANY_MATCH"
+        string_match_options {
+          match_criteria  = "CONTAINS"
+          contains_string = "192.168.0.1"
+        }
+      }
+    }
   }
 }
 
-  
+    

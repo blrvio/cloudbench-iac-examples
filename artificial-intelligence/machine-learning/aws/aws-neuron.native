@@ -1,0 +1,7 @@
+
+      // Crie um recurso Neuron
+aws sagemaker create-runtime --runtime-name my-neuron-runtime --runtime-version 1.0
+
+// Crie um recurso de treinamento do SageMaker usando Neuron
+aws sagemaker create-training-job --training-job-name my-training-job --algorithm-specification TrainingImage=your-image-name --hyperparameters epochs=10 --role-arn arn:aws:iam::your-account-id:role/your-role-name --instance-count 1 --instance-type ml.p3.2xlarge --input-data-config S3DataDistributionType=FullyReplicated S3DataType=S3Prefix S3Uri=s3://your-bucket/your-data-folder --stopping-condition MaxRuntimeInSeconds=3600 --neuron Runtime=my-neuron-runtime
+    

@@ -1,0 +1,7 @@
+
+      // Crie um cluster Kubernetes
+gcloud container clusters create my-cluster --location us-central1 --num-nodes 3 --machine-type n1-standard-1
+
+// Importe o namespace padrão
+gcloud container namespaces import default --cluster my-cluster
+    

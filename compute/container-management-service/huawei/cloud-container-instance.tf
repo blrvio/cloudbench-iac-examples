@@ -1,28 +1,47 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "eu-west-1" # Replace with your desired region
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "gcp-project-id" # Substitua pelo seu ID do projeto
+  region  = "us-central1" # Substitua pela sua região
 }
 
-# Create a Container Instance
-resource "huaweicloud_cci_instance" "main" {
-  name = "my-container-instance"
-  # Optional: Specify a custom container image
-  image = "docker.io/library/nginx:latest"
-  # Specify the resources for the instance
-  resources {
-    cpu = 1
-    memory = 1024
+# Crie um cluster de Cloud Container Instance
+resource "google_container_cluster" "default" {
+  name     = "my-cluster"
+  location = google_container_cluster.default.location
+  initial_node_count = 1
+  node_config {
+    machine_type = "e2-medium"
   }
-
-  # Optional: Define a custom network configuration
-  network_config {
-    vpc_id = "<vpc_id>"
-    subnet_id = "<subnet_id>"
+  add_ons {
+    kubernetes_dashboard {
+      disabled = false
+    }
   }
-
-  # Optional: Configure security groups
-  security_groups = ["<security_group_id>"]
 }
 
-  
+# Crie um namespace no cluster
+resource "google_container_namespace" "default" {
+  cluster = google_container_cluster.default.name
+  name    = "default"
+}
+
+# Importe o serviço do Google Kubernetes Engine
+resource "google_container_service" "default" {
+  name    = "my-service"
+  location = google_container_cluster.default.location
+  cluster = google_container_cluster.default.name
+  namespace = google_container_namespace.default.name
+  template {
+    spec {
+      containers {
+        name  = "nginx"
+        image = "nginx:latest"
+        ports {
+          container_port = 80
+        }
+      }
+    }
+  }
+}
+    

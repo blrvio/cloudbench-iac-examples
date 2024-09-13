@@ -1,95 +1,83 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a QuickSight Account
-resource "aws_quicksight_account" "main" {
-  name = "my-quicksight-account"
-  # Optional
-  email = "user@example.com"
-  # Optional
-  namespace = "default"
+# Crie um usuário do QuickSight
+resource "aws_quicksight_user" "admin" {
+  email  = "admin@example.com" # Substitua pelo email do usuário
+  role   = "ADMIN"
+  user_name = "admin"
 }
 
-# Create a QuickSight User
-resource "aws_quicksight_user" "main" {
-  email = "user@example.com"
-  # Optional
-  identity_type = "IAM"
-  # Optional
-  iam_arn = "arn:aws:iam::123456789012:user/user-name"
-  # Optional
-  role = "ADMIN"
-  # Optional
-  user_name = "user-name"
-  # Optional
-  # Specify the QuickSight account ID
-  aws_account_id = aws_quicksight_account.main.aws_account_id
+# Crie um grupo do QuickSight
+resource "aws_quicksight_group" "example_group" {
+  name  = "example_group"
+  users = [aws_quicksight_user.admin.user_name]
 }
 
-# Create a QuickSight Dataset
-resource "aws_quicksight_dataset" "main" {
-  name = "my-quicksight-dataset"
-  # Specify the QuickSight account ID
-  aws_account_id = aws_quicksight_account.main.aws_account_id
-  # Choose the data source type
-  data_source_arn = aws_quicksight_data_source.main.arn
-  # Optional
-  # Specify the data source format
-  # data_source_format = "PARQUET"
-  # Optional
-  # Specify the data source parameters
-  # data_source_parameters = {
-  #   # Specify the data source parameters based on the data source type
-  # }
+# Crie um conjunto de dados do QuickSight
+resource "aws_quicksight_dataset" "example_dataset" {
+  name           = "example_dataset"
+  data_source_arn = "arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:datasource/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  import_mode  = "SPICE"
+  physical_table {
+    name     = "example_table"
+    data_source_arn = aws_quicksight_datasource.example_datasource.arn
+    columns = {
+      "column_1" = "string"
+      "column_2" = "integer"
+    }
+  }
 }
 
-# Create a QuickSight Data Source
-resource "aws_quicksight_data_source" "main" {
-  name = "my-quicksight-data-source"
-  # Specify the QuickSight account ID
-  aws_account_id = aws_quicksight_account.main.aws_account_id
-  # Choose the data source type
+# Crie uma análise do QuickSight
+resource "aws_quicksight_analysis" "example_analysis" {
+  name          = "example_analysis"
+  analysis_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  arn           = "arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:analysis/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+
+# Crie um dashboard do QuickSight
+resource "aws_quicksight_dashboard" "example_dashboard" {
+  name        = "example_dashboard"
+  dashboard_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  arn         = "arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:dashboard/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+
+# Crie uma fonte de dados do QuickSight
+resource "aws_quicksight_datasource" "example_datasource" {
+  name = "example_datasource"
   type = "S3"
-  # Optional
-  # Specify the data source credentials
-  # credentials {
-  #   # Specify the credentials based on the data source type
-  # }
-  # Optional
-  # Specify the data source parameters
-  # data_source_parameters = {
-  #   # Specify the data source parameters based on the data source type
-  # }
+  credentials {
+    s3 {
+      bucket        = "example_bucket"
+      region        = "us-east-1"
+      aws_access_key_id     = "AKIAxxxxxxxxxxxxx"
+      aws_secret_access_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  }
 }
 
-# Create a QuickSight Analysis
-resource "aws_quicksight_analysis" "main" {
-  name = "my-quicksight-analysis"
-  # Specify the QuickSight account ID
-  aws_account_id = aws_quicksight_account.main.aws_account_id
-  # Specify the dataset ARN
-  dataset_arns = [aws_quicksight_dataset.main.arn]
-  # Optional
-  # Specify the analysis parameters
-  # parameters = {
-  #   # Specify the analysis parameters
-  # }
+# Crie um usuário do QuickSight
+resource "aws_quicksight_user" "user_name" {
+  email = "user_name@example.com"
+  role   = "READER"
+  user_name = "user_name"
 }
 
-# Create a QuickSight Dashboard
-resource "aws_quicksight_dashboard" "main" {
-  name = "my-quicksight-dashboard"
-  # Specify the QuickSight account ID
-  aws_account_id = aws_quicksight_account.main.aws_account_id
-  # Specify the analysis ARN
-  analysis_arns = [aws_quicksight_analysis.main.arn]
-  # Optional
-  # Specify the dashboard parameters
-  # parameters = {
-  #   # Specify the dashboard parameters
-  # }
+# Crie uma análise do QuickSight
+resource "aws_quicksight_analysis" "analysis_id" {
+  name          = "analysis_id"
+  analysis_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  arn           = "arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:analysis/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
-  
+
+# Crie um dashboard do QuickSight
+resource "aws_quicksight_dashboard" "dashboard_id" {
+  name        = "dashboard_id"
+  dashboard_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  arn         = "arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:dashboard/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+    

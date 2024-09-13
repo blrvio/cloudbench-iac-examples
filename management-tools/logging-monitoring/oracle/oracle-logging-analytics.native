@@ -1,0 +1,13 @@
+
+      // Create a compartment
+oci logging create-compartment --compartment-name "MyCompartment" --description "My compartment for logging"
+
+// Create a log group
+oci logging create-log-group --compartment-id "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-group-name "MyLogGroup" --description "My log group"
+
+// Create a log
+oci logging create-log --compartment-id "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-group-id "ocid1.loggroup.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-name "MyLog" --description "My log"
+
+// Write logs
+oci logging write-log --compartment-id "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-group-id "ocid1.loggroup.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-id "ocid1.log.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa" --log-entries "{"message":"Hello from Oracle Logging Analytics", "timestamp":"2023-07-20T12:00:00Z"}
+    

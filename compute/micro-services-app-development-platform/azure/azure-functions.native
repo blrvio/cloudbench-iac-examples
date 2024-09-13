@@ -1,0 +1,13 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create -n example-resource-group -l westus
+
+// Crie uma função do Azure
+azurerm functionapp create -n example-function-app -g example-resource-group -s example-storage-account -p example-app-service-plan --https --https-route-prefix /api
+
+// Crie um script de função
+azurerm functionapp function create -n example-function -g example-resource-group -a example-function-app -s function.js -e httpTrigger
+
+// Crie uma função HTTP
+azurerm functionapp function create -n httpTrigger -g example-resource-group -a example-function-app -s function.js -e httpTrigger --auth-level anonymous
+    

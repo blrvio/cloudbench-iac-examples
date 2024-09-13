@@ -1,0 +1,10 @@
+
+      // Crie um ambiente de App Service
+azurerm appserviceenvironment create -n ase-example -g resource-group-name -l westus2 -s "Isolated"
+
+// Crie um plano de App Service
+azurerm appserviceplan create -n app-service-plan -g resource-group-name -l westus2 --kind app,function --sku Free S1 --app-service-environment ase-example
+
+// Crie uma aplicação web
+azurerm appservice create -n web-app -g resource-group-name -l westus2 -p app-service-plan
+    

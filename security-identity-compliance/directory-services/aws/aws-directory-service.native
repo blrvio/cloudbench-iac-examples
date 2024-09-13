@@ -1,0 +1,11 @@
+
+      // Criar um diretório Microsoft Active Directory
+aws dsa create-directory --name "my-ad-directory" --password "password" --edition "Standard" --size "Small" --type "MicrosoftAD" --vpc-id "vpc-xxxxxxxx" --subnet-ids "subnet-xxxxxxxx","subnet-xxxxxxxx"
+
+// Criar uma conta de usuário
+aws dsa create-user --directory-id "d-xxxxxxxx" --name "user" --password "password" --username "user" --user-type "NORMAL" --enabled true
+
+// Adicionar o usuário a um grupo
+aws dsa create-group --directory-id "d-xxxxxxxx" --name "Administrators"
+aws dsa add-group-membership --directory-id "d-xxxxxxxx" --group-name "Administrators" --user-name "user"
+    

@@ -1,0 +1,6 @@
+
+      // Create a Data Exchange
+aws dataexchange create-data-set --name MyDataSet --arn arn:aws:dataexchange:us-east-1:123456789012:dataset:ds-xxxxxxxxxxxx --description "This is a description of the data set"
+
+aws dataexchange create-revision --data-set-id ds-xxxxxxxxxxxx --source-id ds-xxxxxxxxxxxx
+    

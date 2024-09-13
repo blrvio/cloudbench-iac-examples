@@ -1,25 +1,30 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor Oracle Cloud
 provider "oci" {
   region  = "us-ashburn-1"
   tenancy = "ocid1.tenancy.oc1..."
+  user    = "ocid1.user.oc1..."
+  fingerprint = "xxxxxxxxxxxxxxxx"
 }
 
-# Create a bare metal server
-resource "oci_core_instance" "main" {
-  availability_domain = "AD-1"
-  shape              = "BM.Standard.E2.1.X"
-  compartment_id       = "ocid1.compartment.oc1..."
-  # Define the SSH key that will be used to access the instance
-  source_details {
-    source_type = "PUBLIC_KEY"
-    source_value = "ssh-rsa AAAAB3NzaC1yc2E..."
-  }
-  display_name = "My Bare Metal Server"
-  network_interfaces {
-    subnet_id = "ocid1.subnet.oc1..."
-    private_ip = "172.16.0.10"
-  }
-}
-
+# Crie um grupo de segurança
+resource "oci_core_network_security_group" "allow_ssh" {
+  compartment_id = "ocid1.compartment.oc1..."
+  name           = "allow_ssh"
   
+  ingress {
+    source   = "0.0.0.0/0"
+    protocol = "tcp"
+    port_range = "22"
+  }
+}
+
+# Crie um servidor Bare Metal
+resource "oci_core_bare_metal_instance" "web_server" {
+  compartment_id = "ocid1.compartment.oc1..."
+  availability_domain = "AD-1"
+  shape = "BM.Standard.2.8"
+  network_security_groups = [oci_core_network_security_group.allow_ssh.id]
+}
+
+    

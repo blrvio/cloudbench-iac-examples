@@ -1,0 +1,7 @@
+
+      // Crie uma regra de evento
+aws events put-rule --name example_rule --schedule-expression "rate(5 minutes)" --description "Exemplo de regra de evento"
+
+// Adicione um destino à regra de evento
+aws events put-targets --rule example_rule --targets [{"Id": "1", "Arn": "arn:aws:lambda:us-east-1:123456789012:function:example_function"}]
+    

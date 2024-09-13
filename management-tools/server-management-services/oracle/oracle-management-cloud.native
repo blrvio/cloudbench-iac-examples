@@ -1,0 +1,70 @@
+
+      // Declare variables for Oracle Cloud Infrastructure (OCI) configuration
+OCI_USER="your_oci_user"
+OCI_TENANCY_OCID="your_tenancy_ocid"
+OCI_REGION="your_region"
+OCI_KEY_FILE="your_key_file"
+
+// Example of a simple bash script to interact with Oracle Management Cloud using OCI CLI
+
+# Authenticate to OCI
+# Replace with your actual key file and profile information
+oci setup config --profile "default" --key-file "$OCI_KEY_FILE"
+
+# List all instances in a specific compartment
+oci compute instance list --compartment-id "your_compartment_id" --region "$OCI_REGION"
+
+# Get details of a specific instance
+oci compute instance get --instance-id "your_instance_id" --region "$OCI_REGION"
+
+# Start a specific instance
+oci compute instance start --instance-id "your_instance_id" --region "$OCI_REGION"
+
+# Stop a specific instance
+oci compute instance stop --instance-id "your_instance_id" --region "$OCI_REGION"
+
+# Terminate a specific instance
+oci compute instance terminate --instance-id "your_instance_id" --region "$OCI_REGION"
+
+# Monitor the health and performance of your infrastructure using Oracle Management Cloud
+oci monitoring alert list --compartment-id "your_compartment_id" --region "$OCI_REGION"
+
+# Create a new alert rule
+oci monitoring alert create --compartment-id "your_compartment_id" --name "MyAlertRule" --region "$OCI_REGION" --description "Alert when CPU utilization is above 90%" --metric-namespace "oci_compute" --metric-name "cpu_utilization" --threshold 90 --comparison-operator "GreaterThan"
+
+# Apply the alert rule to a specific instance
+oci monitoring alert apply --compartment-id "your_compartment_id" --alert-rule-id "your_alert_rule_id" --target-id "your_instance_id" --region "$OCI_REGION"
+
+# Get the logs of a specific instance
+oci logging log-group list --compartment-id "your_compartment_id" --region "$OCI_REGION"
+
+# Get the logs of a specific instance
+oci logging log-group get --log-group-id "your_log_group_id" --region "$OCI_REGION"
+
+# Get the logs of a specific instance
+oci logging log list --log-group-id "your_log_group_id" --region "$OCI_REGION"
+
+# Get the logs of a specific instance
+oci logging log get --log-id "your_log_id" --region "$OCI_REGION"
+
+# Get the logs of a specific instance
+oci logging log-group download --log-group-id "your_log_group_id" --region "$OCI_REGION"
+
+# Perform other management tasks like patching, backup, and recovery
+
+# Get a list of all the patch IDs associated with a specific instance
+oci compute instance patch-id-list --instance-id "your_instance_id" --region "$OCI_REGION"
+
+# Apply a specific patch to an instance
+oci compute instance patch-apply --instance-id "your_instance_id" --patch-id "your_patch_id" --region "$OCI_REGION"
+
+# Create a backup of a specific database
+oci database backup create --compartment-id "your_compartment_id" --database-id "your_database_id" --backup-name "my_database_backup" --region "$OCI_REGION"
+
+# Recover a database from a backup
+oci database backup restore --compartment-id "your_compartment_id" --backup-id "your_backup_id" --region "$OCI_REGION"
+
+# Perform other management tasks using OCI CLI or API
+
+# For more information, please refer to the Oracle Cloud Infrastructure Documentation: https://docs.oracle.com/en/cloud/paas/management-cloud/index.html
+    

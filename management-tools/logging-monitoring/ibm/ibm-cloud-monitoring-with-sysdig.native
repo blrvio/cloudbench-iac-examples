@@ -1,0 +1,10 @@
+
+      // Crie um monitoramento de aplicação
+ibmcloud monitoring create-app-monitor --name My Application Monitor --app-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+// Crie um monitoramento de infraestrutura
+ibmcloud monitoring create-infra-monitor --name My Infrastructure Monitor --resource-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+// Crie um alerta
+ibmcloud monitoring create-alert --name My Alert --type application --monitor-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --condition "metric_value > 100"
+    

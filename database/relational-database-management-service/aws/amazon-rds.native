@@ -1,0 +1,10 @@
+
+      // Crie um cluster do RDS
+aws rds create-db-cluster --db-cluster-identifier example --engine postgres --engine-version 13.4 --db-name mydb --master-username admin --master-password password --# ...
+
+// Crie um sub-rede para o cluster
+aws rds create-db-subnet-group --db-subnet-group-name example --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx --# ...
+
+// Crie uma instância do RDS
+aws rds create-db-instance --db-instance-identifier example --db-cluster-identifier example --allocated-storage 10 --engine postgres --engine-version 13.4 --db-subnet-group-name example --# ...
+    

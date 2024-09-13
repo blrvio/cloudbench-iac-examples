@@ -1,24 +1,21 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+  project = "your-project-id" # Substitua pelo seu ID do projeto
 }
 
-# Create a managed zone
-resource "google_dns_managed_zone" "main" {
-  name    = "example-zone"
-  dns_name = "example.com."
-  description = "Example DNS zone"
+# Crie uma zona DNS
+resource "google_dns_managed_zone" "my_zone" {
+  name = "my-zone.example.com"
+  dns_name = "my-zone.example.com."
 }
 
-# Create a record set
-resource "google_dns_record_set" "main" {
-  name    = "www"
-  type    = "A"
-  ttl     = 300
-  managed_zone = google_dns_managed_zone.main.name
-  # Add a list of records
-  rrdatas = ["1.2.3.4", "5.6.7.8"]
+# Crie um registro DNS
+resource "google_dns_record_set" "my_record" {
+  managed_zone = google_dns_managed_zone.my_zone.name
+  name = "example.com."
+  type = "A"
+  ttl = 300
+  rrdatas = ["1.2.3.4"]
 }
-  
+    

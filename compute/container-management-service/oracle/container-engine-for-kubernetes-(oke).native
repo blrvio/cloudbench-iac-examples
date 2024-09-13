@@ -1,0 +1,10 @@
+
+      // Crie um cluster Kubernetes
+gcloud container clusters create my-cluster --location us-central1 --num-nodes 3
+
+// Crie um serviço Kubernetes
+gcloud container clusters create-service my-service --cluster my-cluster --namespace default --port 80 --selector app=my-app
+
+// Implante um aplicativo em um pod Kubernetes
+gcloud container clusters create-deployment my-deployment --cluster my-cluster --namespace default --image nginx:latest --replicas 3 --labels app=my-app
+    

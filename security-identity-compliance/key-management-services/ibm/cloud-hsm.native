@@ -1,0 +1,7 @@
+
+      // Criar um cluster do Cloud HSM
+aws cloudhsm create-cluster --hsm-type hsm1.medium --subnet-ids subnet-xxxxxxxx --source-backup-id backup-xxxxxxxx
+
+// Criar um HSM no cluster
+aws cloudhsm create-hsm --cluster-id cluster-xxxxxxxx --eni-id eni-xxxxxxxx --subnet-id subnet-xxxxxxxx --external-ip x.x.x.x
+    

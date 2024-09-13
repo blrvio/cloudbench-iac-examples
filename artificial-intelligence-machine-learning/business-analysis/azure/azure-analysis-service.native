@@ -1,0 +1,10 @@
+
+      # Crie um servidor do Azure Analysis Services
+azurerm analysis-services server create --name example-aas-server --resource-group example-resources --location westus2 --sku Standard --administrator-contact-email admin@example.com
+
+# Crie uma base de dados do Azure Analysis Services
+azurerm analysis-services database create --name example-aas-database --server-name example-aas-server --resource-group example-resources --edition Enterprise --compatibility-level 1400
+
+# Crie uma tabela dentro da base de dados
+azurerm analysis-services table create --name example-table --database-name example-aas-database --server-name example-aas-server --resource-group example-resources
+    

@@ -1,67 +1,44 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Opcional: Habilita recursos beta
 }
 
-# Create an Azure Time Series Insights Environment
-resource "azurerm_time_series_insights_environment" "main" {
-  name                       = "my-time-series-insights-environment"
-  location                   = "westus2"
-  resource_group_name         = "my-resource-group"
-  sku {
-    name = "S1"
+# Crie um ambiente do Azure Time Series Insights
+resource "azurerm_time_series_insights_environment" "example" {
+  name                = "example-env"
+  location            = "westus2"
+  resource_group_name = "example-rg"
+  sku                 = "S1"
+  data_retention_time = 365 # Dias
+}
+
+# Crie uma fonte de dados
+resource "azurerm_time_series_insights_gen2_data_source" "example" {
+  name                = "example-datasource"
+  location            = "westus2"
+  resource_group_name = "example-rg"
+  environment_name    = azurerm_time_series_insights_environment.example.name
+  kind               = "EventHub"
+  event_hub_endpoint = "example-eventhub.servicebus.windows.net"
+  event_hub_name      = "example-eventhub"
+  event_hub_consumer_group = "example-consumergroup"
+  shared_access_key      = "example-key"
+}
+
+# Crie uma referência de modelo de dados
+resource "azurerm_time_series_insights_gen2_reference_data_set" "example" {
+  name                = "example-reference-dataset"
+  location            = "westus2"
+  resource_group_name = "example-rg"
+  environment_name    = azurerm_time_series_insights_environment.example.name
+  data_source_name     = azurerm_time_series_insights_gen2_data_source.example.name
+  key_properties      = ["Id", "name"]
+  timestamp_properties = ["timestamp"]
+  data_format         = "Avro"
+  ingestion_properties = {
+    batch_size = 1000 # Limite de eventos por lote
+    interval   = 60 # Tempo entre lotes em segundos
   }
-  data_retention_time_in_days = 7
-  # Optional: Configure the access policy
-  # access_policies {
-  #   name = "access-policy"
-  #   principal_object_id = "your-principal-object-id"
-  #   permission = "ReadWrite"
-  # }
-  # Optional: Configure the ingress settings
-  # ingress_settings {
-  #   event_source_types = ["IoTEventSource", "EventHubEventSource"]
-  # }
 }
-
-# Create an Azure Time Series Insights Gen 2 Environment
-resource "azurerm_time_series_insights_gen2_environment" "main" {
-  name                       = "my-time-series-insights-gen2-environment"
-  location                   = "westus2"
-  resource_group_name         = "my-resource-group"
-  sku {
-    name = "S1"
-  }
-  # Optional: Configure the storage settings
-  # storage_settings {
-  #   type = "StorageAccount"
-  #   storage_account_name = "your-storage-account-name"
-  #   container_name = "your-container-name"
-  #   storage_account_key = "your-storage-account-key"
-  # }
-  # Optional: Configure the ingress settings
-  # ingress_settings {
-  #   event_source_types = ["IoTEventSource", "EventHubEventSource"]
-  # }
-}
-
-# Create an Azure Time Series Insights Gen 2 Ingestion Endpoint
-resource "azurerm_time_series_insights_gen2_ingestion_endpoint" "main" {
-  name                       = "my-ingestion-endpoint"
-  environment_name            = azurerm_time_series_insights_gen2_environment.main.name
-  resource_group_name         = "my-resource-group"
-  location                   = "westus2"
-  # Optional: Configure the event source type
-  # event_source_type = "IoTEventSource"
-}
-
-# Create an Azure Time Series Insights Gen 2 Query Endpoint
-resource "azurerm_time_series_insights_gen2_query_endpoint" "main" {
-  name                       = "my-query-endpoint"
-  environment_name            = azurerm_time_series_insights_gen2_environment.main.name
-  resource_group_name         = "my-resource-group"
-  location                   = "westus2"
-}
-
-  
+    

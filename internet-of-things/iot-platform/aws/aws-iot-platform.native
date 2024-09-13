@@ -1,0 +1,10 @@
+
+      // Crie um certificado IoT
+aws iot create-certificate --certificate-pem "certificate"
+
+// Crie uma política IoT
+aws iot create-policy --policy-name example --policy "policy"
+
+// Anexar uma política a um certificado IoT
+aws iot attach-policy --policy-name example --target target-id
+    

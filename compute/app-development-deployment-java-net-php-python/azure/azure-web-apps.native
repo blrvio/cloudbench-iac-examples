@@ -1,0 +1,7 @@
+
+      az group create -n example-resources -l westus
+
+az appservice plan create -n example-plan -g example-resources -s Free -t F1
+
+az webapp create -n example-app -g example-resources -p example-plan
+    

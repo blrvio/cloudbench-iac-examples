@@ -1,0 +1,11 @@
+
+      // Create a Hyper Protect DBaaS for PostgreSQL service instance
+ibmcloud db hyper-protect create-instance --service-name "my-postgresql-instance" --instance-type "postgresql" --plan "standard" --region "us-south"
+
+// Create a database
+ibmcloud db hyper-protect create-database --instance-name "my-postgresql-instance" --database-name "my-database"
+
+// Connect to the database
+# Connect to the database using your preferred database client (e.g., psql, pgAdmin)
+# Refer to the documentation for specific connection details and credentials
+    

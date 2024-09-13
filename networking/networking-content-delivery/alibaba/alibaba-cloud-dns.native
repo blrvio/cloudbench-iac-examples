@@ -1,0 +1,13 @@
+
+      // Crie um domínio
+ali dns:CreateDomain --DomainName example.com
+
+// Crie um registro A
+ali dns:CreateRecord --DomainName example.com --Type A --RR www --Value 1.1.1.1 --TTL 600
+
+// Crie um registro CNAME
+ali dns:CreateRecord --DomainName example.com --Type CNAME --RR mail --Value mail.example.com --TTL 600
+
+// Crie um registro TXT
+ali dns:CreateRecord --DomainName example.com --Type TXT --RR google-site-verification --Value YOUR_GOOGLE_SITE_VERIFICATION_CODE --TTL 600
+    

@@ -1,35 +1,31 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Cloud Storage Gateway instance
-resource "huaweicloud_csg_gateway" "main" {
-  name = "my-csg-gateway" # Name of your gateway instance
-  # Choose a VPC ID from your existing Huawei Cloud VPC
-  vpc_id = "vpc-xxxxxxxxxxxxx"
-  # Choose a subnet ID from your existing VPC
-  subnet_id = "subnet-xxxxxxxxxxxxx"
-  # Configure the security group ID
-  security_group_id = "sg-xxxxxxxxxxxxx"
-  # Choose a storage type
-  storage_type = "S3"
-  # Configure the S3 access key and secret key
-  s3_access_key_id = "AKIAXXXXXXXXXXXXXXXX"
-  s3_secret_access_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-  # Choose the S3 bucket region
-  s3_bucket_region = "cn-north-1"
-  # Set the S3 bucket name
-  s3_bucket_name = "my-bucket"
-  # Specify a storage capacity for the gateway instance
-  storage_capacity = 100
-  # Configure the gateway instance type
-  instance_type = "standard"
-  # Optional: Define tags for the gateway instance
-  tags = {
-    Name = "my-csg-gateway"
-  }
+# Crie um gateway de armazenamento
+resource "aws_storagegateway_gateway" "gateway" {
+  gateway_name = "my-gateway"
+  gateway_type = "FILE_GATEWAY"
+  gateway_location  = "us-east-1"
+  gateway_timezone = "America/New_York"
 }
 
-  
+# Crie um volume de gateway
+resource "aws_storagegateway_volume" "volume" {
+  gateway_arn = aws_storagegateway_gateway.gateway.arn
+  volume_type = "STORED_VOLUME"
+  source_volume_arn = "arn:aws:s3:::my-bucket/my-prefix"
+  snapshot_schedule  = "hourly"
+}
+
+# Crie um endpoint de gateway
+resource "aws_storagegateway_endpoint" "endpoint" {
+  gateway_arn = aws_storagegateway_gateway.gateway.arn
+  endpoint_type = "S3"
+  target_path = "my-path"
+  file_share_name = "my-share"
+  file_share_access_control = "PRIVATE"
+}
+    

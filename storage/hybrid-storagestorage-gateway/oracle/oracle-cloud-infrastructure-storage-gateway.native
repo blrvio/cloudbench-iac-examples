@@ -1,0 +1,7 @@
+
+      # Criar um Gateway de Armazenamento
+oci storage-gateway create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --display-name "Storage Gateway Example" --source-endpoint-id ocid1.endpoint.oc1..aaaaaaaaxxxxxxxxxxxxxx
+
+# Criar um ponto de montagem para o Gateway de Armazenamento
+oci storage-gateway create-mount-target --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --storage-gateway-id ocid1.storagegateway.oc1..aaaaaaaaxxxxxxxxxxxxxx --display-name "Storage Gateway Mount Target"
+    

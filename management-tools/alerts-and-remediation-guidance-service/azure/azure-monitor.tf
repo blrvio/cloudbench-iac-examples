@@ -1,43 +1,47 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} 
+  features {} # Garante que as últimas funcionalidades estejam disponíveis
 }
 
-# Create a Log Analytics Workspace
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "West Europe"
+}
+
+# Crie uma conta de Log Analytics
 resource "azurerm_log_analytics_workspace" "example" {
-  location             = "westus2"
-  name                 = "example-log-analytics-workspace"
-  resource_group_name = "example-resource-group"
-  # Specify if the workspace is a dedicated workspace. Default is false.
-  dedicated = false
-  # Specify the retention policy (in days) for data in the workspace. Default is 730 days.
-  retention_in_days   = 730
+  name                = "example-workspace"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  sku                  = "Free"
 }
 
-# Create an Azure Log Analytics Application Insights Extension
-resource "azurerm_monitor_application_insights_extension" "example" {
-  name                 = "example-extension"
-  resource_group_name = "example-resource-group"
-  location             = "westus2"
-  application_insights_id = azurerm_application_insights.example.id
-  resource_type = "virtualMachine"
-  resource_name = "example-vm"
-  # Set a time series sampling percentage for collected data, for example 10 would collect 10% of data. Default is 100.
-  sampling_percentage = 10
+# Crie uma regra de alerta
+resource "azurerm_monitor_alert_rule" "example" {
+  name                = "example-alert"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.example.location
+  workspace_name       = azurerm_log_analytics_workspace.example.name
+  description         = "Exemplo de regra de alerta"
+  enabled              = true
+  condition {
+    window_size              = "PT1M"
+    time_aggregation         = "Average"
+    operator                = "GreaterThan"
+    threshold                = 10
+    metric_namespace        = "Microsoft.Compute/virtualMachines"
+    metric_name            = "PercentageCPU"
+    dimension_name_value_pairs {
+      name  = "ResourceGroupName"
+      value = azurerm_resource_group.example.name
+    }
+  }
+  actions {
+    action_group_name = "example-action-group"
+    # Configure o grupo de ações aqui
+  }
 }
 
-# Create an Application Insights resource
-resource "azurerm_application_insights" "example" {
-  name                 = "example-application-insights"
-  resource_group_name = "example-resource-group"
-  location             = "westus2"
-  # Enable the ingestion of data from Azure Monitor for VMs.
-  # This will enable the collection of performance metrics, logs, and events.
-  # from the virtual machines.
-  vm_ingestion = true
-  # The Application Insights component can be enabled for the Azure Monitor for VMs solution to automatically collect metrics, logs and events from your VMs.
-  # To disable the ingestion of data from Azure Monitor for VMs, set this to false. Default is true.
-  vm_ingestion = true
-}
-  
+    

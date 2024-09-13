@@ -1,69 +1,36 @@
 
-    # Configure the Azure provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # This is required to use the Azure Synapse Analytics resources
+  features {} # Use a versão mais recente do provedor
 }
 
-# Create a Synapse Workspace
-resource "azurerm_synapse_workspace" "main" {
-  name                = "my-synapse-workspace"
+# Crie um workspace do Azure Synapse Analytics
+resource "azurerm_synapse_workspace" "example" {
+  name                = "example-workspace"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  # Optional settings:
-  # sql_administrator_login = "sql-admin"
-  # sql_administrator_password = "password"
+  resource_group_name = "example-resources"
+  sql_administrator_login = "admin"
+  sql_administrator_login_password = "examplepassword"
+  # Outros atributos podem ser configurados conforme necessário
 }
 
-# Create a Synapse SQL Pool
-resource "azurerm_synapse_sql_pool" "main" {
-  name                = "my-sql-pool"
+# Crie um pool dedicado do Azure Synapse Analytics
+resource "azurerm_synapse_sql_pool" "example" {
+  name                = "example-pool"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  workspace_name     = azurerm_synapse_workspace.main.name
-  # Optional settings:
-  # service_level = "S1"
-  # storage_account_type = "Standard"
-  # max_degree_of_parallelism = 8
+  resource_group_name = "example-resources"
+  workspace_name     = azurerm_synapse_workspace.example.name
+  # Outros atributos podem ser configurados conforme necessário
 }
 
-# Create a Synapse Spark Pool
-resource "azurerm_synapse_spark_pool" "main" {
-  name                = "my-spark-pool"
+# Crie uma tabela no pool dedicado
+resource "azurerm_synapse_sql_table" "example" {
+  name                = "example-table"
+  schema              = "dbo"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  workspace_name     = azurerm_synapse_workspace.main.name
-  # Optional settings:
-  # node_size = "Standard_DS3_v2"
-  # node_count = 4
-  # auto_scale {
-  #   min_node_count = 2
-  #   max_node_count = 8
-  # }
+  resource_group_name = "example-resources"
+  workspace_name     = azurerm_synapse_workspace.example.name
+  sql_pool_name      = azurerm_synapse_sql_pool.example.name
+  # Outros atributos podem ser configurados conforme necessário
 }
-
-# Create a Synapse Linked Service
-resource "azurerm_synapse_linked_service" "main" {
-  name                = "my-linked-service"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  workspace_name     = azurerm_synapse_workspace.main.name
-  # Define the type of linked service
-  type = "AzureBlobStorage"
-  # Configure the linked service based on the type
-  # For example, for AzureBlobStorage:
-  # connection_string = "DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=key"
-}
-
-# Create a Synapse Pipeline
-resource "azurerm_synapse_pipeline" "main" {
-  name                = "my-pipeline"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  workspace_name     = azurerm_synapse_workspace.main.name
-  # Optional settings:
-  # access_control {
-  #   access_right = "AllAccess"
-  # }
-}
-
-  
+    

@@ -1,37 +1,42 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region = "us-ashburn-1"
-  # Add your tenancy OCID, user OCID and private key here
-  tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
-  user_ocid       = "ocid1.user.oc1..aaaaaaaaxxxxxx"
-  fingerprint = "xxxxxx"
-  private_key_path = "~/.oci/oci_api_key.pem"
+  region     = "us-ashburn-1"
+  compartment = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
 }
 
-# Create a notification topic
+# Crie um tópico de notificação
 resource "oci_notifications_topic" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  name            = "example-topic"
-  description     = "Example notification topic"
+  compartment_id = oci_compartment.example.id
+  name          = "example-topic"
+  display_name  = "Example Topic"
+  description  = "Example Topic"
 }
 
-# Create a notification rule
+# Crie uma regra de notificação
 resource "oci_notifications_rule" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
+  compartment_id = oci_compartment.example.id
   topic_id       = oci_notifications_topic.example.id
-  name            = "example-rule"
-  description     = "Example notification rule"
-  # Set the action to send an email
-  actions = ["email"]
-  # Set the email address for the notification
-  email_addresses = ["example@example.com"]
-  # Define the rule's condition
-  condition {
-    attribute = "instance.state"
-    operation  = "EQUALS"
-    value      = "RUNNING"
+  name           = "example-rule"
+  description    = "Example Rule"
+  action         = "oci.action.notifications.send-email"
+  is_enabled     = true
+  actions        = {
+    email_notification {
+      subject       = "Example Notification"
+      body          = "Example Notification Body"
+      to_addresses = ["example@example.com"]
+    }
+  }
+  conditions      = {
+    event_type = "instance.create"
+    namespace    = "oci.compute"
   }
 }
 
-  
+# Crie um compartimento
+resource "oci_compartment" "example" {
+  name = "example-compartment"
+  description = "Example Compartment"
+}
+    

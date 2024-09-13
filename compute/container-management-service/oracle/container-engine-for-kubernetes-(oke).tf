@@ -1,94 +1,64 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
-provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your region
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "gcp-project-id" # Substitua pelo ID do seu projeto
+  region  = "us-central1" # Substitua pela região desejada
 }
 
-# Create a Kubernetes cluster
-resource "oci_core_cluster" "main" {
-  # Set the cluster name
-  name = "my-oke-cluster"
-  # Choose a compartment to create the cluster in
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxx"
-  # Specify the cluster's version
-  kubernetes_version = "1.20.10"
-  # Define the cluster's size
-  node_shape = "VM.Standard.E2.1.Micro"
-  # Choose the cluster's subnet
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaxxxxxxxxxx"
+# Crie um cluster Kubernetes
+resource "google_container_cluster" "default" {
+  name     = "my-cluster"
+  location = google_container_cluster.default.location
 
-  # Optional settings
-  # Specify a custom domain for the cluster
-  # domain = "my-domain.com"
-  # Set the cluster's maximum number of nodes
-  # max_nodes = 5
-  # Add a label to the cluster
-  # labels = {
-  #   "environment" = "development"
-  # }
-}
-
-# Create a namespace within the Kubernetes cluster
-resource "kubernetes_namespace" "main" {
-  metadata {
-    name = "my-namespace"
+  initial_node_count = 3
+  node_config {
+    machine_type = "n1-standard-1"
   }
-  # Optional settings
-  # labels = {
-  #   "app" = "my-app"
-  # }
+
+  # Adicione um grupo de nós com um tipo de máquina específico
+  node_pool {
+    name = "default-pool"
+    initial_node_count = 3
+    node_config {
+      machine_type = "n1-standard-1"
+    }
+  }
 }
 
-# Create a deployment within the namespace
-resource "kubernetes_deployment" "main" {
-  metadata {
-    name = "my-deployment"
-    namespace = kubernetes_namespace.main.metadata.name
+# Crie um serviço Kubernetes
+resource "google_container_cluster_service" "default" {
+  name     = "my-service"
+  location = google_container_cluster.default.location
+  cluster  = google_container_cluster.default.name
+  namespace = "default"
+  port      = 80
+  selector = {
+    app = "my-app"
   }
-  spec {
-    replicas = 3
-    selector {
-      match_labels = {
-        "app" = "my-app"
+}
+
+# Implante um aplicativo em um pod Kubernetes
+resource "google_container_cluster_deployment" "default" {
+  name     = "my-deployment"
+  location = google_container_cluster.default.location
+  cluster  = google_container_cluster.default.name
+  namespace = "default"
+  replicas  = 3
+  template {
+    metadata {
+      labels = {
+        app = "my-app"
       }
     }
-    template {
-      metadata {
-        labels = {
-          "app" = "my-app"
-        }
-      }
-      spec {
-        containers {
-          name = "my-app"
-          image = "nginx:latest"
-          # Add ports to the container
-          ports {
-            container_port = 80
-          }
+    spec {
+      containers {
+        name  = "my-app"
+        image = "nginx:latest"
+        ports {
+          container_port = 80
         }
       }
     }
   }
 }
-
-# Create a service to expose the deployment
-resource "kubernetes_service" "main" {
-  metadata {
-    name = "my-service"
-    namespace = kubernetes_namespace.main.metadata.name
-  }
-  spec {
-    selector = {
-      "app" = "my-app"
-    }
-    ports {
-      port = 80
-      target_port = 80
-      protocol = "TCP"
-    }
-  }
-}
-
-  
+    

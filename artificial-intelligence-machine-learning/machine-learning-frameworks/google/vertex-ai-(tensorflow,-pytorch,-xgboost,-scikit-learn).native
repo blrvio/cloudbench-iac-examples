@@ -1,0 +1,9 @@
+
+      # Use o Google Cloud SDK para criar um modelo de treinamento
+gcloud ai models create my-model --display-name "my-model" --description "Modelo de treinamento de exemplo" --artifact-uri gs://my-bucket/my-model
+
+# Use o Google Cloud SDK para criar um endpoint
+gcloud ai endpoints create my-endpoint --display-name "my-endpoint" --description "Endpoint de serviço de exemplo" --machine-type n1-standard-1
+
+gcloud ai endpoints deploy my-endpoint --model my-model
+    

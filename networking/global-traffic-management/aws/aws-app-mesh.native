@@ -1,0 +1,22 @@
+
+      // Criar uma malha do App Mesh
+aws appmesh create-mesh --mesh-name example
+
+// Criar um virtual service
+aws appmesh create-virtual-service --mesh-name example --virtual-service-name example
+
+// Criar um virtual router
+aws appmesh create-virtual-router --mesh-name example --virtual-router-name example --virtual-service-name example
+
+// Criar uma rota
+aws appmesh create-route --mesh-name example --route-name example --virtual-router-name example
+
+// Criar um virtual node
+aws appmesh create-virtual-node --mesh-name example --virtual-node-name example
+
+// Criar um listener
+aws appmesh create-virtual-node-listener --mesh-name example --virtual-node-name example
+
+// Criar um backend
+aws appmesh create-virtual-node-backend --mesh-name example --virtual-node-name example
+    

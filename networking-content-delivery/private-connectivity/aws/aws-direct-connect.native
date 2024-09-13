@@ -1,0 +1,13 @@
+
+      // Crie uma conexão AWS Direct Connect
+aws directconnect create-connection --location EqDc2 --bandwidth 1Gbps --connection-type dedicated --name example-connection
+
+// Crie uma interface virtual
+aws directconnect create-virtual-interface --connection-id dxcon-xxxxxxxx --name example-interface --vlan 100 --connection-type private --address-family ipv4 --mtu 1500
+
+// Crie um gateway virtual
+aws directconnect create-direct-connect-gateway --name example-gateway --amazon-side-asn 64512 --type transit
+
+// Crie uma conexão virtual com o gateway virtual
+aws directconnect create-virtual-interface --connection-id dxcon-xxxxxxxx --name example-gateway-interface --vlan 200 --connection-type private --address-family ipv4 --mtu 1500 --gateway-id dxgw-xxxxxxxx
+    

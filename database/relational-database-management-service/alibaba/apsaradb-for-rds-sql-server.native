@@ -1,0 +1,14 @@
+
+      // Crie um instance do ApsaraDB for RDS SQL Server
+abs rds create-instance --engine SQLServer --engine-version 2017_Standard --instance-type rds.mysql.t1.small --instance-charge-type Postpaid --instance-network-type VPC --db-instance-class basic --db-instance-storage 20 --payment-type PayAsYouGo --storage-type cloud_essd --vpc-id vpc-xxxxxxxx --vswitch-id vswitch-xxxxxxxx --connection-mode Public --db-name mydatabase --db-instance-description "My RDS SQL Server instance" --security-ip-list "0.0.0.0/0" --availability-zone-id cn-hangzhou-a --port 1433 --password password
+
+// Crie um usuário do banco de dados
+abs rds create-account --account-name db_user --account-password password --db-instance-id db-xxxxxxxx --account-type normal
+
+// Crie uma regra de segurança para o banco de dados
+abs rds create-security-group --security-group-name db_security_group --security-group-description "Security group for RDS SQL Server" --vpc-id vpc-xxxxxxxx
+abs rds authorize-security-group-ingress --security-group-id sg-xxxxxxxx --type ingress --from-port 1433 --to-port 1433 --ip-protocol tcp --cidr-ip 0.0.0.0/0
+
+// Crie uma regra de segurança para o banco de dados
+abs rds authorize-security-group-ingress --db-instance-id db-xxxxxxxx --security-group-id sg-xxxxxxxx --db-instance-port 1433
+    

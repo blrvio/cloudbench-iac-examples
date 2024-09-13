@@ -1,0 +1,10 @@
+
+      # Crie um recurso Data Box Disk
+ azurerm datoboxdisk create --name example-disk --resource-group example-resource-group --location westus --transfer-type Import --storage-account-type Standard_LRS --size-in-tb 10 --shipping-address "street_address_line1=123 Main St,city=Anytown,state=CA,postal_code=12345,country=US"
+
+# Crie um recurso Data Box Edge
+ azurerm databoxedge create --name example-edge --resource-group example-resource-group --location westus --sku DataBoxEdgeGen2 --shipping-address "street_address_line1=123 Main St,city=Anytown,state=CA,postal_code=12345,country=US"
+
+# Crie um recurso Data Box Gateway
+ azurerm databoxgateway create --name example-gateway --resource-group example-resource-group --location westus --sku DataBoxGatewayGen2 --shipping-address "street_address_line1=123 Main St,city=Anytown,state=CA,postal_code=12345,country=US"
+    

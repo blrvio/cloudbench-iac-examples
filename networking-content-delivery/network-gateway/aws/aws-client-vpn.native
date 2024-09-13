@@ -1,0 +1,10 @@
+
+      // Criar um VPN Endpoint
+aws clientvpn create-client-vpn-endpoint --server-certificate-arn arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012 --... # outros parâmetros
+
+// Criar um Network Association
+aws clientvpn associate-client-vpn-target-network --client-vpn-endpoint-id <client-vpn-endpoint-id> --... # outros parâmetros
+
+// Criar uma Route
+aws clientvpn create-client-vpn-route --client-vpn-endpoint-id <client-vpn-endpoint-id> --... # outros parâmetros
+    

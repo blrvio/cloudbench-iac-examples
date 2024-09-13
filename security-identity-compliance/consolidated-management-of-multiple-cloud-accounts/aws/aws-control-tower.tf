@@ -1,56 +1,60 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor do AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS Control Tower
-resource "aws_controltower_enabled" "main" {
-  # Configure optional settings for Control Tower
-  account_name_prefix = "my-control-tower-"
-  # The region that will be used to create the landing zone
-  landing_zone_region = "us-east-1"
-  # Configure the optional settings for the Landing Zone
-  landing_zone_options {
-    # Configure optional settings for the delegated administrator accounts
-    delegated_administrator_accounts {
-      # You must specify at least one delegated administrator account
-      # The IAM account ID of the account to be delegated administrator
-      account_id = "123456789012" # Replace with your account ID
-    }
-  }
-  # Enable Control Tower in this account
-  enable = true
+# Configure o provedor do Control Tower
+provider "aws-controltower" {
+  account_id = "xxxxxxxx"
+  region     = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a service control policy to control the services that can be used in the account
-resource "aws_controltower_service_control_policy" "main" {
-  # The name of the service control policy
-  name = "MyServiceControlPolicy"
-  # Define the rules for the service control policy
-  rules = [
-    # Allow the use of AWS EC2, AWS S3, and AWS CloudFront
-    {
-      # The service that the rule applies to
-      service = "ec2"
-      # The action that the rule allows
-      action = "allow"
-    },
-    {
-      # The service that the rule applies to
-      service = "s3"
-      # The action that the rule allows
-      action = "allow"
-    },
-    {
-      # The service that the rule applies to
-      service = "cloudfront"
-      # The action that the rule allows
-      action = "allow"
-    },
-  ]
-  # The policy's description
-  description = "This policy controls the services that can be used in the account"
+# Crie uma conta gerenciada pelo Control Tower
+resource "aws_controltower_account" "managed_account" {
+  email        = "example@example.com" # Substitua pelo email da conta
+  account_name = "managed-account"
+
+  # ... outras configurações de conta
 }
 
-  
+# Crie uma conta gerenciada pelo Control Tower
+resource "aws_controltower_enabled_service" "guardduty" {
+  service_name = "GuardDuty"
+}
+
+# Crie uma conta gerenciada pelo Control Tower
+resource "aws_controltower_organizational_unit" "ou_development" {
+  name = "Development"
+  parent_id  = aws_controltower_organizational_unit.ou_root.id
+}
+
+# Crie uma conta gerenciada pelo Control Tower
+resource "aws_controltower_organizational_unit" "ou_root" {
+  name = "Root"
+}
+
+# Crie uma conta gerenciada pelo Control Tower
+resource "aws_controltower_policy" "iam_policy" {
+  name = "iam-policy"
+  content = "# Exemplo de política IAM
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::xxxxxxxx:root"
+        },
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::my-bucket/*"
+        ]
+      }
+    ]
+  }"
+}
+    

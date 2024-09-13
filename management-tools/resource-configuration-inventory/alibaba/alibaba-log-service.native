@@ -1,0 +1,16 @@
+
+      // Crie um projeto de log
+alibaba log:create-project --project-name my-log-project
+
+// Crie um logstore
+alibaba log:create-logstore --project-name my-log-project --logstore-name my-log-store
+
+// Crie um índice de log
+alibaba log:create-index --project-name my-log-project --logstore-name my-log-store --index-name my-log-index --keys timestamp,message
+
+// Crie uma regra de exportação de log
+alibaba log:create-export --project-name my-log-project --logstore-name my-log-store --export-name my-log-export --destination oss://my-oss-bucket/logs --filter "timestamp > 1600000000"
+
+// Crie uma regra de ingestão de log
+alibaba log:create-ingest-rule --project-name my-log-project --logstore-name my-log-store --rule-name my-ingest-rule --content '{"condition":"timestamp > 1600000000","action":"drop"}'
+    

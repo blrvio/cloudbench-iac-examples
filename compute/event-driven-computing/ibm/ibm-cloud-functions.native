@@ -1,0 +1,19 @@
+
+      // Crie um namespace para as funções
+ibmcloud fn namespace create my-namespace --location us-south
+
+// Crie uma função
+ibmcloud fn action create my-function --namespace my-namespace --runtime nodejs:16
+
+// Defina o código da função
+echo 'const { Response } = require('ibm-functions');
+
+module.exports = (params) => {
+  const name = params.name || 'World';
+  return new Response(`Hello ${name}!`);
+};' > my-function.js
+ibmcloud fn action update my-function --namespace my-namespace --code my-function.js
+
+// Crie uma regra de invocação da função
+ibmcloud fn invoke create my-route --namespace my-namespace --action my-function
+    

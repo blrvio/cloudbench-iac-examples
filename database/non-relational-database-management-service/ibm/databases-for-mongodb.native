@@ -1,0 +1,10 @@
+
+      // Crie um cluster MongoDB
+aws docdb create-db-cluster --db-cluster-identifier my-mongodb-cluster --engine mongodb --engine-version 4.0 --database-name mydatabase --master-user-password mypassword
+
+// Crie um endpoint para o cluster MongoDB
+aws docdb create-db-cluster-endpoint --db-cluster-identifier my-mongodb-cluster --endpoint-type READER --static-members my-mongodb-instance
+
+// Crie uma instância MongoDB
+aws docdb create-db-instance --db-instance-identifier my-mongodb-instance --engine mongodb --engine-version 4.0 --db-instance-class db.t3.micro --database-name mydatabase --master-user-password mypassword --cluster-identifier my-mongodb-cluster
+    

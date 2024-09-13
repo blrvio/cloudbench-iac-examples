@@ -1,84 +1,39 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Pinpoint application
-resource "aws_pinpoint_app" "main" {
-  name = "my-pinpoint-app" # Name of your Pinpoint application
-
-  # Optional settings
-  application_settings {
-    # Configure the default channel settings for the application
-    default_push_notification_channel {
-      # Disable push notifications by default
-      enable_push_notification_channel = false
-    }
-    default_sms_channel {
-      # Disable SMS notifications by default
-      enable_sms_channel = false
-    }
-  }
+# Crie um aplicativo Pinpoint
+resource "aws_pinpoint_app" "my_app" {
+  name = "MyApp"
 }
 
-# Create a segment in your Pinpoint application
-resource "aws_pinpoint_segment" "main" {
-  application_id = aws_pinpoint_app.main.id # ID of the Pinpoint application
-  name            = "my-segment" # Name of the segment
-
-  # Define the segment criteria
+# Crie um segmento
+resource "aws_pinpoint_segment" "my_segment" {
+  application_id = aws_pinpoint_app.my_app.application_id
+  name          = "MySegment"
   dimensions {
-    # Define the conditions for the segment
-    # This example defines a segment for users who are in the US
-    # and have a specific attribute set to 'value'
-    # Replace with your own criteria
-    # See the documentation for more options: https://docs.aws.amazon.com/pinpoint/latest/developerguide/apps-segments.html
-    attributes {
-      app_version {
-        # Define a condition for the app version attribute
-        # This example matches users with app version 1.0
-        # Replace with your own condition
-        dimension_type = "INCLUSIVE"
-        values = ["1.0"]
-      }
-      # Define additional attributes and conditions as needed
-    }
-    location {
-      # Define a condition for the user's location
-      # This example matches users who are in the United States
-      # Replace with your own condition
-      country = "US"
-    }
+    # Define as dimensões do segmento, como atributos do usuário ou eventos
   }
 }
 
-# Create a campaign in your Pinpoint application
-resource "aws_pinpoint_campaign" "main" {
-  application_id = aws_pinpoint_app.main.id # ID of the Pinpoint application
-  name            = "my-campaign" # Name of the campaign
-  # Define the campaign settings
-  schedule {
-    # Configure the campaign schedule
-    # This example sets the campaign to run immediately
-    # Replace with your own schedule settings
-    schedule_type = "NOW"
-  }
-  # Define the campaign message settings
+# Envie uma campanha SMS
+resource "aws_pinpoint_sms_channel" "sms_channel" {
+  application_id = aws_pinpoint_app.my_app.application_id
+  enabled        = true
+  # Configure as credenciais do SMS
+}
+
+resource "aws_pinpoint_campaign" "my_campaign" {
+  application_id = aws_pinpoint_app.my_app.application_id
+  name           = "MyCampaign"
+  segment_id      = aws_pinpoint_segment.my_segment.id
   message_config {
-    # Configure the message content
-    # This example sends a push notification message
-    # Replace with your own message settings
-    # See the documentation for more options: https://docs.aws.amazon.com/pinpoint/latest/developerguide/apps-campaigns.html
-    push {
-      # Set the push message title and body
-      # Replace with your own values
-      body = "Welcome to my app!"
-      title = "Welcome"
+    sms_message {
+      body = "Olá! Esta é uma mensagem de teste."
     }
   }
-  # Configure the segment for the campaign
-  segment_id = aws_pinpoint_segment.main.id # ID of the segment
 }
 
-  
+    

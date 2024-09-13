@@ -1,0 +1,7 @@
+
+      // Crie uma instância do Cloud Data Fusion
+gcloud data-fusion instances create data-fusion-instance --location=us-central1 --version latest --network=projects/gcp-project-id/global/networks/default
+
+// Opcional: adicione recursos para a instância
+# gcloud data-fusion instances update data-fusion-instance --location=us-central1 --resources cloud-sql,bigquery,pubsub,gcs
+    

@@ -1,61 +1,32 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a VPC
-resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16" # Replace with your desired CIDR block
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-  tags = {
-    Name = "My VPC"
-  }
+# Crie um Enclave
+resource "aws_enclave" "my_enclave" {
+  enclave_type = "nitro" # Tipo de enclave
+  name        = "my-enclave" # Nome do enclave
+
+  # Configurações de segurança (supressas para brevidade)
 }
 
-# Create a subnet
-resource "aws_subnet" "main" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a" # Replace with your desired Availability Zone
-  tags = {
-    Name = "My Subnet"
-  }
-}
-
-# Create a security group
-resource "aws_security_group" "main" {
-  name   = "sg-nitro-enclave"
-  vpc_id = aws_vpc.main.id
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Create an EC2 instance with Nitro Enclaves enabled
-resource "aws_instance" "main" {
-  ami           = "ami-08c40ec972c57421d" # Replace with your desired AMI
-  instance_type = "t3.xlarge"
-  key_name      = "my-key-pair"
-  subnet_id     = aws_subnet.main.id
-  # Enable Nitro Enclaves
-  enclave_options {
-    enabled = true
-  }
-  vpc_security_group_ids = [aws_security_group.main.id]
-  tags = {
-    Name = "My Nitro Enclave Instance"
-  }
-}
-
+# Crie uma instância EC2 com suporte a Enclaves
+resource "aws_instance" "my_instance" {
+  ami           = "ami-xxxxxxxx" # AMI com suporte a Enclaves
+  instance_type = "c5.xlarge" # Tipo de instância com suporte a Enclaves
+  key_name     = "key_name" # Chave SSH
+  security_groups = [aws_security_group.allow_ssh.id]
   
+  enclave_options {
+    enabled = true # Habilita o suporte a Enclaves
+  }
+}
+
+# Associe o Enclave à instância EC2
+resource "aws_enclave_data" "my_enclave_data" {
+  enclave_arn = aws_enclave.my_enclave.arn
+  instance_id = aws_instance.my_instance.id
+}
+    

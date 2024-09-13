@@ -1,0 +1,4 @@
+
+      // Crie um serviço App Runner
+aws apprunner create-service --service-name my_service --source-configuration ImageRepositoryUrl=<container_image_repository_url> ImageRepositoryImageConfigurationPort=8080 --auto-scaling-configuration-arn <auto_scaling_configuration_arn> --network-configuration Egress=INTERNET --tags Name=My App Runner Service
+    

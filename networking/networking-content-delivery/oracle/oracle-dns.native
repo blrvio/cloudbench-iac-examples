@@ -1,0 +1,11 @@
+
+      // Crie um serviço de DNS
+oci dns service create -c "<compartment_id>" -n "my-dns-service"
+
+// Crie uma zona DNS
+oci dns zone create -c "<compartment_id>" -n "example.com"
+
+// Crie um registro DNS
+oci dns record create -c "<compartment_id>" -z "<zone_id>" -n "www" -t "A" -d "<ip_address>" // Substitua por seu endereço IP desejado
+
+    

@@ -1,0 +1,10 @@
+
+      // Crie um domínio Elasticsearch
+aws es create-elasticsearch-domain --domain-name my-elasticsearch-domain --elasticsearch-version 7.10 --ebs-options '{"VolumeType":"gp2","VolumeSize":10, "Iops":10000}' --snapshot-options '{"AutomatedSnapshotStartHour":1}' --vpc-options '{"SubnetIds":["subnet-xxxxxxxx","subnet-xxxxxxxx"], "SecurityGroupIds":["sg-xxxxxxxx"]}' --advanced-options '{"index.max_result_window":"10000","indices.query.bool.max_clause_count":"1024"}' --access-policies '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":"es:*","Resource":"arn:aws:es:us-east-1:xxxxxxxx:domain/my-elasticsearch-domain/*"}]}'
+
+// Configure um usuário Elasticsearch
+aws es create-elasticsearch-user --domain-name my-elasticsearch-domain --username admin --password 'your_password'
+
+// Crie um endpoint do Kibana
+aws es create-elasticsearch-domain-endpoint --domain-name my-elasticsearch-domain --endpoint kibana
+    

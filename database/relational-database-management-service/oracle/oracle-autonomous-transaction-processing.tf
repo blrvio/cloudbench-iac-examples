@@ -1,36 +1,24 @@
 
-    # Configure the Oracle provider
-provider "oracle" {
-  # Set the connection details for your Oracle Cloud Infrastructure (OCI)
-  # You can find these in your OCI console
-  # https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm
-  # Ensure you've configured the 'OCI_CONFIG_FILE' environment variable
-  # or set the 'config_file' and 'profile' values accordingly
+      # Configure o provedor Oracle Cloud Infrastructure
+provider "oci" {
+  region = "us-ashburn-1"
+  # Adicione credenciais para o OCI
 }
 
-# Create an Autonomous Transaction Processing database
-resource "oci_database_autonomous_database" "main" {
-  # Set a unique name for the database
-  display_name = "my-atp-database"
-  # Select the desired compartment ID from OCI
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Choose the appropriate database edition
-  edition = "ENTERPRISE"
-  # Specify the desired version of the database
-  version = "19.0.0.0"
-  # Set the desired size of the database
-  db_size = 20
-  # Set the desired number of CPU cores
-  cpu_core_count = 2
-  # Select the desired network subnet ID
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-  # Configure the database with the appropriate security settings
-  # For production environments, consider creating a dedicated subnet
-  # and configure firewall rules accordingly
+# Crie uma instância do Autonomous Transaction Processing
+resource "oci_database_autonomous_database" "atp_instance" {
+  # Substitua por valores reais
+  admin_password      = "<ADMIN_PASSWORD>"
+  autonomous_database_name = "atp-instance"
+  compartment_id     = "<COMPARTMENT_ID>"
+  db_version            = "19c"
+  # Configure a network
+  # Substitua por valores reais
+  subnet_id           = "<SUBNET_ID>"
+  # Opcional: Especifique o tipo de banco de dados
+  # "SHARED" para um ambiente compartilhado
+  # "DEDICATED" para um ambiente dedicado
+  edition              = "SHARED"
 }
 
-# Output the database connection string
-output "database_connection_string" {
-  value = oci_database_autonomous_database.main.connection_string
-}
-  
+    

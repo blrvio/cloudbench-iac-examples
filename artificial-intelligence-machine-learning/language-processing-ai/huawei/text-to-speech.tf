@@ -1,28 +1,42 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "eu-west-1"
+      # Configure o provedor do Google Cloud
+provider "google" {
+  project = "your-project-id"
+  region  = "us-central1"
 }
 
-# Create a Text-to-Speech project
-resource "huaweicloud_tts_project" "main" {
-  name = "my-tts-project"
+# Crie um arquivo de voz
+resource "google_text_to_speech_voice" "my_voice" {
+  name     = "my-voice"
+  language_code = "en-US"
+  ssml_gender = "MALE"
 }
 
-# Create a Text-to-Speech voice
-resource "huaweicloud_tts_voice" "main" {
-  project_id = huaweicloud_tts_project.main.id
-  name       = "my-tts-voice"
-  language  = "en-US"
-  gender     = "female"
+# Crie um arquivo de texto para sintetizar
+resource "google_storage_bucket" "my_bucket" {
+  name    = "my-bucket"
+  location = "US"
 }
 
-# Create a Text-to-Speech synthesis job
-resource "huaweicloud_tts_synthesis_job" "main" {
-  project_id = huaweicloud_tts_project.main.id
-  voice_id   = huaweicloud_tts_voice.main.id
-  text       = "Hello, world!"
-  output_format = "mp3"
+resource "google_storage_bucket_object" "my_text" {
+  name    = "my-text.txt"
+  bucket  = google_storage_bucket.my_bucket.name
+  source  = "your-text-file.txt"
 }
 
-  
+# Sintetize a voz
+resource "google_text_to_speech_synthesis" "my_synthesis" {
+  input {
+    text = file(google_storage_bucket_object.my_text.self_link)
+  }
+  voice {
+    name = google_text_to_speech_voice.my_voice.name
+  }
+  audio_config {
+    audio_encoding = "LINEAR16"
+  }
+  output_config {
+    gcs_uri = "gs://my-bucket/my-speech.mp3"
+  }
+}
+    

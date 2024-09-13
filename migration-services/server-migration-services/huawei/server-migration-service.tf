@@ -1,49 +1,25 @@
 
-    # Configure the Huawei Cloud Provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Server Migration Service (SMS) Migration Task
-resource "huaweicloud_sms_migration_task" "main" {
-  name  = "my-sms-migration-task"
-  source_type = "PHYSICAL_MACHINE" # Specify the source type, here physical machine
-  # Other properties for source configuration
-  # ...
-  target_type = "ECS" # Specify the target type, here ECS
-  # Other properties for target configuration
-  # ...
-  migration_mode = "HOT" # Specify the migration mode
-  # Other optional properties
-  # ...
-}
-
-# Create an ECS instance
-resource "huaweicloud_ecs_instance" "main" {
-  name             = "my-ecs-instance"
-  flavor           = "ecs.s1.small"
-  image_id         = "centos-7.5"
-  security_groups  = [aws_security_group.main.id] # Reference the security group
-  # Other optional properties
-  # ...
-}
-
-# Create a security group for the ECS instance
-resource "huaweicloud_vpc_security_group" "main" {
-  name   = "sg-ecs"
-  # Define inbound and outbound rules
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+# Crie um servidor de migração
+resource "aws_smis_server" "example" {
+  name   = "example"
+  tags = {
+    Name = "Example Server"
   }
 }
 
-  
+# Crie uma tarefa de migração
+resource "aws_smis_replication_run" "example" {
+  server_id = aws_smis_server.example.id
+  source_server_type = "LINUX"
+  source_server_ip = "10.0.0.1"
+  destination_volume_type = "gp2"
+  tags = {
+    Name = "Example Replication Run"
+  }
+}
+    

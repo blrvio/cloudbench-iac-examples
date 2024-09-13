@@ -1,0 +1,13 @@
+
+      // Crie um balanceador de carga
+aws elb create-load-balancer --load-balancer-name my-load-balancer --listeners 'Protocol=HTTP,LoadBalancerPort=80,InstancePort=80' --subnets subnet-xxxxxxxx,subnet-xxxxxxxx --security-groups sg-xxxxxxxx
+
+// Crie um grupo de destino
+aws elb create-target-group --name my-target-group --protocol HTTP --port 80 --vpc-id vpc-xxxxxxxx
+
+// Adicione uma instância ao grupo de destino
+aws elb register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:targetgroup/my-target-group/xxxxxxxx --targets Id=i-xxxxxxxx
+
+// Associe o balanceador de carga ao grupo de destino
+aws elb create-rule --listener-arn arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:loadbalancer/app/my-load-balancer/xxxxxxxx --rule-priority 1 --conditions 'PathPattern=/' --actions 'Forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:targetgroup/my-target-group/xxxxxxxx'
+    

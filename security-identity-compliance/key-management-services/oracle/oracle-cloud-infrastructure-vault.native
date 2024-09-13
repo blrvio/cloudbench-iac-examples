@@ -1,0 +1,10 @@
+
+      // Crie um cofre
+oci kms create-vault --compartment-id ocid1.compartment.oc1..aaaaaaaayxxxxxxxx --name example-vault --description "Example vault"
+
+// Crie uma chave
+oci kms create-key --compartment-id ocid1.compartment.oc1..aaaaaaaayxxxxxxxx --vault-id ocid1.vault.oc1..aaaaaaaayxxxxxxxx --name example-key --description "Example key"
+
+// Crie uma versão de chave
+oci kms create-key-version --compartment-id ocid1.compartment.oc1..aaaaaaaayxxxxxxxx --kms-key-id ocid1.key.oc1..aaaaaaaayxxxxxxxx
+    

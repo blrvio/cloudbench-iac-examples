@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+# az group create -n drs-resource-group -l eastus
+
+// Crie uma conta de recuperação
+# az site-recovery vault create -g drs-resource-group -n drs-vault --location eastus --sku Standard
+
+// Crie um servidor de gerenciamento
+# az site-recovery management-server create -g drs-resource-group -v drs-vault -n drs-management-server --location eastus --vm-size Standard_A2_v2 --os-type Windows --vm-disk-size-gb 1023 --protection-source On-premises --license-type BringYourOwnLicense --install-method Manual --network-credential-name drs-network-credential --run-as-account LocalSystem --server-version Latest --source-id drs-source-id --fabric-region "East US" --fabric-location "West Europe" --fabric-name drs-fabric --management-server-role Primary
+    

@@ -1,0 +1,7 @@
+
+      // Crie um bucket S3
+aws s3api create-bucket --bucket my-bucket-name --acl private --region us-east-1
+
+// Carregue um objeto para o bucket S3
+aws s3api put-object --bucket my-bucket-name --key my-object.txt --body my-object.txt
+    

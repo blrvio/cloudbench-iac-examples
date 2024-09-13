@@ -1,0 +1,11 @@
+
+      // Crie um recurso de Migration Hub
+aws migrationhub configure-home-region --home-region us-east-1
+
+// Crie uma configuração de migração
+aws migrationhub create-configuration --name example
+
+// Registre um servidor na Migration Hub
+aws migrationhub register-server --configuration-id config-id --server-id server-id --server-type EC2 --discovery-time "2022-01-01T00:00:00Z"
+
+    

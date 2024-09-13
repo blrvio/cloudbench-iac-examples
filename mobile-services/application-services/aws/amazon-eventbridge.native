@@ -1,0 +1,11 @@
+
+      // Crie uma regra de evento
+aws events put-rule --name my_rule --description "Minha regra de evento" --event-pattern '{"source": ["aws.ec2"], "detail-type": ["EC2 Instance State-change Notification"], "detail": {"state": ["running"]}}'
+
+// Adicione um cronograma para a regra de evento
+aws events put-schedule --rule-name my_rule --schedule-expression "cron(0 0 * * ? *) # Executa diariamente às 00:00"
+
+// Crie uma meta de destino para a regra de evento
+aws events put-targets --rule my_rule --targets [{"Id": "1", "Arn": "arn:aws:lambda:us-east-1:123456789012:function:my_lambda_function", "InputPath": "$.detail"}]
+
+    

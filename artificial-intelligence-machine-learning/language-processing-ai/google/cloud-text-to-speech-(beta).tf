@@ -1,46 +1,28 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
+  project = "your-project-id"
   region  = "us-central1"
 }
 
-# Create a Text-to-Speech voice
+# Crie um arquivo de áudio a partir de texto
 resource "google_text_to_speech_voice" "default" {
-  name        = "my-voice"
+  name     = "my-voice"
   language_code = "en-US"
-  name_suffix  = "default"
-  ssml_gender  = "FEMALE"
+  name     = "en-US-Standard-A"
 }
 
-# Create a Text-to-Speech synthesis input
 resource "google_text_to_speech_synthesis_input" "default" {
   text = "Hello, world!"
-  voice {
-    name = google_text_to_speech_voice.default.name
-  }
+}
+
+resource "google_text_to_speech_synthesis" "default" {
+  input = google_text_to_speech_synthesis_input.default.id
+  voice = google_text_to_speech_voice.default.id
   audio_config {
-    audio_encoding = "MP3"
+    audio_encoding = "LINEAR16"
   }
+  name = "my-audio"
 }
 
-# Create a Text-to-Speech synthesis config
-resource "google_text_to_speech_synthesis_config" "default" {
-  input  = google_text_to_speech_synthesis_input.default.id
-  name = "my-synthesis-config"
-}
-
-# Create a Text-to-Speech synthesis output
-resource "google_text_to_speech_synthesis_output" "default" {
-  synthesis_config = google_text_to_speech_synthesis_config.default.id
-  name = "my-synthesis-output"
-}
-
-# Create a Text-to-Speech synthesis job
-resource "google_text_to_speech_synthesis_job" "default" {
-  name              = "my-synthesis-job"
-  synthesis_config = google_text_to_speech_synthesis_config.default.id
-  output_uri        = "gs://my-bucket/my-output.mp3"
-}
-
-  
+    

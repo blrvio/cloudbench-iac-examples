@@ -1,0 +1,10 @@
+
+      // Crie um ponto de extremidade do SageMaker
+aws sagemaker create-endpoint-config --endpoint-config-name example-endpoint-config --production-variants '[{"InitialInstanceCount": 1, "InstanceType": "ml.t2.medium", "ModelName": "example-model", "VariantName": "AllTraffic"}]'
+
+// Crie um ponto de extremidade do SageMaker
+aws sagemaker create-endpoint --endpoint-name example-endpoint --endpoint-config-name example-endpoint-config
+
+// Crie um modelo de SageMaker
+aws sagemaker create-model --model-name example-model --primary true --containers '[{"Image": "example-container-image"}]'
+    

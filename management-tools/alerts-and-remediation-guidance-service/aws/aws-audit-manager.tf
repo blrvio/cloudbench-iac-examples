@@ -1,46 +1,46 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Audit Manager Assessment
-resource "aws_auditmanager_assessment" "main" {
-  name        = "MyAuditManagerAssessment"
-  description = "Assessment for compliance with PCI DSS"
-  framework   = "PCI DSS"
-  assessment_scope {
-    # Include all AWS accounts
-    all_aws_accounts = true
+# Crie uma avaliação de segurança
+resource "aws_auditmanager_assessment" "example" {
+  name            = "MyAssessment"
+  description     = "Example Audit Manager Assessment"
+  framework       = "NIST CSF"
+  assessment_scope = "account"
+
+  # Adicione controles à avaliação
+  controls {
+    control_id = "NIST-CSF-AC-1"
+    selected   = true
   }
 }
 
-# Create an Audit Manager Control
-resource "aws_auditmanager_control" "main" {
-  assessment_id = aws_auditmanager_assessment.main.id
-  name          = "PCI DSS Control 1"
-  description   = "Control 1 description"
-  # Define the control type (manual or automated)
-  control_type = "manual"
-  # Add control steps
-  control_steps = ["Step 1", "Step 2"]
-  # Define the control testing information
-  evidence_requirements = ["Evidence 1", "Evidence 2"]
+# Crie um conjunto de controle
+resource "aws_auditmanager_control_set" "example" {
+  name            = "MyControlSet"
+  description     = "Example Audit Manager Control Set"
+  framework       = "NIST CSF"
+  control_set_type = "standard"
+  controls {
+    control_id = "NIST-CSF-AC-1"
+  }
 }
 
-# Create an Audit Manager Assessment Framework
-resource "aws_auditmanager_assessment_framework" "main" {
-  name      = "MyFramework"
-  framework = "PCI DSS"
-  # Add frameworks to the control set
-  control_sets = ["Control Set 1", "Control Set 2"]
+# Adicione um controle personalizado
+resource "aws_auditmanager_control" "example" {
+  name            = "MyCustomControl"
+  description     = "Example Audit Manager Custom Control"
+  control_type     = "custom"
+  control_source   = "aws"
+  assessment_id   = aws_auditmanager_assessment.example.id
+  control_set_id  = aws_auditmanager_control_set.example.id
+  control_mapping {
+    source_id  = "NIST-CSF-AC-1"
+    source_type = "framework"
+  }
 }
 
-# Create an Audit Manager Control Set
-resource "aws_auditmanager_control_set" "main" {
-  assessment_framework_id = aws_auditmanager_assessment_framework.main.id
-  name                    = "Control Set 1"
-  # Add controls to the control set
-  controls = [aws_auditmanager_control.main.id]
-}
-  
+    

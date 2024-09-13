@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Web PubSub
+azurerm webpubsub create --name example-webpubsub --resource-group example-resource-group --location westus2 --sku Free
+
+// Crie um endpoint de Web PubSub
+azurerm webpubsub endpoint create --name example-endpoint --resource-group example-resource-group --webpubsub-name example-webpubsub --location westus2
+    

@@ -1,50 +1,30 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      ## Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region = "us-ashburn-1"
-  # Add your credentials here
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+
+  # Substitua pelos seus valores reais
+  # Use variáveis para manter as credenciais seguras
+  # Exemplo:
+  #   tenancy = var.tenancy_id
+  #   user     = var.user_ocid
+  #   key      = var.api_key
 }
 
-# Create a storage gateway
-resource "oci_storage_gateway" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
-  display_name  = "my-storage-gateway"
-  # Optional: Configure the storage gateway network
-  network_config {
-    subnet_id  = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
-    security_list_ids = ["ocid1.securitylist.oc1..aaaaaaaaz7y724q7"]
-  }
-  # Optional: Configure the storage gateway storage
-  storage_config {
-    storage_type = "file"
-  }
-  # Optional: Configure the storage gateway file system
-  file_system_config {
-    file_system_name = "my-file-system"
-    # Optional: Configure the storage gateway file system mount target
-    mount_target {
-      mount_target_name = "my-mount-target"
-      # Optional: Configure the storage gateway file system mount target subnet
-      subnet_id = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
-    }
-  }
+## Crie um Gateway de Armazenamento
+resource "oci_core_storage_gateway" "example" {
+  compartment_id     = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  display_name      = "Storage Gateway Example"
+  source_endpoint_id = "ocid1.endpoint.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  # Substitua pelos seus valores reais
 }
 
-# Create a storage gateway file system
-resource "oci_storage_gateway_file_system" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
-  storage_gateway_id = oci_storage_gateway.main.id
-  display_name = "my-file-system"
+## Crie um ponto de montagem para o Gateway de Armazenamento
+resource "oci_core_storage_gateway_mount_target" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  storage_gateway_id = oci_core_storage_gateway.example.id
+  display_name     = "Storage Gateway Mount Target"
+  # Substitua pelos seus valores reais
 }
-
-# Create a storage gateway mount target
-resource "oci_storage_gateway_mount_target" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7y724q7"
-  storage_gateway_id = oci_storage_gateway.main.id
-  file_system_id = oci_storage_gateway_file_system.main.id
-  display_name = "my-mount-target"
-  # Optional: Configure the storage gateway mount target subnet
-  subnet_id = "ocid1.subnet.oc1..aaaaaaaaz7y724q7"
-}
-
-  
+    

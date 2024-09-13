@@ -1,0 +1,13 @@
+
+      // Crie uma política de Firewall Manager
+aws firewall-manager create-policy --name "example" --description "Example policy"
+
+// Adicione regras à política
+aws firewall-manager put-policy-rules --policy-name "example" --firewall-policy-rules
+
+// Configure a política
+aws firewall-manager put-policy-configuration --policy-name "example" --policy-configuration
+
+// Vincule a política a recursos
+aws firewall-manager associate-policy --policy-name "example" --resource-type "AWS::EC2::SecurityGroup" --resource-ids sg-xxxxxxxx
+    

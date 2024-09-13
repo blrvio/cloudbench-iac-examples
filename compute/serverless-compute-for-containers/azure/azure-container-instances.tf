@@ -1,43 +1,34 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # This will automatically enable all features
+  features {} # Habilita recursos de pré-visualização
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "example" {
-  name     = "example-resource-group"
-  location = "westus2"
-}
+# Define a imagem do container
+resource "azurerm_container_group" "aci" {
+  name                = "aci-example"
+  location            = "westus2"
+  resource_group_name = "aci-rg"
+  os_type             = "Linux"
 
-# Create a container group
-resource "azurerm_container_group" "example" {
-  name                = "example-aci-group"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-
-  # Define containers within the group
   container {
-    name  = "my-app"
-    image = "mcr.microsoft.com/azuredocs/aci-helloworld:latest"
-    # Add resources
-    resources {
-      requests {
-        cpu    = "1"
-        memory = "1Gi"
-      }
+    name  = "aci-app"
+    image = "mcr.microsoft.com/azuredocs/aci-helloworld:v1"
+  }
+
+  # Define a rede para o grupo de contêineres
+  network_profile {
+    name                = "aci-network"
+    dns_config {
+      options = ["dns.google.com"]
     }
   }
-  # Define the network configuration
-  network_profile {
-    # Use a public IP address
-    ip_address {
-      ports {
-        port     = 80
-        protocol = "tcp"
-      }
-    }
+
+  # Recursos do grupo de contêineres
+  resource_requests {
+    cpu          = 1
+    memory_in_gb = 1
   }
 }
 
-  
+    

@@ -1,55 +1,48 @@
 
-    # Configure the Alibaba Cloud Provider
-provider "alicloud" {
-  region = "cn-hangzhou" # Replace with your desired region
-  # Add your access key and secret key
-  # ...
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an API Gateway
-resource "alicloud_api_gateway_api" "main" {
-  # Define API Gateway properties
-  group_id       = "example_group_id"
-  api_name      = "my_api"
-  api_version   = "1.0.0"
-  description    = "My API Gateway"
-  # Optional: define request configurations
-  # request_config = {}
-  # Optional: define response configurations
-  # response_config = {}
-  # Optional: define security configurations
-  # security_config = {}
+# Crie um REST API
+resource "aws_api_gateway_rest_api" "my_api" {
+  name = "My API"
 }
 
-# Create an API Group
-resource "alicloud_api_gateway_group" "main" {
-  # Define API Group properties
-  group_name = "my_api_group"
-  description = "My API Group"
-  # Optional: define CORS configurations
-  # cors_config = {}
+# Crie um recurso para a API
+resource "aws_api_gateway_resource" "my_resource" {
+  rest_api_id = aws_api_gateway_rest_api.my_api.id
+  parent_id   = aws_api_gateway_rest_api.my_api.root_resource_id
+  path_part   = "myresource"
 }
 
-# Create an API Gateway Deployment
-resource "alicloud_api_gateway_deployment" "main" {
-  # Define Deployment properties
-  group_id       = alicloud_api_gateway_group.main.id
-  api_id         = alicloud_api_gateway_api.main.id
-  deployment_name = "my_api_deployment"
-  # Optional: define traffic configurations
-  # traffic_config = {}
+# Crie um método para o recurso
+resource "aws_api_gateway_method" "my_method" {
+  rest_api_id = aws_api_gateway_rest_api.my_api.id
+  resource_id  = aws_api_gateway_resource.my_resource.id
+  http_method = "GET"
+  authorization_type = "NONE"
 }
 
-# Create an API Gateway Stage
-resource "alicloud_api_gateway_stage" "main" {
-  # Define Stage properties
-  group_id     = alicloud_api_gateway_group.main.id
-  api_id       = alicloud_api_gateway_api.main.id
-  stage_name = "prod"
-  # Optional: define the deployment to use
-  # deployment_id = alicloud_api_gateway_deployment.main.id
-  # Optional: define the stage variables
-  # variables = {}
+# Crie uma integração para o método
+resource "aws_api_gateway_integration" "my_integration" {
+  rest_api_id   = aws_api_gateway_rest_api.my_api.id
+  resource_id    = aws_api_gateway_resource.my_resource.id
+  http_method    = aws_api_gateway_method.my_method.http_method
+  integration_type = "AWS_PROXY"
+  integration_uri  = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:my-function/invocations"
 }
 
-  
+# Crie um modelo de resposta para a integração
+resource "aws_api_gateway_integration_response" "my_integration_response" {
+  rest_api_id   = aws_api_gateway_rest_api.my_api.id
+  resource_id    = aws_api_gateway_resource.my_resource.id
+  http_method    = aws_api_gateway_method.my_method.http_method
+  status_code    = "200"
+  selection_pattern = "(.*)"
+  response_templates = {
+    "application/json" = "{\"message\": \"Hello from API Gateway!\"}"
+  }
+}
+
+    

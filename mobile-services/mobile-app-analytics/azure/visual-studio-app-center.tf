@@ -1,49 +1,49 @@
 
-    # Configure the AzureRM provider
+      ## Configure o provedor do Azure
 provider "azurerm" {
-  features {} # This will ensure latest features are used
+  features {} # Define as features desejadas
 }
 
-# Create an Azure App Service plan
-resource "azurerm_app_service_plan" "app_service_plan" {
-  name     = "app-service-plan"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
   location = "westus2"
-  resource_group_name = "app-service-plan-rg"
-  sku {
-    tier = "Free"
-    size = "F1"
-  }
 }
 
-# Create an Azure App Service
-resource "azurerm_app_service" "app_service" {
-  name                = "app-service"
-  location            = "westus2"
-  resource_group_name = "app-service-rg"
-  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+# Crie um aplicativo no App Center
+resource "azurerm_appcenter_app" "example" {
+  name          = "example-app"
+  resource_group = azurerm_resource_group.example.name
+  platform      = "ios"
 }
 
-# Configure App Center Build Service
-resource "azurerm_app_center_build_service" "build_service" {
-  name               = "build-service"
-  resource_group_name = "app-center-rg"
-  location            = "westus2"
-  # ... other configuration
+# Crie um pipeline no App Center
+resource "azurerm_appcenter_build_pipeline" "example" {
+  name          = "example-pipeline"
+  app_name      = azurerm_appcenter_app.example.name
+  resource_group = azurerm_resource_group.example.name
+  platform      = "ios"
 }
 
-# Configure App Center distribution service
-resource "azurerm_app_center_distribution_service" "distribution_service" {
-  name               = "distribution-service"
-  resource_group_name = "app-center-rg"
-  location            = "westus2"
-  # ... other configuration
+# Configure o pipeline
+# ...
+
+# Crie um branch para o pipeline
+resource "azurerm_appcenter_branch" "example" {
+  name          = "main"
+  pipeline_name = azurerm_appcenter_build_pipeline.example.name
+  app_name      = azurerm_appcenter_app.example.name
+  resource_group = azurerm_resource_group.example.name
 }
 
-# Configure App Center user
-resource "azurerm_app_center_user" "user" {
-  name               = "app-center-user"
-  resource_group_name = "app-center-rg"
-  location            = "westus2"
-  # ... other configuration
+# Crie um build no App Center
+resource "azurerm_appcenter_build" "example" {
+  branch_name   = azurerm_appcenter_branch.example.name
+  pipeline_name = azurerm_appcenter_build_pipeline.example.name
+  app_name      = azurerm_appcenter_app.example.name
+  resource_group = azurerm_resource_group.example.name
 }
-  
+
+# Configure o build
+# ...
+    

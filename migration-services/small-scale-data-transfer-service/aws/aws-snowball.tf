@@ -1,79 +1,45 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Snowball Job
-resource "aws_snowball_job" "main" {
-  address {
-    line1   = "123 Main Street"
-    line2   = "Suite 100"
-    city    = "Anytown"
-    state   = "CA"
-    zip     = "91234"
-    country = "US"
-  }
-  description = "My Snowball Job"
+# Crie um job de Snowball
+resource "aws_snowball_job" "example" {
+  description = "My Snowball job"
   job_type    = "IMPORT"
-  notification {
-    s3_event_notification {
-      bucket_arn = "arn:aws:s3:::my-bucket"
-      events     = ["Completed"]
-    }
-  }
-  # Optionally specify the number of Snowballs to request
-  number_of_jobs = 1
-  # Specify the size of the Snowballs to request
-  # Valid values are "T100" (100TB), "T80" (80TB), "T50" (50TB), "T40" (40TB), "T25" (25TB)
-  # "T10" (10TB), "T8" (8TB), "T3" (3TB), or "T1" (1TB)
-  # The default size is 80TB.
-  # size = "T80"
-  # Specify the resources to be transferred to or from the Snowball
-  resources {
-    # Specify the S3 bucket for the transfer
-    # s3_bucket = "my-bucket"
-    # Specify the S3 prefix for the transfer
-    # s3_prefix = "my-prefix"
-  }
-  # Specify the type of Snowball to request
-  # Valid values are "STANDARD", "EDGE", or "EDGE_CLUSTER"
-  # The default type is STANDARD
-  # type = "EDGE"
+  resources   = [{"s3_bucket": "my-bucket", "s3_prefix": "my-prefix"}]
+  # ... (opções adicionais, como número de dispositivos)
 }
 
-# Create a Snowball Job Manifest
-resource "aws_snowball_job_manifest" "main" {
-  job_id = aws_snowball_job.main.id
-  # Specify the manifest file
-  manifest_file_path = "path/to/manifest.txt"
+# Crie um endereço de envio
+resource "aws_snowball_address" "example" {
+  job_id = aws_snowball_job.example.id
+  name   = "My shipping address"
+  # ... (informações do endereço)
 }
 
-# Create a Snowball Job Shipping Address
-resource "aws_snowball_job_shipping_address" "main" {
-  job_id = aws_snowball_job.main.id
-  # Specify the shipping address
-  shipping_address_id = "123456789012"
+# Crie um endereço de retorno
+resource "aws_snowball_address" "example_return" {
+  job_id = aws_snowball_job.example.id
+  name   = "My return address"
+  # ... (informações do endereço)
 }
 
-# Create a Snowball Job Shipping Instruction
-resource "aws_snowball_job_shipping_instruction" "main" {
-  job_id = aws_snowball_job.main.id
-  # Specify the shipping instructions
-  shipping_instructions = "Ship to the address specified in the shipping address"
+# Crie um usuário no AWS Snowball
+resource "aws_snowball_user" "example" {
+  job_id     = aws_snowball_job.example.id
+  email       = "my-user@example.com"
+  role        = "USER"
+  password    = "my-password"
+  is_admin    = false
+  is_password_reset_required = false
 }
 
-# Create a Snowball Job Shipping Notification
-resource "aws_snowball_job_shipping_notification" "main" {
-  job_id = aws_snowball_job.main.id
-  # Specify the shipping notification
-  shipping_notification = "Notify me when the Snowball is shipped"
+# Crie uma política de Snowball
+resource "aws_snowball_policy" "example" {
+  job_id = aws_snowball_job.example.id
+  policy  = "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Principal\": {\"AWS\": \"arn:aws:iam::123456789012:user/my-user\"}, \"Action\": [\"snowball:DescribeJob\", \"snowball:ListJobs\", \"snowball:UpdateJob\", \"snowball:CancelJob\"]}]}"
 }
 
-# Create a Snowball Job Tracking Number
-resource "aws_snowball_job_tracking_number" "main" {
-  job_id = aws_snowball_job.main.id
-  # Specify the tracking number
-  tracking_number = "123456789012"
-}
-  
+    

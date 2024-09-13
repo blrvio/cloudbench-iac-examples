@@ -1,32 +1,35 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1" # Replace with your desired region
+  project = "gcp-project-id"
 }
 
-# Create a Cloud DataPrep Job
-resource "google_dataprep_job" "main" {
-  display_name = "my-dataprep-job"
-  # Define the source data location and format
-  source_spec {
-    gcs_source {
-      # Replace with the GCS URI for your source data
-      uri = "gs://your-bucket/your-data.csv"
-    }
-    format = "CSV"
-  }
-  # Define the job's destination
-  destination_spec {
-    gcs_destination {
-      # Replace with the GCS URI for your output data
-      uri = "gs://your-bucket/processed-data.csv"
-    }
-  }
-  # Define the job's transformations
-  transformations {
-    # Replace with your desired data transformations
-  }
+# Crie um conjunto de dados do Cloud DataPrep
+resource "google_dataprep_dataset" "default" {
+  name     = "my-dataset"
+  location = "us-central1"
 }
 
-  
+# Crie um fluxo de trabalho do Cloud DataPrep
+resource "google_dataprep_flow" "default" {
+  dataset_id = google_dataprep_dataset.default.id
+  name        = "my-flow"
+  recipe      = <<EOF
+  {
+    "steps": [
+      {
+        "operation": "TRANSFORM",
+        "parameters": {
+          "replacements": [
+            {
+              "source": "\d{3}-\d{3}-\d{4}",
+              "target": "REPLACE_PHONE_NUMBER"
+            }
+          ]
+        }
+      }
+    ]
+  }
+EOF
+}
+    

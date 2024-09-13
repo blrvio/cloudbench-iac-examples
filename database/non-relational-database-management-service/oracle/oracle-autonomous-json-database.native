@@ -1,0 +1,29 @@
+
+      // Create a new Autonomous JSON Database
+CREATE DATABASE autonomous_json_db
+  AS JSON
+  AUTOMATIC_BACKUP_ENABLED = TRUE
+  AUTOMATIC_PATCHING_ENABLED = TRUE
+  FREE_USAGE_ENABLED = TRUE
+  STORAGE_SIZE_IN_GBS = 100
+  VERSION = '19.0';
+
+// Grant access to a user
+GRANT CONNECT, RESOURCE TO username IDENTIFIED BY "password";
+
+// Connect to the database
+CONNECT username/password@autonomous_json_db;
+
+// Create a table with JSON data
+CREATE TABLE my_json_table (
+  id NUMBER PRIMARY KEY,
+  data JSON
+);
+
+// Insert data into the table
+INSERT INTO my_json_table (id, data) VALUES
+  (1, '{"name":"John Doe", "age":30}');
+
+// Query the data
+SELECT * FROM my_json_table;
+    

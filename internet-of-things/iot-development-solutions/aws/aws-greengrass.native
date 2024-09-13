@@ -1,0 +1,25 @@
+
+      // Crie um grupo Greengrass
+aws greengrass create-group --name example
+
+// Crie um núcleo Greengrass
+aws greengrass create-core-definition --group-id example --core-definition-id example --thing-name example
+
+// Crie uma função Lambda para o Greengrass
+aws lambda create-function --function-name example --runtime nodejs14.x --handler index.handler --memory-size 128 --timeout 30 --zip-file # Supress código da função Lambda
+
+// Crie uma função Lambda para o Greengrass
+aws greengrass create-function-definition --name example --function-id arn:aws:lambda:us-east-1:xxxxxxxxxxxxx:function:example --function-configuration MemorySize=128 Timeout=30
+
+// Crie uma definição de recurso para o Greengrass
+aws greengrass create-resource-definition --name example --resource-definition-id example --resource-id arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example
+
+// Crie uma definição de subscrição para o Greengrass
+aws greengrass create-subscription-definition --name example --subscription-definition-id example --subscription-id arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example --source aws/greengrass/example --target aws/greengrass/example --subject # Supress assunto da subscrição --qos at_least_once --retry-interval-seconds 60 --timeout-in-seconds 60 --max-queue-size 10
+
+// Crie uma definição de grupo Greengrass
+aws greengrass create-group-version --group-id example --group-version-id example --function-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example --resource-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example --subscription-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example
+
+// Crie uma versão do grupo Greengrass
+aws greengrass create-group-version --group-id example --group-version-id example --function-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example --resource-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example --subscription-definitions arn:aws:greengrass:us-east-1:xxxxxxxxxxxxx:definition:example
+    

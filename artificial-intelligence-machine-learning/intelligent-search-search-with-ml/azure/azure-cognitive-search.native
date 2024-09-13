@@ -1,0 +1,7 @@
+
+      // Criar um recurso de pesquisa cognitiva
+azurerm search create --name mysearchservice --location westus2 --resource-group myresourcegroup --sku free
+
+// Criar um índice de pesquisa
+azurerm search index create --name myindex --search-service mysearchservice --resource-group myresourcegroup --fields name=title type=Edm.String facet=true --fields name=description type=Edm.String facet=true
+    

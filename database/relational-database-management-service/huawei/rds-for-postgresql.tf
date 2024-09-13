@@ -1,44 +1,40 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  # Configure the region and credentials
-  region = "region_name" # Replace with your region
-  # ... other provider settings
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a PostgreSQL instance
-resource "huaweicloud_rds_instance" "main" {
-  # Basic settings
-  name = "my-postgres-instance"
-  # Choose PostgreSQL version
-  engine_version = "13.0"
-  # Choose instance type
-  instance_type = "rds.gp1.small"
-  # Choose storage type and size
-  storage_type = "SSD"
-  storage_size = 100
-  # Configure network
-  vpc_id = "vpc-id"
-  subnet_id = "subnet-id"
-  # Security group configuration
-  security_group_id = "sg-id"
-  # Configure password
-  password = "your_password"
-  # ... other settings
+# Crie um grupo de segurança para o banco de dados
+resource "aws_db_instance" "postgres_db" {
+  allocated_storage = 10
+  engine            = "postgres"
+  engine_version    = "13.7"
+  instance_class    = "db.t3.micro"
+  name              = "postgres_db"
+  password          = "password123" # Substitua por uma senha forte
+  username          = "admin"
+  # vpc_security_group_ids = [aws_security_group.postgres_sg.id]
+  db_subnet_group_name = "default"
+  # ... (Outras configurações)
 }
 
-# Create a security group (optional)
-resource "huaweicloud_vpc_security_group" "main" {
-  name = "my-rds-security-group"
-  description = "Allow access to the PostgreSQL instance"
-  # ... other settings
+# Crie um grupo de segurança para o banco de dados
+resource "aws_security_group" "postgres_sg" {
+  name = "postgres_sg"
+  vpc_id = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Substitua por seus IPs permitidos
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
-# Create a subnet (optional)
-resource "huaweicloud_vpc_subnet" "main" {
-  name = "my-rds-subnet"
-  cidr_block = "10.0.0.0/24"
-  # ... other settings
-}
-
-  
+    

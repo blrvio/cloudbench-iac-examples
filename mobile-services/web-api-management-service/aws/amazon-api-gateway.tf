@@ -1,87 +1,42 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an API Gateway REST API
-resource "aws_api_gateway_rest_api" "main" {
-  name = "my-api-gateway"
-  description = "My API Gateway"
-
-  # Define the API endpoint configuration
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
+# Crie um API Gateway REST API
+resource "aws_api_gateway_rest_api" "example" {
+  name = "example-api"
 }
 
-# Create an API Gateway Resource
-resource "aws_api_gateway_resource" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part  = "items"
+# Crie um recurso API Gateway
+resource "aws_api_gateway_resource" "example_resource" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  parent_id   = aws_api_gateway_rest_api.example.root_resource_id
+  path_part   = "items"
 }
 
-# Create an API Gateway Method
-resource "aws_api_gateway_method" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.main.id
-  http_method = "GET"
-  authorization = "NONE"
-
-  # Define the integration type for the method
-  integration {
-    type                      = "AWS_PROXY"
-    integration_http_method = "POST"
-    # Define the Lambda function to be invoked by the method
-    uri = "arn:aws:lambda:us-east-1:123456789012:function:my-lambda-function"
-  }
+# Crie um método API Gateway
+resource "aws_api_gateway_method" "example_method" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  resource_id  = aws_api_gateway_resource.example_resource.id
+  http_method  = "GET"
+  authorization_type = "NONE"
 }
 
-# Create an API Gateway Deployment
-resource "aws_api_gateway_deployment" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  stage_name  = "dev"
+# Crie uma integração API Gateway
+resource "aws_api_gateway_integration" "example_integration" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  resource_id  = aws_api_gateway_resource.example_resource.id
+  http_method  = "GET"
+  integration_type = "AWS_PROXY"
+  integration_uri = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:xxxxxxxxxxxx:function:example-function:xxxxxxxxxxxx/invocations"
 }
 
-# Create an API Gateway Stage
-resource "aws_api_gateway_stage" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  stage_name  = "dev"
-  deployment_id = aws_api_gateway_deployment.main.id
-
-  # Define the stage options
-  options {
-    # Disable throttling for the stage
-    throttling_burst_limit = 0
-    throttling_rate_limit  = 0
-  }
+# Crie uma implantação API Gateway
+resource "aws_api_gateway_deployment" "example_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  stage_name = "dev"
 }
 
-# Create an API Gateway Integration Response
-resource "aws_api_gateway_integration_response" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.main.id
-  http_method = "GET"
-  status_code = "200"
-
-  # Define the response parameters
-  response_parameters = {
-    "method.response.header.Content-Type" = "integration.response.header.Content-Type"
-  }
-}
-
-# Create an API Gateway Method Response
-resource "aws_api_gateway_method_response" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.main.id
-  http_method = "GET"
-  status_code = "200"
-
-  # Define the response parameters
-  response_parameters = {
-    "method.response.header.Content-Type" = true
-  }
-}
-
-  
+    

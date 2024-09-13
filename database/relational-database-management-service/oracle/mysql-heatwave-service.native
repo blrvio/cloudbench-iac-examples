@@ -1,0 +1,13 @@
+
+      // Crie um cluster RDS para MySQL Heatwave
+aws rds create-db-cluster --db-cluster-identifier mysql-heatwave-cluster --engine mysql --engine-version 8.0.27 --master-username admin --master-password password --database-name my_database --skip-final-snapshot
+
+// Configure o recurso Heatwave
+aws rds modify-db-cluster --db-cluster-identifier mysql-heatwave-cluster --apply-immediately --heatwave-config 'Enabled=true,NodeType=h1.2xlarge,ScaleCapacity=2'
+
+// Configure a instância do banco de dados
+aws rds create-db-instance --db-instance-identifier mysql-heatwave-instance --db-cluster-identifier mysql-heatwave-cluster --engine mysql --engine-version 8.0.27 --db-subnet-group-name my-subnet-group
+
+// Configurações de segurança
+aws rds modify-db-instance --db-instance-identifier mysql-heatwave-instance --vpc-security-group-ids sg-xxxxxxxx
+    

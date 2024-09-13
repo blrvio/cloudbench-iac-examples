@@ -1,35 +1,27 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor Oracle Cloud Infrastructure
 provider "oci" {
-  region  = "us-ashburn-1"
-  # Add your tenancy OCID, user OCID and API key
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
-  user_ocid = "ocid1.user.oc1..aaaaaaaaxxxxxx"
-  api_key = "your_api_key"
+  region = "us-ashburn-1"
 }
 
-# Create an Oracle Integration Instance
-resource "oci_integration_instance" "main" {
+# Crie um novo recurso de integração
+resource "oci_integration_integration" "example" {
   compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  display_name   = "my-integration-instance"
-  # Add optional parameters like `shape` and `subnet_id`
+  display_name  = "My Integration"
+  # Descrição do recurso de integração
+  description = "Integration for example purpose"
 }
 
-# Create an Oracle Integration Connection
-resource "oci_integration_connection" "main" {
-  compartment_id  = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  display_name    = "my-integration-connection"
-  integration_instance_id = oci_integration_instance.main.id
-  connection_type = "rest"
-  # Add optional parameters like `authentication_details` and `endpoint`
+# Crie uma nova conexão de integração
+resource "oci_integration_connection" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
+  integration_id = oci_integration_integration.example.id
+  display_name  = "My Connection"
+  # Descrição da conexão
+  description = "Connection for example purpose"
+  # Definição da conexão
+  connection_definition = <<EOF
+# Definição da conexão em formato JSON
+EOF
 }
-
-# Create an Oracle Integration Integration
-resource "oci_integration_integration" "main" {
-  compartment_id  = "ocid1.compartment.oc1..aaaaaaaaxxxxxx"
-  display_name    = "my-integration"
-  integration_instance_id = oci_integration_instance.main.id
-  integration_type = "rest"
-  # Add optional parameters like `source_connection_id`, `target_connection_id`, and `integration_definition`
-}
-  
+    

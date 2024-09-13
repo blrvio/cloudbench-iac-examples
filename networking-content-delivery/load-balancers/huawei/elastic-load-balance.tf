@@ -1,63 +1,55 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a load balancer
-resource "huaweicloud_elb_listener" "main" {
-  loadbalancer_id = aws_elb_load_balancer.main.id
-  protocol        = "HTTP"
-  port            = 80
-  # Configure the listener to use the backend server group
-  backend_group_id = aws_elb_backend_group.main.id
+# Crie um balanceador de carga
+resource "aws_lb" "my_load_balancer" {
+  name           = "my-load-balancer"
+  internal       = false
+  load_balancer_type = "application"
+  subnets        = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"] # Substitua pelos IDs das sub-redes
+  security_groups = [aws_security_group.allow_ssh.id]
+
+  # Opções de configuração do balanceador de carga
+  # (Exemplo de configuração para um balanceador de carga HTTP)
+  # listener {
+  #   port     = 80
+  #   protocol = "HTTP"
+  #   # Adicione mais configurações do listener, como certificado SSL
+  # }
 }
 
-# Create a backend server group
-resource "huaweicloud_elb_backend_group" "main" {
-  loadbalancer_id = aws_elb_load_balancer.main.id
-  name            = "my-backend-group"
+# Adicione uma regra de balanceamento de carga
+resource "aws_lb_target_group" "my_target_group" {
+  name     = "my-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+
+  # Opções de configuração do grupo de destino
+  # (Exemplo de configuração para uma instância EC2)
+  # health_check {
+  #   healthy_threshold   = 2
+  #   unhealthy_threshold = 2
+  #   timeout             = 5
+  #   interval            = 10
+  #   # Adicione mais configurações de verificação de integridade
+  # }
 }
 
-# Create a load balancer
-resource "huaweicloud_elb_load_balancer" "main" {
-  name = "my-load-balancer"
-  # Configure the load balancer to use the default security group
-  security_group_ids = [aws_security_group.main.id]
-  # Configure the load balancer to use the default subnet
-  subnet_ids = [aws_subnet.main.id]
-}
-
-# Create a security group
-resource "huaweicloud_security_group" "main" {
-  name   = "my-security-group"
-  # Define the ingress and egress rules
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+# Associe o balanceador de carga ao grupo de destino
+resource "aws_lb_listener_rule" "my_listener_rule" {
+  listener_arn = aws_lb.my_load_balancer.arn
+  priority      = 1
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.my_target_group.arn
   }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+
+  condition {
+    # Defina condições para a regra de balanceamento de carga
   }
 }
-
-# Create a subnet
-resource "huaweicloud_subnet" "main" {
-  name    = "my-subnet"
-  cidr_block = "10.0.0.0/24"
-  # Configure the subnet to use the default VPC
-  vpc_id = aws_vpc.main.id
-}
-
-# Create a VPC
-resource "huaweicloud_vpc" "main" {
-  name = "my-vpc"
-  # Define the CIDR block for the VPC
-  cidr_block = "10.0.0.0/16"
-}
-  
+    

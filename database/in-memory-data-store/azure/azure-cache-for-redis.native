@@ -1,0 +1,10 @@
+
+      # Crie um grupo de recursos
+azurerm resourcegroup create --name example-resources --location westus2
+
+# Crie um cache Redis
+azurerm redis create --resource-group example-resources --name example-cache --location westus2 --sku Basic --capacity 1
+
+# Crie uma chave de acesso para o cache
+azurerm redis key create --resource-group example-resources --name example-cache --key-name example-key
+    

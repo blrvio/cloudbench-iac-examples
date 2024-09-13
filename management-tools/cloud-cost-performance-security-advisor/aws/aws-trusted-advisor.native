@@ -1,0 +1,16 @@
+
+      // List all Trusted Advisor checks
+aws trusted-advisor describe-checks
+
+// Get the results of a specific check
+aws trusted-advisor describe-check-result --check-id 'cost-optimization'
+
+// Get the results of a check for a specific resource
+aws trusted-advisor describe-check-result --check-id 'cost-optimization' --resource-id i-xxxxxxxx
+
+// Suppress specific checks
+aws trusted-advisor suppress-check-result --check-id 'cost-optimization' --resource-id i-xxxxxxxx --suppression-reason 'This instance is used for a critical application'
+
+// Unsuppress a specific check
+aws trusted-advisor unsuppress-check-result --check-id 'cost-optimization' --resource-id i-xxxxxxxx
+    

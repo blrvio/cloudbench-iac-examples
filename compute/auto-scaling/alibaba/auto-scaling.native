@@ -1,0 +1,20 @@
+
+      // Crie uma configuração de lançamento
+aws autoscaling create-launch-configuration --launch-configuration-name web-server-launch-configuration --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups sg-xxxxxxxx --user-data '#!/bin/bash
+echo "Hello from Auto Scaling" > /var/www/html/index.html'
+
+// Crie um grupo de auto escalonamento
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name web-server-asg --launch-configuration-name web-server-launch-configuration --min-size 1 --max-size 3 --desired-capacity 1 --vpc-zone-identifier subnet-xxxxxxxx --health-check-grace-period 300 --target-group-arns arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:targetgroup/web-server-target-group/xxxxxxxx
+
+// Crie um balanceador de carga clássico
+aws elb create-load-balancer --load-balancer-name web-server-lb --listeners 'Protocol=HTTP,LoadBalancerPort=80,InstancePort=80' --subnets subnet-xxxxxxxx --security-groups sg-xxxxxxxx
+
+// Crie um grupo de destino
+aws elb create-target-group --name web-server-target-group --port 80 --protocol HTTP --vpc-id vpc-xxxxxxxx
+
+// Registre as instâncias no grupo de destino
+aws elb register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:targetgroup/web-server-target-group/xxxxxxxx --targets Id=i-xxxxxxxx
+
+// Crie uma regra de escuta para o balanceador de carga
+aws elb create-listener --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:loadbalancer/app/web-server-lb/xxxxxxxx --protocol HTTP --port 80 --default-actions 'Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:xxxxxxxx:targetgroup/web-server-target-group/xxxxxxxx'
+    

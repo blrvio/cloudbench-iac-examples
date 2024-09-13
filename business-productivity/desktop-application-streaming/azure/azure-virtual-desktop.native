@@ -1,0 +1,19 @@
+
+      # Crie um grupo de recursos
+ az group create --name example-rg --location "West Europe"
+
+# Crie uma máquina virtual
+ az vm create --resource-group example-rg --name example-vm --image Canonical:UbuntuServer:18.04-LTS:Latest --size Standard_B2s --location "West Europe"
+
+# Crie um host pool
+ az vds hostpool create --resource-group example-rg --name example-hostpool --location "West Europe"
+
+# Crie um grupo de aplicativos
+ az vds appgroup create --resource-group example-rg --name example-appgroup --location "West Europe"
+
+# Adicione a máquina virtual ao host pool
+ az vds hostpool add-vm --resource-group example-rg --name example-hostpool --vm-name example-vm
+
+# Adicione o aplicativo ao grupo de aplicativos
+ az vds appgroup add-app --resource-group example-rg --name example-appgroup --application-name example-app
+    

@@ -1,41 +1,30 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+  project = "gcp-project-id"
 }
 
-# Create an Artifact Registry repository
-resource "google_artifact_registry_repository" "main" {
-  location = "us-central1"
-  project  = "your-project-id"
+# Crie um repositório do Artifact Registry
+resource "google_artifact_registry_repository" "default" {
+  location   = "us-central1"
+  project    = "gcp-project-id"
   repository = "my-repo"
-  format    = "DOCKER"
+  format     = "DOCKER"
 }
 
-# Create an Artifact Registry IAM binding
-resource "google_project_iam_member" "artifact_registry_admin" {
-  project = "your-project-id"
-  role    = "roles/artifactregistry.admin"
-  member  = "serviceAccount:your-service-account@gcp-sa-artifactregistry.iam.gserviceaccount.com"
-}
-
-# Create a service account
-resource "google_service_account" "artifact_registry_sa" {
-  account_id = "artifact-registry-sa"
+# Crie uma chave de serviço para autenticação
+resource "google_service_account" "default" {
+  account_id   = "artifact-registry-sa"
+  disabled     = false
   display_name = "Artifact Registry Service Account"
-  disabled = false
+  project      = "gcp-project-id"
 }
 
-# Create a key for the service account
-resource "google_service_account_key" "artifact_registry_sa_key" {
-  service_account_id = google_service_account.artifact_registry_sa.account_id
-  project             = "your-project-id"
-  # Suppressing the key to avoid storing it in the code
-  private_key_type   = "TYPE_GOOGLE_CREDENTIALS_FILE"
-  # Suppressing the output of the key to avoid showing it
-  output_secret_name = "artifact-registry-sa-key"
-  output_file        = "artifact-registry-sa-key.json"
+# Vincule a chave de serviço ao repositório
+resource "google_artifact_registry_repository_iam_member" "default" {
+  project    = "gcp-project-id"
+  repository = "my-repo"
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.default.email}"
 }
-
-  
+    

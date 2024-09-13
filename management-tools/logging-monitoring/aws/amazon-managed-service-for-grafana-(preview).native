@@ -1,0 +1,10 @@
+
+      // Crie um workspace do Amazon Managed Service for Grafana
+aws grafana create-workspace --name example --tags Name=example
+
+// Crie um usuário do Amazon Managed Service for Grafana
+aws grafana create-user --workspace-id ws-xxxxxxxx --username example --password example
+
+// Crie um dashboard do Amazon Managed Service for Grafana
+aws grafana create-dashboard --workspace-id ws-xxxxxxxx --dashboard-json '{"id": null, "uid": null, "title": "Example Dashboard", "tags": [], "panels": []}'
+    

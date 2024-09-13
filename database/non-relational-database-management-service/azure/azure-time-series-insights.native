@@ -1,0 +1,16 @@
+
+      # Crie um ambiente de Time Series Insights
+azurerm time-series-insights environment create -g example-resources -n example-tsi-env -l westus2 -sku S1 -d 7
+
+# Crie uma base de dados de Time Series Insights
+azurerm time-series-insights gen2-database create -g example-resources -n example-tsi-db -l westus2 -e example-tsi-env -p deviceId -r 365
+
+# Crie uma identidade gerenciada
+azurerm identity create -g example-resources -n example-identity -t systemassigned
+
+# Crie um acesso de armazenamento para a base de dados
+azurerm time-series-insights storage-account-access create -g example-resources -n example-tsi-db -e example-tsi-env -s example-storage -i /subscriptions/<subscription_id>/resourcegroups/example-resources/providers/microsoft.managedidentity/userassignedidentities/example-identity -k ReadWrite
+
+# Crie um acesso de armazenamento para o ambiente
+azurerm time-series-insights storage-account-access create -g example-resources -n example-tsi-env -e example-tsi-env -s example-storage -i /subscriptions/<subscription_id>/resourcegroups/example-resources/providers/microsoft.managedidentity/userassignedidentities/example-identity -k ReadWrite
+    

@@ -1,0 +1,10 @@
+
+      # Crie uma diretiva de MFA (utilizando PowerShell)
+New-AzureADMSAuthRequirement -DisplayName "MFA for all users" -AuthenticationMode "RequireMFA"
+
+# Configure a MFA para um usuário específico (utilizando PowerShell)
+Set-AzureADUser -ObjectId "userObjectId" -StrongAuthenticationRequirements "Enable" -StrongAuthenticationMethods "{ "mfaMethods": [{"id": "sms","primary": true}], "passMethods": [] }" -Force
+
+# Configure a MFA para um usuário específico (utilizando Azure CLI)
+# az ad user update --id userObjectId --strongAuthenticationRequirements "Enable" --strongAuthenticationMethods "{ \"mfaMethods\": [{\"id\": \"sms\",\"primary\": true}], \"passMethods\": [] }" -f
+    

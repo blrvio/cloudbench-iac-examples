@@ -1,58 +1,60 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use the latest Azure provider features
+  features {} # Ativa recursos mais recentes
 }
 
-# Create a Front Door
-resource "azurerm_front_door" "main" {
-  name                = "my-front-door"
-  resource_group_name = "my-resource-group"
+# Crie um Front Door
+resource "azurerm_frontdoor" "example" {
+  name                = "example-frontdoor"
+  resource_group_name = "example-resource-group"
   location            = "westus2"
-  # Define routing rules
-  routing_rules {
-    name                    = "my-routing-rule"
-    frontend_endpoint_name  = "my-frontend-endpoint"
-    backend_pool_name       = "my-backend-pool"
-    http_port               = 80
-    https_port              = 443
-    # Route based on a condition
-    conditions {
-      match_values = ["example.com"]
-      match_variable = "Hostname"
-      operator        = "Equals"
-    }
-  }
-  # Define frontend endpoints
-  frontend_endpoints {
-    name                     = "my-frontend-endpoint"
-    hostname                  = "my-front-door.azureedge.net"
-    session_affinity_enabled = false # Disable session affinity
-    # Configure a custom domain
-    custom_https_provisioning_enabled = false
-  }
-  # Define backend pools
-  backend_pools {
-    name = "my-backend-pool"
-    # Define a single backend server
-    backend_servers {
-      address        = "192.168.0.1"
-      http_port     = 80
-      https_port    = 443
-      priority      = 1
-      weight        = 1
-      enabled        = true
-      server_name    = "my-backend-server"
-      # Use a custom health probe
-      health_probe_settings {
-        protocol     = "Http"
-        path         = "/healthcheck"
-        interval      = 30
-        timeout      = 10
-        healthy_threshold = 2
-        unhealthy_threshold = 5
+
+  frontend_endpoint {
+    name             = "example-frontend"
+    host_names      = ["example.com"] # Substitua pelos seus nomes de host
+    session_affinity = "Enabled"
+
+    # Defina regras de roteamento
+    routing_rule {
+      name = "example-routing-rule"
+
+      # Encaminhe todo o tráfego para o backend
+      forwarding_configuration {
+        backend_pool_id = azurerm_frontdoor_backend_pool.example.id
       }
     }
   }
 }
-  
+
+# Crie um grupo de backend
+resource "azurerm_frontdoor_backend_pool" "example" {
+  name                = "example-backend-pool"
+  frontdoor_name     = azurerm_frontdoor.example.name
+  resource_group_name = azurerm_frontdoor.example.resource_group_name
+
+  # Defina backends para o grupo de backend
+  backend {
+    address = "192.168.0.1" # Substitua pelo endereço do seu backend
+    # Adicione propriedades adicionais se necessário, como prioridade, peso, etc.
+  }
+}
+
+# Crie um perfil de segurança de aplicação (WAF)
+resource "azurerm_frontdoor_waf_policy" "example" {
+  name                = "example-waf-policy"
+  resource_group_name = "example-resource-group"
+  location            = "westus2"
+
+  # Defina regras de WAF
+  rule {
+    match_condition {
+      # Defina regras de correspondência
+      match_variable = "REQUEST_HEADERS"
+      operator        = "Contains"
+      selector        = "User-Agent"
+      value           = "malware-bot"
+    }
+  }
+}
+    

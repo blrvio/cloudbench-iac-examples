@@ -1,0 +1,13 @@
+
+      // Create a ModelArts workspace
+huawei modelarts workspace create --name my-workspace --region eu-west-1
+
+// Create a training job
+huawei modelarts training-job create --workspace-id ws-xxxxxxxx --name my-training-job --code-url https://github.com/example/my-model.git --framework tensorflow --entry-point train.py --dataset-id ds-xxxxxxxx
+
+// Create a model deployment
+huawei modelarts model-deployment create --workspace-id ws-xxxxxxxx --name my-model-deployment --model-id model-xxxxxxxx --endpoint-type online
+
+// Create a ModelArts endpoint
+huawei modelarts endpoint create --workspace-id ws-xxxxxxxx --name my-endpoint --deployment-id deployment-xxxxxxxx
+    

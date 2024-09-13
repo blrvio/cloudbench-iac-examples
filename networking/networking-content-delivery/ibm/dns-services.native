@@ -1,0 +1,7 @@
+
+      # Crie uma zona DNS
+aws route53 create-hosted-zone --name example.com
+
+# Crie um registro DNS
+aws route53 change-resource-record-sets --hosted-zone-id Zxxxxxxxxxxxxxxxxxxxxxxxxxx --change-batch '{ "Changes": [{"Action": "CREATE", "ResourceRecordSet": {"Name": "www.example.com.", "Type": "A", "TTL": 300, "ResourceRecords": [{"Value": "192.168.0.10"}]}}] }'
+    

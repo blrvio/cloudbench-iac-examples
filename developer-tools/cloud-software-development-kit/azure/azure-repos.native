@@ -1,0 +1,7 @@
+
+      // Crie um projeto Azure DevOps
+az devops project create --name example-project --visibility private --version-control Git
+
+// Crie um repositório Git
+az devops repo create --project example-project --name example-repo
+    

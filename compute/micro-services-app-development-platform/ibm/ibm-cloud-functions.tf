@@ -1,29 +1,30 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  ibmcloud_api_key = "YOUR_IBM_CLOUD_API_KEY" # Replace with your IBM Cloud API key
+  api_key = "<YOUR_IBM_API_KEY>" # Substitua pela sua chave API do IBM Cloud
+  region  = "us-south" # Substitua pela sua região desejada
 }
 
-# Create an IBM Cloud Function
-resource "ibm_action" "main" {
-  name     = "my-cloud-function"
-  namespace = "my-namespace"
-  kind      = "nodejs:14"
-  code      = <<EOF
-const express = require('express');
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello from IBM Cloud Functions!');
-});
-exports.main = app;
-EOF
-
-  # Optional settings
-  memory       = 128
-  timeout      = 60
-  runtime      = "nodejs:14"
-  trigger_type = "http"
-  api_key     = "YOUR_API_KEY" # Replace with your API key
+# Crie um namespace para a função
+resource "ibm_functions_namespace" "my_namespace" {
+  name = "my-namespace"
 }
 
-  
+# Crie uma ação de função
+resource "ibm_functions_action" "my_action" {
+  name         = "my-action"
+  runtime      = "nodejs:16"
+  namespace_id = ibm_functions_namespace.my_namespace.id
+  code         = "// Código da função
+console.log('Hello, world!');"
+}
+
+# Crie uma regra de gatilho HTTP
+resource "ibm_functions_trigger_http" "my_trigger" {
+  name         = "my-trigger"
+  action_id    = ibm_functions_action.my_action.id
+  namespace_id = ibm_functions_namespace.my_namespace.id
+  method       = "GET"
+  path         = "/hello"
+}
+    

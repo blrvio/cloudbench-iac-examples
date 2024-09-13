@@ -1,0 +1,10 @@
+
+      # Define o peering de VNet
+ az network vnet peering create -g rg1 -n peering -vnet-name vnet1 -remote-vnet-id /subscriptions/<subscription-id>/resourcegroups/rg2/providers/microsoft.network/virtualnetworks/vnet2 -allow-forwarded-traffic -allow-gateway-transit -use-remote-gateways
+
+# Crie o VNet remoto
+ az network vnet create -g rg2 -n vnet2 -l westus2 -a 10.10.0.0/16
+
+# Crie o VNet local
+ az network vnet create -g rg1 -n vnet1 -l westus2 -a 10.0.0.0/16
+    

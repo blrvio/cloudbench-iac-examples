@@ -1,0 +1,10 @@
+
+      // Crie um volume de armazenamento
+aws ec2 create-volume --availability-zone us-east-1a --size 100 --volume-type gp3
+
+// Crie uma instância EC2
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name # ... outros atributos da instância ...
+
+// Anexar o volume à instância
+aws ec2 attach-volume --volume-id vol-xxxxxxxx --instance-id i-xxxxxxxx --device /dev/sdf
+    

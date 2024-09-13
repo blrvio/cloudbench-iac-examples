@@ -1,0 +1,10 @@
+
+      // Crie um grupo de segurança
+huawei-cloud ecs create-security-group --name allow_ssh --description "Allow SSH access" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+huawei-cloud ecs authorize-security-group-ingress --security-group-id sg-xxxxxxxx --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+// Crie uma instância ECS
+huawei-cloud ecs create-server --name web_server --availability-zone cn-north-4-a --flavor ecs.g1.small --image-id centos-7.6-20200910.vhd --security-group-ids sg-xxxxxxxx --key-pair-name key_name --system-disk-type SATA --system-disk-size 100
+    

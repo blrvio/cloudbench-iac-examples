@@ -1,0 +1,12 @@
+
+      gcloud ai models create my-model --display-name="my-model" --description="Modelo de treinamento de Vertex AI" --location=us-central1
+
+gcloud ai endpoints create my-endpoint --display-name="my-endpoint" --description="Ponto de extremidade para o modelo de treinamento" --location=us-central1 --model=my-model
+
+gcloud ai endpoints deploy my-endpoint --model=my-model --traffic-split=0=100 --location=us-central1
+
+gcloud ai jobs create my-training-job --display-name="my-training-job" --description="Tarefa de treinamento para o modelo" --location=us-central1 --model=my-model
+
+gcloud ai jobs submit my-training-job --location=us-central1
+
+    

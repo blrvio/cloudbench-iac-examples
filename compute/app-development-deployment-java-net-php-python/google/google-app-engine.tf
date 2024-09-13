@@ -1,111 +1,30 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "your-project-id"
 }
 
-# Create an App Engine application
-resource "google_app_engine_application" "main" {
-  name = "my-appengine-app"
-}
-
-# Create an App Engine service
-resource "google_app_engine_service" "main" {
-  name     = "my-appengine-service"
-  app_id   = google_app_engine_application.main.name
+# Crie um aplicativo App Engine
+resource "google_app_engine_application" "default" {
   location = "us-central1"
-  # Optional settings
-  #  runtime_version = "nodejs18"
-  #  threadsafe = false
-  #  entry_point = "main"
-  #  env = "standard"
-  #  basic_scaling {
-  #    max_instances = 20
-  #    min_instances = 2
-  #  }
-  #  manual_scaling {
-  #    instances = 2
-  #  }
-  #  network_settings {
-  #    ingress { 
-  #      all_traffic = true
-  #    }
-  #    egress { 
-  #      all_traffic = true
-  #    }
-  #  }
-  #  ingress {
-  #    all_traffic = true
-  #  }
-  #  egress {
-  #    all_traffic = true
-  #  }
+  name     = "my-app-engine-app"
 }
 
-# Create an App Engine version
-resource "google_app_engine_version" "main" {
-  app_id   = google_app_engine_application.main.name
-  service  = google_app_engine_service.main.name
-  version  = "v1"
-  location = "us-central1"
-  # Optional settings
-  #  runtime = "nodejs18"
-  #  entry_point = "main"
-  #  threadsafe = false
-  #  env = "standard"
-  #  runtime_channel = "default"
-  #  serving_status = "SERVING"
-  #  basic_scaling {
-  #    max_instances = 20
-  #    min_instances = 2
-  #  }
-  #  manual_scaling {
-  #    instances = 2
-  #  }
-  #  network_settings {
-  #    ingress { 
-  #      all_traffic = true
-  #    }
-  #    egress { 
-  #      all_traffic = true
-  #    }
-  #  }
-  #  ingress {
-  #    all_traffic = true
-  #  }
-  #  egress {
-  #    all_traffic = true
-  #  }
+# Crie um serviço App Engine
+resource "google_app_engine_service" "default" {
+  application  = google_app_engine_application.default.name
+  name         = "default"
+  location     = "us-central1"
+  runtime      = "nodejs16"
+  env          = "standard"
+  # ... other configurations
 }
 
-# Create an App Engine deployment
-resource "google_app_engine_deployment" "main" {
-  app_id   = google_app_engine_application.main.name
-  service  = google_app_engine_service.main.name
-  version  = "v1"
-  location = "us-central1"
-  # Optional settings
-  #  source {
-  #    archive_url = "gs://my-bucket/my-app.zip"
-  #  }
-  #  source {
-  #    storage_source {
-  #      bucket = "my-bucket"
-  #      object = "my-app.zip"
-  #    }
-  #  }
-  #  source {
-  #    zip {
-  #      files = [ "src/main/java/com/example/MyServlet.java" ]
-  #    }
-  #  }
-  #  source {
-  #    zip {
-  #      files = [ "src/main/java/com/example/MyServlet.java" ]
-  #      exclude_paths = [ "**/*.txt" ]
-  #    }
-  #  }
+# Crie um arquivo de configuração de implantação
+resource "google_app_engine_deployment" "default" {
+  application  = google_app_engine_application.default.name
+  service      = google_app_engine_service.default.name
+  version      = "1"
+  # ... other configurations
 }
-
-  
+    

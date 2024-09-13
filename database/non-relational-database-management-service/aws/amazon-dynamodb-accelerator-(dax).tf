@@ -1,44 +1,72 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a DAX Cluster
+# Crie um cluster DAX
 resource "aws_dax_cluster" "main" {
-  name = "my-dax-cluster" # Name of your DAX cluster
-  #  Define the number of nodes in the cluster
-  node_type = "dax.r4.large"
-  #  Define the replication factor for the cluster
+  name              = "my-dax-cluster"
+  node_type         = "dax.r4.large"
   replication_factor = 3
-  #  Define the security group for the cluster
-  security_group_ids = [aws_security_group.main.id]
-  #  Define the subnet group for the cluster
-  subnet_group_name = aws_dax_subnet_group.main.name
+
+  cluster_name     = "my-dax-cluster"
+  subnet_group_name = "my-dax-subnet-group"
+
+  # Substitua pelos seus valores reais
+  iam_role_arn = "arn:aws:iam::123456789012:role/my-dax-role"
+
+  # Define as configurações do cache
+  parameter_group_name = "default.dax.parameter.group"
 }
 
-# Create a DAX Subnet Group
+# Crie um grupo de sub-redes DAX
 resource "aws_dax_subnet_group" "main" {
-  name       = "my-dax-subnet-group"
-  subnet_ids = ["subnet-1234567890abcdef0", "subnet-1234567890abcdef1"] # Replace with your subnet IDs
+  name   = "my-dax-subnet-group"
+  subnet_ids = ["subnet-xxxxxxxx", "subnet-yyyyyyyy", "subnet-zzzzzzzz"] # Substitua pelos IDs das suas sub-redes
 }
 
-# Create a Security Group
-resource "aws_security_group" "main" {
-  name = "sg-dax"
-  # Define the ingress and egress rules
-  ingress {
-    from_port   = 6379 # DAX port
-    to_port     = 6379
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie um papel IAM para o DAX
+resource "aws_iam_role" "dax" {
+  name = "my-dax-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "dax.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
 }
 
-  
+# Adicione permissões ao papel IAM
+resource "aws_iam_role_policy" "dax" {
+  name   = "dax-policy"
+  role   = aws_iam_role.dax.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+    

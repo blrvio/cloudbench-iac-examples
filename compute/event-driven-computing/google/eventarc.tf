@@ -1,34 +1,79 @@
 
-    # Configure the Google Cloud Provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a new Eventarc Trigger
-resource "google_eventarc_trigger" "default" {
-  name     = "my-trigger"
-  event_type = "google.cloud.storage.object.v1.finalized"
-  project  = "your-gcp-project-id"
+# Crie um EventBus
+resource "aws_eventarc_event_bus" "example" {
+  name = "example"
+}
 
-  destination {
-    cloud_function {
-      function_region = "us-central1"
-      function_name  = "my-function"
-    }
+# Crie uma regra de evento
+resource "aws_eventarc_rule" "example" {
+  name = "example"
+  event_bus_name = aws_eventarc_event_bus.example.name
+  event_pattern = <<EOF
+{
+  "source": ["aws.ec2"
+  ],
+  "detail-type": ["EC2 Instance State-change Notification"
+  ]
+}
+EOF
+  targets {
+    id  = aws_lambda_function.example.arn
+    arn = aws_lambda_function.example.arn
   }
 }
 
-# Create a Cloud Function
-resource "google_cloudfunctions2_function" "default" {
-  name     = "my-function"
-  runtime  = "nodejs16"
-  entry_point = "helloHTTP"
-  source_archive_bucket = "your-cloud-storage-bucket-name"
-  source_archive_object = "my-function.zip"
-  trigger_http  = true
-  region    = "us-central1"
-  project  = "your-gcp-project-id"
+# Crie uma função Lambda
+resource "aws_lambda_function" "example" {
+  function_name = "example"
+  runtime = "nodejs16.x"
+  handler = "index.handler"
+  role = aws_iam_role.example.arn
+  code = { # Replace with your lambda code
+    zip_file = "# code"
+  }
 }
 
-  
+# Crie um papel IAM para a função Lambda
+resource "aws_iam_role" "example" {
+  name = "example"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+# Adicione uma política IAM para o papel Lambda
+resource "aws_iam_role_policy" "example" {
+  name = "example"
+  role = aws_iam_role.example.name
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "events:PutEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+    

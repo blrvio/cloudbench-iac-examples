@@ -1,34 +1,24 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..."
-  user    = "ocid1.user.oc1..."
-  key_file = "path/to/key/file"
+  region = "us-ashburn-1"
+  # Substitua pela sua região desejada
 }
 
-# Create a FastConnect connection
-resource "oci_core_fastconnect_connection" "main" {
-  compartment_id = "ocid1.compartment.oc1..."
-  name          = "my-fastconnect-connection"
-  bandwidth_shape = "100Mbps"
-  # ... other configuration options
+# Crie um FastConnect
+resource "oci_core_fast_connect" "example" {
+  # Substitua pelos valores reais
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw7777777777777777777777777777"
+  display_name  = "FastConnectExample"
+  # ...
 }
 
-# Create a Virtual Circuit
-resource "oci_core_fastconnect_virtual_circuit" "main" {
-  compartment_id = "ocid1.compartment.oc1..."
-  name           = "my-virtual-circuit"
-  connection_id = oci_core_fastconnect_connection.main.id
-  # ... other configuration options
+# Crie uma conexão FastConnect
+resource "oci_core_fast_connect_connection" "example" {
+  # Substitua pelos valores reais
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw7777777777777777777777777777"
+  display_name  = "FastConnectConnectionExample"
+  fast_connect_id  = oci_core_fast_connect.example.id
+  # ...
 }
-
-# Create a VLAN
-resource "oci_core_virtual_circuit_vlan" "main" {
-  compartment_id   = "ocid1.compartment.oc1..."
-  virtual_circuit_id = oci_core_fastconnect_virtual_circuit.main.id
-  vlan_tag         = 100
-  # ... other configuration options
-}
-
-  
+    

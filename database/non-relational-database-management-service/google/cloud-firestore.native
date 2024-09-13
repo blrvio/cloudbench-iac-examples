@@ -1,0 +1,10 @@
+
+      // Crie um banco de dados do Firestore
+gcloud firestore databases create default
+
+// Crie uma coleção no Firestore
+gcloud firestore --database=default --collection=users add-doc user1 --fields 'name=John Doe,email=john.doe@example.com'
+
+// Crie um índice no Firestore
+gcloud firestore indexes create --database=default --collection-group=users --fields=email:ASCENDING
+    

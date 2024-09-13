@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Monitoramento do Azure
+azurerm monitor workspace create --name metrics_advisor_workspace --location westus2 --resource-group my-resource-group
+
+// Crie um recurso do Metrics Advisor
+azurerm metrics-advisor configuration create --name metrics_advisor_configuration --resource-group my-resource-group --workspace-name metrics_advisor_workspace --alerting-configuration "alertFrequency=daily" --ingestion-configuration "autoDetectAnomalies=true,dataSource=[{"dataSourceType=applicationInsights,appId=YOUR_APP_INSIGHTS_ID}]" --metric-configurations "[{"metricName=YOUR_METRIC_NAME,metricNamespace=YOUR_METRIC_NAMESPACE}]"
+    

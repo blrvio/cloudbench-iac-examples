@@ -1,0 +1,10 @@
+
+      // Crie um diretório
+oci identity create-directory --compartment-id ocid1.compartment.oc1... --display-name "My Directory"
+
+// Crie um usuário no diretório
+oci identity create-user --directory-id ocid1.directory.oc1... --display-name "john.doe"
+
+// Atribua uma política ao usuário
+oci identity attach-policy --policy-id ocid1.policy.oc1... --target-type user --target-id ocid1.user.oc1...
+    

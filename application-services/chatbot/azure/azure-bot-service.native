@@ -1,0 +1,10 @@
+
+      # Criar um serviço de bot
+# az bot create --name "example-bot" --location "westus2" --resource-group "example-resources" --sku "F0"
+
+# Criar uma chave de canal DirectLine
+# az bot channel directline create --name "example-direct-line" --bot-name "example-bot" --location "westus2" --resource-group "example-resources"
+
+# Outros comandos para gerenciar o bot
+# az bot ...
+    

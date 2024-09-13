@@ -1,52 +1,35 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Amazon Chime Account
-resource "aws_chime_account" "main" {
-  name = "my-chime-account" # Name of your Chime account
-
-  # Optional settings
-  # enable_sms = true # Enable SMS for the account
-  # enable_voice = true # Enable voice for the account
-  # default_calling_country_code = "US" # Set the default calling country code
-  # enable_calling_features = true # Enable calling features
-  # enable_chat = true # Enable chat for the account
-  # enable_meeting_features = true # Enable meeting features
-  # default_meeting_features = "basic" # Set the default meeting features (basic, advanced)
-  # enable_phone_number_features = true # Enable phone number features
+# Crie um usuário do Amazon Chime
+resource "aws_chime_user" "user" {
+  email  = "user@example.com"
+  user_id = "user-id"
+  name   = "User Name"
 }
 
-# Create an Amazon Chime User
-resource "aws_chime_user" "main" {
-  account_id = aws_chime_account.main.account_id # ID of the Chime account
-  email      = "user@example.com" # Email address of the user
-  username   = "user1" # Username of the user
-
-  # Optional settings
-  # full_name = "John Doe" # Full name of the user
-  # user_type = "user" # Type of user (user, bot)
-  # enable_calling = true # Enable calling for the user
-  # enable_chat = true # Enable chat for the user
-  # enable_meetings = true # Enable meetings for the user
-  # allow_phone_number = true # Allow phone numbers for the user
+# Crie uma sala de reunião do Amazon Chime
+resource "aws_chime_meeting" "meeting" {
+  meeting_id = "meeting-id"
+  external_meeting_id = "external-meeting-id"
 }
 
-# Create an Amazon Chime Voice Connector
-resource "aws_chime_voice_connector" "main" {
-  account_id   = aws_chime_account.main.account_id # ID of the Chime account
-  name         = "my-voice-connector" # Name of the voice connector
-  # Set the SIP endpoint details for the voice connector
-  sip_media_application_endpoint {
-    # endpoint_type = "application" # Type of endpoint
-    # url = "https://example.com/" # URL of the SIP media application endpoint
+# Crie um convite para uma sala de reunião
+resource "aws_chime_meeting_invitation" "invitation" {
+  meeting_id = aws_chime_meeting.meeting.meeting_id
+  attendee {
+    email = "attendee@example.com"
   }
-
-  # Optional settings
-  # enable_phone_number_features = true # Enable phone number features
-  # phone_number_features_type = "default" # Type of phone number features (default, custom)
 }
 
-  
+# Crie um registro de chamada para um usuário
+resource "aws_chime_call_record" "record" {
+  user_id  = aws_chime_user.user.user_id
+  call_type = "inbound"
+  call_id  = "call-id"
+}
+
+    

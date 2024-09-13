@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+ az group create --name example-resources --location westus2
+
+// Crie uma conta de armazenamento
+ az storage account create --name storage-account-name --location westus2 --resource-group example-resources --sku Standard_LRS
+
+// Crie um cluster HDInsight
+ az hdinsight cluster create --name hdinsightcluster --resource-group example-resources --location westus2 --cluster-version 4.0 --storage-account storage-account-name --http-password password
+    

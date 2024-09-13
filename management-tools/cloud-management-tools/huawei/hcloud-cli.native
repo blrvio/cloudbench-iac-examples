@@ -1,0 +1,28 @@
+
+      # Listar servidores
+hcloud server list
+
+# Criar um servidor
+hcloud server create --name "My Server" --image ubuntu-20.04 --location fsn1 --public-net
+
+# Excluir um servidor
+hcloud server delete --server "server-id"
+
+# Listar redes
+hcloud network list
+
+# Criar uma rede
+hcloud network create --name "My Network" --location fsn1
+
+# Excluir uma rede
+hcloud network delete --network "network-id"
+
+# Listar firewalls
+hcloud firewall list
+
+# Criar um firewall
+hcloud firewall create --name "My Firewall" --location fsn1
+
+# Excluir um firewall
+hcloud firewall delete --firewall "firewall-id"
+    

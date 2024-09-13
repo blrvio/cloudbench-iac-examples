@@ -1,0 +1,10 @@
+
+      // Crie um recurso de LogDNA
+ibmcloud logdna key-create --org-id YOUR_ORG_ID --name my-logdna-key
+
+// Crie um recurso de LogDNA
+ibmcloud logdna source-create --org-id YOUR_ORG_ID --name my-logdna-source --key my-logdna-key
+
+// Crie um recurso de LogDNA
+ibmcloud logdna dashboard-create --org-id YOUR_ORG_ID --name my-logdna-dashboard --source my-logdna-source
+    

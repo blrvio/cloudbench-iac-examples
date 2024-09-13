@@ -1,39 +1,25 @@
 
-    # Configure the IBM Cloud Provider
-provider "ibm" {
-  api_key    = "your_api_key" # Replace with your IBM Cloud API key
-  region = "us-south"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a service instance for Databases for PostgreSQL
-resource "ibm_service_instance" "postgresql" {
-  name   = "my-postgresql-instance"
-  plan   = "postgresql_trial"
-  service = "databases-for-postgresql"
-  location = "us-south"
-  # You can add other optional parameters here, such as tags
-}
+# Crie um cluster do RDS para PostgreSQL
+resource "aws_db_instance" "postgres_db" {
+  allocated_storage = 10
+  db_name          = "postgres"
+  db_subnet_group_name = "default"
+  engine           = "postgres"
+  engine_version   = "13.5"
+  instance_class    = "db.t3.micro"
+  password         = "password"
+  username         = "postgres"
 
-# Create a PostgreSQL database
-resource "ibm_postgresql_database" "main" {
-  name    = "my-db"
-  service_instance_id = ibm_service_instance.postgresql.id
-  # You can add other optional parameters here, such as the encoding
-}
+  # Opções de configuração adicionais
+  # ...
 
-# Create a user for the PostgreSQL database
-resource "ibm_postgresql_user" "main" {
-  name = "my-user"
-  service_instance_id = ibm_service_instance.postgresql.id
-  password = "my-password"
-  # You can add other optional parameters here, such as roles
+  tags = {
+    Name = "PostgreSQL Database"
+  }
 }
-
-# Grant access to the database for the user
-resource "ibm_postgresql_grant" "main" {
-  user             = ibm_postgresql_user.main.name
-  database         = ibm_postgresql_database.main.name
-  service_instance_id = ibm_service_instance.postgresql.id
-  # You can add other optional parameters here, such as roles
-}
-  
+    

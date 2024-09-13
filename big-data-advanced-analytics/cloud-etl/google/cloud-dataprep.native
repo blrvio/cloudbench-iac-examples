@@ -1,0 +1,21 @@
+
+      // Crie um conjunto de dados do Cloud DataPrep
+gcloud dataprep datasets create my-dataset --location=us-central1
+
+// Crie um fluxo de trabalho do Cloud DataPrep
+gcloud dataprep flows create my-flow --dataset my-dataset --recipe '{
+  "steps": [
+    {
+      "operation": "TRANSFORM",
+      "parameters": {
+        "replacements": [
+          {
+            "source": "\d{3}-\d{3}-\d{4}",
+            "target": "REPLACE_PHONE_NUMBER"
+          }
+        ]
+      }
+    ]
+  }
+'
+    

@@ -1,0 +1,4 @@
+
+      // Crie uma função do Cloud Functions
+gcloud functions deploy hello-world --runtime nodejs16 --trigger-http --entry-point helloWorld --source . --project my-project-id --region us-central1
+    

@@ -1,27 +1,23 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  ibmcloud_api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region         = "us-south"
+  api_key = "your_api_key"
 }
 
-# Create a Cloud Function
-resource "ibm_cloud_function" "example" {
-  name      = "my-function"
-  runtime   = "nodejs-16"
-  memory    = 128
-  timeout    = 60
-  code      = "// Your function code"
-  trigger   = "http"
-  location  = "us-south"
+# Crie uma função do Cloud Functions
+resource "ibm_cloud_functions_action" "my_function" {
+  name     = "my_function"
+  runtime  = "nodejs-16"
+  code     = "// Your function code"
+  region   = "us-south"
+  trigger  = "http"
+  memory   = 128
+  timeout  = 60
 }
 
-# Create a Service Key for the Cloud Function
-resource "ibm_service_key" "example" {
-  instance_id  = ibm_cloud_function.example.id
-  service_name = "cloud-functions"
-  roles        = ["Writer"]
-  name          = "my-function-key"
+# Crie um recurso do Cloud Object Storage
+resource "ibm_cos_bucket" "my_bucket" {
+  name   = "my_bucket"
+  region = "us-south"
 }
-
-  
+    

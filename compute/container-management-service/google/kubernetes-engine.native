@@ -1,0 +1,16 @@
+
+      // Crie um cluster do Kubernetes Engine
+gcloud container clusters create my-cluster --location us-central1 --num-nodes 3 --machine-type n1-standard-1 --network default --subnetwork default
+
+// Crie um namespace para os seus aplicativos
+gcloud container namespaces create default --cluster my-cluster
+
+// Importe a imagem Docker do seu aplicativo
+gcloud container images import my-app --source us-docker.pkg.dev/cloudrun/container/hello
+
+// Crie um deployment para o seu aplicativo
+gcloud container deployments create my-app --image my-app --cluster my-cluster --namespace default
+
+// Crie um service para expor o seu aplicativo
+gcloud container services create my-app --cluster my-cluster --namespace default --selector app=my-app --port 80 --target-port 8080 --type LoadBalancer
+    

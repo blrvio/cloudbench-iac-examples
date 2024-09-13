@@ -1,40 +1,53 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  ibmcloud_api_key = "your_ibmcloud_api_key"
+  # Substitua pela sua região desejada
   region = "us-south"
 }
 
-# Create a Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name = "my-codeengine-service"
-  location = "us-south"
-  runtime = "nodejs-16"
-
-  # Define the container image to use
-  image = "my-docker-hub-image:latest"
-
-  # Set the number of replicas
-  replicas = 2
+# Crie um serviço Code Engine
+resource "ibm_codeengine_service" "my_codeengine_service" {
+  name     = "my-codeengine-service"
+  location = ibm_codeengine_location.my_location.id
 }
 
-# Create a Code Engine route
-resource "ibm_codeengine_route" "main" {
-  service_name = ibm_codeengine_service.main.name
-  route_name = "my-route"
+# Crie uma localização para o serviço Code Engine
+resource "ibm_codeengine_location" "my_location" {
+  name = "us-south"
+}
 
-  # Configure the route rules
-  rules {
-    host = "my-codeengine-service.example.com"
-    path = "/"
+# Crie um aplicativo Code Engine
+resource "ibm_codeengine_application" "my_application" {
+  name          = "my-codeengine-app"
+  location      = ibm_codeengine_location.my_location.id
+  service_name = ibm_codeengine_service.my_codeengine_service.id
+  runtime       = "nodejs-16"
+
+  build {
+    # Substitua pelo caminho para o seu código-fonte
+    context = "path/to/your/code"
+    # Substitua pelo comando de build, se necessário
+    command = "npm install && npm run build"
+  }
+
+  spec {
+    containers {
+      # Substitua pelo nome da sua imagem do Docker
+      image = "my-docker-image:latest"
+    }
   }
 }
 
-# Create a Code Engine secret
-resource "ibm_codeengine_secret" "main" {
-  name = "my-secret"
-  service_name = ibm_codeengine_service.main.name
-  secret_type = "kubernetes"
-  data = "your-secret-data"
+# Crie um roteamento para o aplicativo Code Engine
+resource "ibm_codeengine_route" "my_route" {
+  name          = "my-codeengine-route"
+  location      = ibm_codeengine_location.my_location.id
+  service_name = ibm_codeengine_service.my_codeengine_service.id
+  application_name = ibm_codeengine_application.my_application.name
+
+  spec {
+    # Substitua pelo nome de host desejado
+    host = "my-codeengine-app.example.com"
+  }
 }
-  
+    

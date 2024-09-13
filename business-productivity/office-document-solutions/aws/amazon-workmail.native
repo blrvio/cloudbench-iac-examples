@@ -1,0 +1,10 @@
+
+      // Crie uma organização WorkMail
+aws workmail create-organization --organization-name my-workmail-org --region us-east-1
+
+// Adicione um usuário WorkMail à organização
+aws workmail create-user --organization-id org-xxxxxxxx --name john.doe --email john.doe@example.com
+
+// Crie um grupo de usuários WorkMail
+aws workmail create-group --organization-id org-xxxxxxxx --name team-one
+    

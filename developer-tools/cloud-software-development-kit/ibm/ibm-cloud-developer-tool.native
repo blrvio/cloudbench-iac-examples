@@ -1,0 +1,16 @@
+
+      // Create a Cloud Foundry space
+cf create-space my-space
+
+// Push an application to the space
+cf push my-app
+
+// Bind a service to the application
+cf bind-service my-app my-service
+
+// Create a pipeline
+ibmcloud dev pipeline create my-pipeline --repo-url git@github.com:my-repo.git --space my-space
+
+// Run the pipeline
+ibmcloud dev pipeline run my-pipeline
+    

@@ -1,69 +1,100 @@
 
-    # Configure the Google Cloud Platform Provider
+      # Configure o provedor do GCP
 provider "google" {
-  project  = "your-gcp-project-id"
-  region   = "us-central1"
-  zone     = "us-central1-a"
-  features = [
-    "Compute Engine",  # Enable compute engine features
-    "Storage",  # Enable storage features
-  ]
+  project = "gcp-project-id" # Substitua pelo ID do seu projeto
+  region  = "us-central1" # Substitua pela região desejada
 }
 
-# Create a Security Policy
-resource "google_compute_security_policy" "main" {
-  name = "my-security-policy"
-  description = "Example security policy"
-  
-  # Define the security policy rules
-  rule {
-    match {
-      layer4_config {
-        port_range {
-          from_port   = 443
-          to_port     = 443
-        }
-      }
-    }
-    action = "secure"
-  }
-}
-
-# Create a Network
-resource "google_compute_network" "main" {
-  name = "my-network"
-  auto_create_subnetworks = false
-}
-
-# Create a Subnetwork
-resource "google_compute_subnetwork" "main" {
-  name           = "my-subnet"
-  ip_cidr_range = "10.128.0.0/20"
-  network        = google_compute_network.main.id
-  region         = "us-central1"
-}
-
-# Create a Firewall Rule
-resource "google_compute_firewall" "main" {
-  name       = "my-firewall-rule"
-  network    = google_compute_network.main.id
-  priority   = 1000
-  description = "Example firewall rule"
-  # Define the firewall rule
+# Crie um grupo de segurança para permitir o acesso SSH
+resource "google_compute_firewall" "allow_ssh" {
+  name    = "allow-ssh"
+  network = "default"
   allow {
     protocol = "tcp"
-    ports = ["80", "443"]
+    ports    = ["22"]
   }
+  source_ranges = ["0.0.0.0/0"]
 }
 
-# Attach the Security Policy to a Subnetwork
-resource "google_compute_subnetwork_iam_binding" "main" {
-  role          = "roles/compute.securityPolicyUser"
-  members       = ["serviceAccount:my-service-account@gcp-sa-compute.iam.gserviceaccount.com"]
-  condition {
-    title = "gcp_security_policy"
-    description = "Only allow access from a specific security policy"
-    expression = "resource.type == 'compute.subnetwork' && resource.name == 'my-subnet' && resource.labels.gcp_security_policy == 'my-security-policy'"  }
+# Crie uma instância do Compute Engine
+resource "google_compute_instance" "web_server" {
+  name         = "web-server"
+  machine_type = "n1-standard-1"
+  zone         = "us-central1-a"
+  boot_disk {
+    initialize_params {
+      image = "centos-cloud/centos-7"
+    }
+  }
+  network_interface {
+    network = "default"
+  }
+  network_performance_config {
+    total_egress_bandwidth_tier = "DEFAULT"
+  }
+  can_ip_forward = false
+  deletion_protection = false
+  confidential_instance_config {
+    enable_confidential_compute = false
+  }
+  scheduling {
+    automatic_restart = true
+    on_host_maintenance = "MIGRATE"
+    preemptible         = false
+  }
+  metadata = {
+    "startup-script" = "#!/bin/bash\n# Instale o Apache\nyum update -y\nyum install httpd -y\n# Inicie o servidor web\nsystemctl enable httpd\nsystemctl start httpd"
+  }
+  project = "gcp-project-id"
 }
 
-  
+# Crie um endereço IP externo
+resource "google_compute_address" "web_server_ip" {
+  name   = "web-server-ip"
+  address_type = "EXTERNAL"
+  project      = "gcp-project-id"
+  region       = "us-central1"
+}
+
+# Associe o endereço IP externo à instância do Compute Engine
+resource "google_compute_instance_from_template" "web_server_association" {
+  name         = "web-server-association"
+  machine_type = "n1-standard-1"
+  zone         = "us-central1-a"
+  boot_disk {
+    initialize_params {
+      image = "centos-cloud/centos-7"
+    }
+  }
+  network_interface {
+    network = "default"
+  }
+  network_performance_config {
+    total_egress_bandwidth_tier = "DEFAULT"
+  }
+  can_ip_forward = false
+  deletion_protection = false
+  confidential_instance_config {
+    enable_confidential_compute = false
+  }
+  scheduling {
+    automatic_restart = true
+    on_host_maintenance = "MIGRATE"
+    preemptible         = false
+  }
+  metadata = {
+    "startup-script" = "#!/bin/bash\n# Instale o Apache\nyum update -y\nyum install httpd -y\n# Inicie o servidor web\nsystemctl enable httpd\nsystemctl start httpd"
+  }
+  project = "gcp-project-id"
+  network_interface {
+    network = "default"
+    subnetwork = "projects/gcp-project-id/regions/us-central1/subnetworks/default"
+    subnetwork_project = "gcp-project-id"
+    network_ip = google_compute_address.web_server_ip.address
+  }
+  advanced_machine_features {
+    enable_nested_virtualization = false
+  }
+  source_machine_image = "centos-cloud/centos-7"
+}
+    

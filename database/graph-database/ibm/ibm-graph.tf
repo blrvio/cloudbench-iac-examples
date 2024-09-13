@@ -1,40 +1,41 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  api_key = "your_ibm_cloud_api_key"
-  region  = "us-south"
+  api_key = "your-api-key" # Substitua pela sua API key
+  region = "us-south" # Substitua pela sua região desejada
 }
 
-# Create an IBM Graph Service
-resource "ibm_graph_service" "main" {
-  name     = "my-graph-service"
-  location = "us-south"
+# Crie um serviço IBM Graph
+resource "ibm_cloudant_instance" "my_graph_db" {
+  name = "my-graph-db"
+  plan = "free"
+}
 
-  # Define the graph database type
-  graph_type = "neo4j"
-  # Define the service plan
-  plan = "lite"
+# Crie um banco de dados
+resource "ibm_cloudant_database" "my_graph_db_database" {
+  instance_id = ibm_cloudant_instance.my_graph_db.id
+  name = "my-graph-db-database"
+}
 
-  # Optional: Define service instance tags
-  tags = {
-    environment = "dev"
+# Crie um índice para o banco de dados
+resource "ibm_cloudant_index" "my_graph_db_index" {
+  instance_id = ibm_cloudant_instance.my_graph_db.id
+  database_name = ibm_cloudant_database.my_graph_db_database.name
+  name = "my-graph-db-index"
+  index_definition = <<EOF
+  {
+    "index": {
+      "fields": [ "_id", "_rev" ],
+      "name": "my-graph-db-index"
+    },
+    "type": "json",
+    "partial_filter_selector": {
+      "_id": {
+        "$gt": null
+      }
+    }
   }
+  EOF
 }
 
-# Create an IBM Cloud Database User
-resource "ibm_cloud_database_user" "main" {
-  service_name = ibm_graph_service.main.name
-  username     = "my-graph-user"
-  password     = "my-graph-password"
-  # Optional: Define user roles
-  roles = ["read", "write"]
-}
-
-# Create an IBM Cloud Database Endpoint
-resource "ibm_cloud_database_endpoint" "main" {
-  service_name = ibm_graph_service.main.name
-  # Optional: Define the endpoint type
-  type = "public"
-}
-
-  
+    

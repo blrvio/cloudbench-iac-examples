@@ -1,44 +1,62 @@
 
-    # Configure the Azure provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {}
+  features {} # Opções de recursos do provedor
 }
 
-# Create an Azure DevOps organization
-resource "azurerm_devops_organization" "main" {
-  name = "my-organization"
-  location = "eastus"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
+  location = "westus2"
 }
 
-# Create an Azure Artifacts feed
-resource "azurerm_devops_feed" "main" {
-  name = "my-feed"
-  organization_id = azurerm_devops_organization.main.id
-  project_id = azurerm_devops_project.main.id
-  view_type = "public"
-}
-
-# Create an Azure DevOps project
-resource "azurerm_devops_project" "main" {
-  name        = "my-project"
-  organization_id = azurerm_devops_organization.main.id
+# Crie um projeto Azure DevOps
+resource "azurerm_devops_project" "example" {
+  name      = "example-project"
   visibility = "private"
-  # You can specify other options such as: 
-  #  version_control = "git"
-  #  process_template = "Agile"
+  location  = "westus2"
+  resource_group_name = azurerm_resource_group.example.name
 }
 
-# Create a service connection to Azure DevOps
-resource "azurerm_devops_service_connection" "main" {
-  name = "my-service-connection"
-  organization_id = azurerm_devops_organization.main.id
-  project_id = azurerm_devops_project.main.id
-  service_type = "AzureDevOps"
-  authorization {
-    scheme = "OAuth"
-    parameters = {
-      "serviceUri" = "https://dev.azure.com/my-organization"
-    }
-  }
+# Crie um feed Azure Artifacts
+resource "azurerm_devops_feed" "example" {
+  name          = "example-feed"
+  project_id = azurerm_devops_project.example.id
+  description  = "My example feed"
+  visibility   = "private"
 }
-  
+
+# Defina as permissões do feed
+resource "azurerm_devops_feed_permission" "example" {
+  feed_id = azurerm_devops_feed.example.id
+  identity_descriptor = "{principalName}"
+  access_level = "Contribute"
+  permissions = ["View", "Contribute", "Manage"]
+}
+
+# Crie uma pipeline YAML
+resource "azurerm_devops_pipeline" "example" {
+  project_id = azurerm_devops_project.example.id
+  name = "example-pipeline"
+  yaml = <<YAML
+  trigger: none # Ativar a pipeline manualmente
+  stages:
+    - stage: Build
+      jobs:
+        - job: Build
+          steps:
+            - task: NuGetToolInstaller@2 # Instalar as ferramentas do NuGet
+              inputs:
+                version: '4.x' # Versão do NuGet
+            - task: NuGetAuthenticate@2 # Autenticação no feed
+              inputs:
+                feed: "example-feed" # Nome do feed
+                scope: "project"
+            - task: NuGetCommand@2 # Executar um comando do NuGet
+              inputs:
+                command: "restore"
+                restoreSolution: "example.sln"
+  YAML
+}
+
+    

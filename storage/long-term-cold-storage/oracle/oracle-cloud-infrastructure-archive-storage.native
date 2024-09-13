@@ -1,0 +1,7 @@
+
+      // Create a bucket using the OCI CLI
+oci archive create-bucket --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --name example-bucket --storage-tier ARCHIVE
+
+// Create an object in the bucket using the OCI CLI
+oci archive create-object --bucket-name example-bucket --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx --name example-object --source path/to/your/object
+    

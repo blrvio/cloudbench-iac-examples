@@ -1,0 +1,13 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location "West Europe"
+
+// Crie um registro de contêiner
+azurerm containerregistry create --name example-acr --resource-group example-rg --location "West Europe" --sku Basic --admin-user-enabled false
+
+// Crie um repositório de contêiner
+azurerm containerregistry repository create --name example-repo --registry-name example-acr --resource-group example-rg
+
+// Crie um segredo para armazenar a senha do repositório de contêiner
+azurerm keyvault secret set --name example-secret --value "example-password" --resource-group example-rg --vault-name example-kv
+    

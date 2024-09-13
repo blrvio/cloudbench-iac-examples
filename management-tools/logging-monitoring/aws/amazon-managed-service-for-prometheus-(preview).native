@@ -1,0 +1,7 @@
+
+      aws prometheus create-workspace --name my-prometheus-workspace --alias my-prometheus-workspace-alias
+
+aws prometheus create-alert-rule --workspace-id "workspace-id" --name high_cpu_alert --expression "sum(rate(cpu{job="node"}[5m])) by (instance) > 0.8" --labels severity=warning --annotations summary="High CPU utilization on node" description="CPU utilization is exceeding 80%."
+
+aws prometheus create-integration --workspace-id "workspace-id" --type cloudwatch
+    

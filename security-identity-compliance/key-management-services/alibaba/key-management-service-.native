@@ -1,0 +1,39 @@
+
+      // Crie uma chave KMS
+aws kms create-key --description "My KMS key" --enable-key-rotation
+
+// Crie uma política de chave KMS
+aws kms put-key-policy --key-id "arn:aws:kms:us-east-1:123456789012:key/xxxxxxxxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --policy '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Allow access for specific user",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:user/my_user"
+      },
+      "Action": [
+        "kms:DescribeKey",
+        "kms:EnableKeyRotation",
+        "kms:DisableKeyRotation",
+        "kms:GetKeyPolicy",
+        "kms:GetPublicKey",
+        "kms:ListAliases",
+        "kms:ListGrants",
+        "kms:DescribeKey",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:CreateGrant",
+        "kms:RevokeGrant",
+        "kms:ScheduleKeyDeletion",
+        "kms:CancelKeyDeletion"
+      ],
+      "Resource": "*"
+    }
+  ]
+}'
+    

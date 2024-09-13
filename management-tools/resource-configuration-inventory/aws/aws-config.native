@@ -1,0 +1,13 @@
+
+      // Crie uma regra de configuração
+aws config put-configuration-recorder --name default --role arn:aws:iam::123456789012:role/config-recorder-role
+
+// Crie uma regra de avaliação
+aws config put-config-rule --name S3BucketEncryption --source { "owner": "AWS", "sourceIdentifier": "S3_BUCKET_ENCRYPTION" } --input-parameters { "#": "#", "#": "#" } --description "Garantir que todos os buckets S3 sejam criptografados"
+
+// Crie um registro de entrega
+aws config put-delivery-channel --name default --s3-bucket-name bucket-name --s3-key-prefix config
+
+// Crie uma avaliação de conformidade
+aws config start-config-rules-evaluation --config-rule-names S3BucketEncryption
+    

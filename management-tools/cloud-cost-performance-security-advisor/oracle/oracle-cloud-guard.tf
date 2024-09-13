@@ -1,38 +1,33 @@
 
-    # Configure the Oracle Cloud provider
+      # Configure o provedor do Oracle Cloud
 provider "oci" {
-  # Replace with your Oracle Cloud tenancy information
-  region     = "us-ashburn-1"
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaaayyy78765"
-  user       = "your_username"
-  password   = "your_password"
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  # Substitua pelo caminho da chave privada do usuário.
+  key_file = "path/to/your/private/key.pem"
+  # Substitua pelo caminho do arquivo de configuração do usuário.
+  config_file = "path/to/your/config.json"
 }
 
-# Create a Cloud Guard detector
+# Crie uma regra de Cloud Guard
+resource "oci_cloud_guard_detector_recipe" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  display_name   = "My Detector Recipe"
+  description    = "A custom detector recipe for my environment"
+
+  detector_rule {
+    name = "Example Rule"
+    # ...
+  }
+}
+
+# Crie um detector
 resource "oci_cloud_guard_detector" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaayyy78765"
-  display_name  = "My Cloud Guard Detector"
-  # Define the detector type
-  detector_type = "PREVENTIVE"
-  # Configure the detector's rules
-  rules {
-    # Add your desired Cloud Guard rules here
-    # For example:
-    # rule_name = "My Custom Rule"
-    # description = "This rule checks for open ports on public subnets"
-    # rule_type = "PORT_SCANNING"
-    # enabled = true
-    # actions = ["ALERT"]
-  }
-  # Configure the detector's actions
-  actions {
-    # Add your desired actions here
-    # For example:
-    # action_type = "ALERT"
-    # notification_details {
-    #   # Specify the notification details
-    # }
-  }
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  display_name   = "My Detector"
+  description    = "A custom detector for my environment"
+  detector_recipe_id = oci_cloud_guard_detector_recipe.example.id
+  target_type  = "COMPARTMENT"
+  target_value = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
-
-  
+    

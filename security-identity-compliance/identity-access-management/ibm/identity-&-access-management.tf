@@ -1,26 +1,37 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  api_key = "your_ibm_cloud_api_key"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an IAM service ID
-resource "ibm_iam_service_id" "main" {
-  name = "my-service-id"
-  # Optional: Set the description
-  description = "Service ID for my application"
+# Crie um usuário IAM
+resource "aws_iam_user" "example" {
+  name = "example_user"
 }
 
-# Create an IAM API key
-resource "ibm_iam_api_key" "main" {
-  service_id = ibm_iam_service_id.main.id
-  # Optional: Set the description
-  description = "API key for my application"
+# Crie uma política IAM
+resource "aws_iam_policy" "example" {
+  name = "example_policy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:*"
+        ],
+        "Resource": [
+          "arn:aws:s3:::example-bucket"
+        ]
+      }
+    ]
+  })
 }
 
-# Output the API key
-output "api_key" {
-  value = ibm_iam_api_key.main.api_key
+# Adicione a política ao usuário IAM
+resource "aws_iam_user_policy" "example" {
+  user = aws_iam_user.example.name
+  name = "example_policy"
+  policy = aws_iam_policy.example.policy
 }
-  
+    

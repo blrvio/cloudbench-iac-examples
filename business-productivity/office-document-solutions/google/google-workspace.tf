@@ -1,47 +1,54 @@
 
-    # Configure the Google provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-project-id"
-  region  = "us-central1"
+  project = "project-id" # Substitua pelo ID do seu projeto
+  region  = "us-central1" # Substitua pela região desejada
 }
 
-# Create a Google Workspace directory
-resource "google_workspace_directory" "main" {
-  customer_id = "your-customer-id"
-  name        = "your-directory-name"
-  # Specify the language used for the directory
-  language_code = "en"
-  # Specify the country code
-  country_code = "US"
+# Crie uma conta do Google Workspace
+resource "google_workspace_account" "main" {
+  display_name = "My Google Workspace Account"
+  customer_type = "BUSINESS"
+  edition = "BUSINESS_STANDARD"
+  language = "en"
+  timezone = "America/Los_Angeles"
 }
 
-# Create a Google Workspace user
-resource "google_workspace_user" "main" {
-  directory_id = google_workspace_directory.main.id
-  name          = "your-user-name"
-  email         = "your-user-email@your-domain.com"
-  password      = "your-password"
-  # Specify the user's first name
-  first_name = "Your"
-  # Specify the user's last name
-  last_name  = "User"
-  # Specify the user's organizational unit
-  organizational_unit = "your-organizational-unit"
+# Crie um usuário do Google Workspace
+resource "google_workspace_user" "admin" {
+  account_id = google_workspace_account.main.account_id
+  primary_email = "admin@example.com"
+  password = "password"
+  name = "Admin User"
+  given_name = "Admin"
+  family_name = "User"
 }
 
-# Create a Google Workspace group
-resource "google_workspace_group" "main" {
-  directory_id = google_workspace_directory.main.id
-  name          = "your-group-name"
-  email         = "your-group-email@your-domain.com"
-  # Specify the group's description
-  description = "Your group description"
+# Crie um grupo do Google Workspace
+resource "google_workspace_group" "admins" {
+  account_id = google_workspace_account.main.account_id
+  email = "admins@example.com"
+  name = "Admins"
 }
 
-# Add a user to a group
-resource "google_workspace_group_member" "main" {
-  group_id = google_workspace_group.main.id
-  user_id  = google_workspace_user.main.id
+# Adicione o usuário ao grupo
+resource "google_workspace_group_member" "admin_group" {
+  group_key = google_workspace_group.admins.email
+  member_key = google_workspace_user.admin.primary_email
 }
 
-  
+# Crie uma unidade compartilhada no Google Drive
+resource "google_drive_shared_drive" "shared_drive" {
+  name = "Shared Drive"
+  description = "Shared Drive for Team"
+  team_drive_type = "TEAM_DRIVE"
+}
+
+# Configure a permissão de acesso ao compartilhamento
+resource "google_drive_shared_drive_permission" "admin_access" {
+  drive_id = google_drive_shared_drive.shared_drive.id
+  role = "owner"
+  type = "user"
+  user_key = google_workspace_user.admin.primary_email
+}
+    

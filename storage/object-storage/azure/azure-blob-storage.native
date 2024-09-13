@@ -1,0 +1,13 @@
+
+      # Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location "West Europe"
+
+# Crie uma conta de armazenamento
+azurerm storage account create --name examplestorage --resource-group example-rg --location "West Europe" --sku Standard --replication LRS --redundancy LRS
+
+# Crie um contêiner de blob
+azurerm storage container create --name example-container --account-name examplestorage --public-access blob
+
+# Crie um blob
+azurerm storage blob upload --name example-blob.txt --account-name examplestorage --container-name example-container --file path/to/your/file.txt --type BlockBlob
+    

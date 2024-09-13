@@ -1,0 +1,7 @@
+
+      // Crie um serviço do Identity-Aware Proxy
+gcloud iap web backend-services create iap-backend-service --backend=https://my-app.example.com
+
+// Crie uma configuração de acesso ao serviço do IAP
+gcloud iap web iam-bindings create --member=allUsers --role=roles/iap.httpsResourceAccessor --iap-web-backend-service=iap-backend-service
+    

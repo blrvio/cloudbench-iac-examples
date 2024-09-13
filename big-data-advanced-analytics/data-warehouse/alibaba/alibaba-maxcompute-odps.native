@@ -1,0 +1,11 @@
+
+      // Criar um projeto MaxCompute
+maxcompute createproject -P example-project
+
+// Criar um banco de dados MaxCompute
+maxcompute createdatabase -P example-project -D example_database
+
+// Criar uma tabela MaxCompute
+maxcompute createtable -P example-project -D example_database -T example_table "id BIGINT COMMENT 'ID', name STRING COMMENT 'Nome'" 
+
+    

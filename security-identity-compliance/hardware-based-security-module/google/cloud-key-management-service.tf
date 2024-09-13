@@ -1,23 +1,25 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "gcp-project-id"
-  region  = "us-central1"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a KMS key ring
-resource "google_kms_key_ring" "default" {
-  location = "us-central1"
-  name     = "my-key-ring"
+# Crie uma chave KMS
+resource "aws_kms_key" "default" {
+  description = "Chave KMS para exemplo"
+  deletion_window_in_days = 7 # Tempo de espera para exclusão (opcional)
+  enable_key_rotation = true # Habilita a rotação automática da chave (opcional)
 }
 
-# Create a KMS crypto key
-resource "google_kms_crypto_key" "default" {
-  key_ring = google_kms_key_ring.default.id
-  purpose   = "ENCRYPT_DECRYPT"
-  version_template {
-    algorithm = "GOOGLE_SYMMETRIC_ENCRYPTION"
-  }
+# Use a chave KMS para criptografar dados
+resource "aws_kms_ciphertext" "encrypted_data" {
+  ciphertext_blob = "your-data-to-encrypt"
+  key_id = aws_kms_key.default.key_id
 }
 
-  
+# Descifre dados usando a chave KMS
+resource "aws_kms_plaintext" "decrypted_data" {
+  ciphertext_blob = aws_kms_ciphertext.encrypted_data.ciphertext_blob
+  key_id = aws_kms_key.default.key_id
+}
+    

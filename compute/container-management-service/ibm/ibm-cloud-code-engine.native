@@ -1,0 +1,10 @@
+
+      // Criar um namespace do Code Engine
+ibmcloud ce namespace-create my-namespace --location us-south
+
+// Criar um aplicativo no Code Engine
+ibmcloud ce app-create my-app --namespace my-namespace --runtime nodejs-16 --build-source git --build-source-url https://github.com/ibm-cloud/code-engine-samples.git --build-source-branch main
+
+// Criar um serviço no Code Engine
+ibmcloud ce service-create my-service --namespace my-namespace --app my-app
+    

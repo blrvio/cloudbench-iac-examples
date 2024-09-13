@@ -1,41 +1,26 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      ## Configure o provedor do AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a Kafka cluster
-resource "huaweicloud_dmskafka_cluster" "main" {
-  name                 = "my-kafka-cluster"
-  version              = "2.6.0"
-  broker_num            = 3
-  instance_spec        = "kafka.small"
-  disk_size             = 100
-  vpc_id               = "your-vpc-id"
-  subnet_id            = "your-subnet-id"
-  security_group_id    = "your-security-group-id"
-  enable_public_network = true
-
-  # Define the topics to create in the cluster
-  topics {
-    name = "my-topic"
-    partitions = 3
-    replication_factor = 3
+## Crie um cluster do MSK
+resource "aws_msk_cluster" "main" {
+  name         = "msk-cluster"
+  broker_node_group_info {
+    instance_type = "kafka.m5.large"
+    client_subnets = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"]
   }
+  kafka_version = "2.6.0"
+
+  # ...
 }
 
-# Create a Kafka topic
-resource "huaweicloud_dmskafka_topic" "main" {
-  cluster_id = huaweicloud_dmskafka_cluster.main.id
-  name       = "my-topic"
-  partitions = 3
-  replication_factor = 3
+## Crie um tópico no MSK
+resource "aws_msk_topic" "main" {
+  cluster_arn = aws_msk_cluster.main.arn
+  name         = "my-topic"
+  # ...
 }
 
-# Create a Kafka consumer group
-resource "huaweicloud_dmskafka_consumer_group" "main" {
-  cluster_id = huaweicloud_dmskafka_cluster.main.id
-  name       = "my-consumer-group"
-}
-
-  
+    

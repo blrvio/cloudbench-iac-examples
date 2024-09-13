@@ -1,0 +1,10 @@
+
+      // Crie uma base de dados
+aws athena create-database --database-name my_database
+
+// Crie uma tabela
+aws athena create-table-request --database-name my_database --table-name my_table --output s3://my-bucket/my-prefix --partition-by year,month --columns id:int,name:string,date:date
+
+// Execute uma consulta
+aws athena start-query-execution --query-string "SELECT * FROM my_database.my_table" --result-configuration OutputLocation=s3://my-bucket/my-output-prefix
+    

@@ -1,0 +1,13 @@
+
+      // Create a Redis cluster
+aws elasticache create-cache-cluster --cache-name my_redis_cluster --engine redis --engine-version 6.x --node-type cache.t2.micro --num-node-groups 1 --parameter-group-name default.redis6.x --port 6379 --replication-mode single-node --security-group-ids sg-xxxxxxxx --subnet-group-name my-redis-subnet-group --cache-cluster-id my_redis_cluster
+
+// Create a security group for Redis
+aws ec2 create-security-group --group-name redis_sg --description "Security group for Redis" --vpc-id vpc-xxxxxxxx
+
+// Add an ingress rule to the security group
+aws ec2 authorize-security-group-ingress --group-name redis_sg --protocol tcp --port 6379 --cidr 0.0.0.0/0
+
+// Create a subnet group for Redis
+aws elasticache create-subnet-group --subnet-group-name my-redis-subnet-group --description "Subnet group for Redis" --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx
+    

@@ -1,0 +1,7 @@
+
+      # Crie um novo recurso de integração
+oci integration create-integration --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --display-name "My Integration" --description "Integration for example purpose"
+
+# Crie uma nova conexão de integração
+oci integration create-connection --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --integration-id <integration-id> --display-name "My Connection" --description "Connection for example purpose" --connection-definition "# Definição da conexão em formato JSON"
+    

@@ -1,0 +1,10 @@
+
+      // Crie uma tarefa de migração
+aws application-migration-service create-application --name example-application
+
+// Crie um servidor de migração
+aws application-migration-service create-server --name example-server --instance-type t2.micro
+
+// Crie um grupo de servidores
+aws application-migration-service create-server-group --name example-server-group
+    

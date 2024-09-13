@@ -1,0 +1,19 @@
+
+      // Crie um agente DataSync
+aws datasync create-agent --activation-key xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --name agent-example
+
+// Crie uma localização de origem (Amazon S3)
+aws datasync create-location-s3 --s3-bucket-name source-bucket --s3-region us-east-1 --s3-subdirectory source-folder
+
+// Crie uma localização de destino (Amazon S3)
+aws datasync create-location-s3 --s3-bucket-name destination-bucket --s3-region us-east-1 --s3-subdirectory destination-folder
+
+// Crie uma tarefa DataSync
+aws datasync create-task --name sync-task --source-location-arn arn:aws:datasync:us-east-1:xxxxxxxxxxxx:location:loc-xxxxxxxxxxxx --destination-location-arn arn:aws:datasync:us-east-1:xxxxxxxxxxxx:location:loc-xxxxxxxxxxxx --options verify-mode:checksum,overwrite-mode:overwrite --schedule cron(0 0 * * ? *)
+
+// Crie um conjunto de exclusão para a tarefa DataSync
+aws datasync create-task-exclusion-rule --task-arn arn:aws:datasync:us-east-1:xxxxxxxxxxxx:task:task-xxxxxxxxxxxx --rule *.log
+
+// Crie um conjunto de inclusão para a tarefa DataSync
+aws datasync create-task-inclusion-rule --task-arn arn:aws:datasync:us-east-1:xxxxxxxxxxxx:task:task-xxxxxxxxxxxx --rule *.csv
+    

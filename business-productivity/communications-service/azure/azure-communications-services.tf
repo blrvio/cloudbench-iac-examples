@@ -1,31 +1,29 @@
 
-    # Configure the Azure Provider
+      # Configure the Azure Provider
 provider "azurerm" {
-  features {}  # Ensure all features are enabled
+  features {} # Ensure you have the latest features
 }
 
-# Create a Communication Service
-resource "azurerm_communication_service" "main" {
-  name                = "my-communication-service"
+# Create a Communication Services resource
+resource "azurerm_communication_service" "example" {
+  name                = "example-communication-service"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
+  resource_group_name = "example-resource-group"
 }
 
-# Create a Communication Service Connection
-resource "azurerm_communication_service_connection" "main" {
-  name                = "my-communication-service-connection"
+# Create a Phone Number
+resource "azurerm_communication_service_phone_number" "example" {
+  communication_service_name = azurerm_communication_service.example.name
+  phone_number           = "+14255550123" # Replace with a valid phone number
+  location               = azurerm_communication_service.example.location
+  resource_group_name     = azurerm_communication_service.example.resource_group_name
+}
+
+# Create an Email Service
+resource "azurerm_communication_service_email_service" "example" {
+  name                = "example-email-service"
   location            = "westus2"
-  resource_group_name = "my-resource-group"
-  communication_service_id = azurerm_communication_service.main.id
+  resource_group_name = "example-resource-group"
+  communication_service_name = azurerm_communication_service.example.name
 }
-
-# Create a Communication Service Endpoint
-resource "azurerm_communication_service_endpoint" "main" {
-  name                = "my-communication-service-endpoint"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  communication_service_connection_id = azurerm_communication_service_connection.main.id
-  endpoint_type          = "sms"
-}
-
-  
+    

@@ -1,0 +1,8 @@
+
+      aws quicksight create-user --aws-account-id xxxxxxxxxxxx --user-name user_name --email user_name@example.com --role READER
+aws quicksight create-group --aws-account-id xxxxxxxxxxxx --group-name "example_group" --users user_name
+aws quicksight create-datasource --aws-account-id xxxxxxxxxxxx --aws-region us-east-1 --name example_datasource --type S3 --s3-credentials Bucket=example_bucket,Region=us-east-1,AwsAccessKeyId=AKIAxxxxxxxxxxxxx,AwsSecretAccessKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+aws quicksight create-dataset --aws-account-id xxxxxxxxxxxx --aws-region us-east-1 --name example_dataset --import-mode SPICE --physical-table-map "example_table"={"data-source-arn":"arn:aws:quicksight:us-east-1:xxxxxxxxxxxx:datasource/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx","column-list":[{"name":"column_1","type":"STRING"},{"name":"column_2","type":"INTEGER"}]}
+aws quicksight create-analysis --aws-account-id xxxxxxxxxxxx --aws-region us-east-1 --name example_analysis --analysis-id xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+aws quicksight create-dashboard --aws-account-id xxxxxxxxxxxx --aws-region us-east-1 --dashboard-id xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --name example_dashboard
+    

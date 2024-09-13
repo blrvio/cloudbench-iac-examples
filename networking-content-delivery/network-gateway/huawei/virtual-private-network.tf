@@ -1,24 +1,51 @@
 
-    # Configure the Huawei Cloud provider
-provider "huaweicloud" {
-  region = "cn-north-1" # Replace with your desired region
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a VPN connection
-resource "huaweicloud_vpn_connection" "main" {
-  name = "my-vpn-connection"
-  # Replace with the ID of your VPN gateway
-  vpn_gateway_id = "vpnx-xxxxxx"
-  # Replace with the ID of your customer gateway
-  customer_gateway_id = "cgw-xxxxxx"
-  # Replace with the IP address of your customer gateway
-  customer_gateway_ip_address = "10.10.10.1"
-  # Replace with the type of encryption
-  ipsec_encryption_algorithm = "aes-128"
-  # Replace with the type of authentication
-  ipsec_authentication_algorithm = "sha1"
-  # Replace with the VPN connection type
-  vpn_connection_type = "site-to-site"
+# Crie uma VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16" # Substitua pelo CIDR desejado
+
+  tags = {
+    Name = "VPC Principal"
+  }
 }
 
-  
+# Crie uma sub-rede
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24" # Substitua pelo CIDR desejado
+
+  tags = {\n    Name = "Sub-rede Pública"
+  }
+}
+
+# Crie uma gateway de internet
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+}
+
+# Associe a gateway de internet à VPC
+resource "aws_vpc_gateway_attachment" "main" {
+  vpc_id             = aws_vpc.main.id
+  internet_gateway_id = aws_internet_gateway.main.id
+}
+
+# Crie uma tabela de rotas
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+}
+
+# Associe a tabela de rotas à sub-rede
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+    

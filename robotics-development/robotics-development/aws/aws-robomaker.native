@@ -1,0 +1,16 @@
+
+      // Crie um espaço de trabalho do RoboMaker
+aws robomaker create-workspace --workspace-name my-robomaker-workspace
+
+// Crie um aplicativo de simulação do RoboMaker
+aws robomaker create-simulation-application --application-name my-simulation-application --source-code s3://my-bucket/my-simulation-application.zip --workspace-id my-robomaker-workspace
+
+// Crie uma definição de simulação do RoboMaker
+aws robomaker create-simulation-job --job-name my-simulation-job --application-name my-simulation-application --output-location s3://my-bucket/my-simulation-job-output
+
+// Crie uma definição de mundo do RoboMaker
+aws robomaker create-world --world-name my-world --workspace-id my-robomaker-workspace
+
+// Crie um robô do RoboMaker
+aws robomaker create-robot --robot-name my-robot --greengrass-group-id my-greengrass-group --workspace-id my-robomaker-workspace
+    

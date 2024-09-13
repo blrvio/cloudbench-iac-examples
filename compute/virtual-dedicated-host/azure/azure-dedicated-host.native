@@ -1,0 +1,15 @@
+
+      az group create -n example-resources -l "West Europe"
+
+az dedicated-host-group create -g example-resources -n example-host-group -l "West Europe" -pfd 2
+
+az vm create -g example-resources -n example-vm -l "West Europe" --image UbuntuServer --size Standard_A2_v2 --admin-username azureuser --admin-password "P@$$wOrd" --nics $(az network nic show -g example-resources -n example-nic --query id -o tsv) --host-group $(az dedicated-host-group show -g example-resources -n example-host-group --query id -o tsv)
+
+az network nic create -g example-resources -n example-nic -l "West Europe" --subnet $(az network vnet subnet show -g example-resources -n example-subnet --query id -o tsv) --private-ip-address-allocation Dynamic
+
+az network nsg create -g example-resources -n example-nsg -l "West Europe"
+
+az network vnet subnet create -g example-resources -n example-subnet -l "West Europe" -v example-vnet -a 10.0.0.0/24
+
+az network vnet create -g example-resources -n example-vnet -l "West Europe" -a 10.0.0.0/16
+    

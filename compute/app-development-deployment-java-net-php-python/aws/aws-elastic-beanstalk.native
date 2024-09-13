@@ -1,0 +1,10 @@
+
+      // Crie um aplicativo Elastic Beanstalk
+aws elasticbeanstalk create-application --application-name my-web-app
+
+// Crie um ambiente Elastic Beanstalk
+aws elasticbeanstalk create-environment --application-name my-web-app --environment-name web-app-env --solution-stack-name "64bit Amazon Linux 2 v3.2.3 running Node.js 14.x"
+
+// Opções de configuração opcionais
+// aws elasticbeanstalk create-environment --application-name my-web-app --environment-name web-app-env --solution-stack-name "64bit Amazon Linux 2 v3.2.3 running Node.js 14.x" --cname-prefix my-web-app --tier web --version-label latest
+    

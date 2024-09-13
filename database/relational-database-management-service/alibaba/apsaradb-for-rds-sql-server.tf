@@ -1,45 +1,58 @@
 
-    # Configure the Alibaba Cloud provider
+      # Configure o provedor Alibaba Cloud
 provider "alicloud" {
-  region = "cn-hangzhou" # Replace with your desired region
+  region = "cn-hangzhou" # Substitua pela sua região desejada
 }
 
-# Create an ApsaraDB for RDS SQL Server instance
-resource "alicloud_rds_instance" "main" {
-  engine         = "SQLServer"
-  engine_version = "2019R2Standard"
-  instance_type   = "rds.mssql.t1.small"
-  instance_name   = "my-sqlserver-instance"
-  password       = "your-strong-password"
-  storage_type    = "cloud_essd"
-  storage_size    = 100
-  vswitch_id      = "vsw-id"
-  # Replace with your existing vswitch ID
-  # Define the security group for the RDS instance
-  security_group_ids = [aws_security_group.main.id]
-  # Define the tags for the RDS instance
-  tags = {
-    Name = "My SQL Server Instance"
+# Crie um instance do ApsaraDB for RDS SQL Server
+resource "alicloud_rds_instance" "db_instance" {
+  engine                  = "SQLServer"
+  engine_version          = "2017_Standard"
+  instance_type           = "rds.mysql.t1.small"
+  instance_charge_type    = "Postpaid"
+  instance_network_type   = "VPC"
+  db_instance_class       = "basic"
+  db_instance_storage     = 20
+  payment_type           = "PayAsYouGo"
+  storage_type            = "cloud_essd"
+  vpc_id                   = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+  vswitch_id               = "vswitch-xxxxxxxx" # Substitua pelo ID da sua VSwitch
+  connection_mode         = "Public"
+  db_name                  = "mydatabase"
+  db_instance_description  = "My RDS SQL Server instance"
+  security_ip_list        = ["0.0.0.0/0"]
+  availability_zone_id    = "cn-hangzhou-a"
+  port                     = 1433
+  password                 = "password"
+}
+
+# Crie um usuário do banco de dados
+resource "alicloud_rds_account" "db_user" {
+  account_name = "db_user"
+  account_password = "password"
+  db_instance_id   = alicloud_rds_instance.db_instance.id
+  account_type     = "normal"
+}
+
+# Crie uma regra de segurança para o banco de dados
+resource "alicloud_rds_security_group" "db_security_group" {
+  security_group_name = "db_security_group"
+  security_group_description = "Security group for RDS SQL Server"
+  vpc_id                 = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+  security_group_rule {
+    type = "ingress"
+    from_port = 1433
+    to_port = 1433
+    ip_protocol = "tcp"
+    cidr_ip = "0.0.0.0/0"
   }
 }
 
-# Create a security group for the RDS instance
-resource "alicloud_security_group" "main" {
-  name = "sg-rds"
-  # Define the ingress rules for the security group
-  ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  # Define the egress rules for the security group
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie uma regra de segurança para o banco de dados
+resource "alicloud_rds_security_group_rule" "db_security_group_rule" {
+  db_instance_id = alicloud_rds_instance.db_instance.id
+  security_group_id = alicloud_rds_security_group.db_security_group.id
+  db_instance_port = 1433
 }
 
-  
+    

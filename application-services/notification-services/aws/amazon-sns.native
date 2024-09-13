@@ -1,0 +1,7 @@
+
+      // Crie um tópico SNS
+aws sns create-topic --name example-topic
+
+// Publique uma mensagem no tópico
+aws sns publish --topic-arn arn:aws:sns:us-east-1:123456789012:example-topic --message "Hello from AWS CLI!"
+    

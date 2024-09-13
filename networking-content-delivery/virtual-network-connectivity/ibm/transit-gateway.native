@@ -1,0 +1,12 @@
+
+      // Crie um Transit Gateway
+aws ec2 create-transit-gateway --description "Transit Gateway for connecting VPCs" --tag-specifications 'ResourceType=transit-gateway,Tags=[{Key=Name,Value=Transit Gateway}]'
+
+// Crie uma associação de VPC ao Transit Gateway
+aws ec2 create-transit-gateway-vpc-attachment --transit-gateway-id tgw-xxxxxxxx --vpc-id vpc-xxxxxxxx
+
+// Crie uma rota para o Transit Gateway
+aws ec2 create-transit-gateway-route-table --transit-gateway-id tgw-xxxxxxxx --tag-specifications 'ResourceType=transit-gateway-route-table,Tags=[{Key=Name,Value=Main Route Table}]'
+
+aws ec2 create-transit-gateway-route --transit-gateway-route-table-id tgwrtb-xxxxxxxx --destination-cidr-block 10.0.0.0/16 --transit-gateway-attachment-id tgw-attach-xxxxxxxx
+    

@@ -1,57 +1,50 @@
 
-    # Configure the Google Cloud provider
-provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+      # Configure o provedor Looker
+provider "looker" {
+  api_token = "looker_api_token"
+  host      = "looker.host"
+  version   = "4.0"
 }
 
-# Create a Looker instance
-resource "google_looker_instance" "main" {
-  name         = "my-looker-instance"
-  edition     = "enterprise"
-  maintenance_window_day = "monday"
-  maintenance_window_time = "03:00"
-  # Suppress the creation of the first user
-  initial_user_config {
-    disabled = true
-  }
-  # Enable the Looker API
-  api_enabled = true
-  # Configure the Looker API endpoint
-  api_endpoint = "https://api.looker.com"
-  # Enable the Looker API proxy
-  api_proxy_enabled = true
+# Crie um grupo de usuários
+resource "looker_user_group" "my_group" {
+  name    = "My Group"
+  user_ids = ["user_1", "user_2"] # Substitua por IDs dos usuários
 }
 
-# Create a Looker group
-resource "google_looker_group" "main" {
-  name = "my-looker-group"
-  # Suppress the creation of the first user
-  initial_user_config {
-    disabled = true
-  }
+# Crie um projeto
+resource "looker_project" "my_project" {
+  name     = "My Project"
+  space_id = "space_id" # Substitua pelo ID do espaço
 }
 
-# Create a Looker user
-resource "google_looker_user" "main" {
-  first_name  = "John"
-  last_name   = "Doe"
-  email        = "john.doe@example.com"
-  group_ids   = [google_looker_group.main.id]
-  # Suppress the creation of the first user
-  initial_user_config {
-    disabled = true
-  }
-  # Set the user password
-  password = "password123"
-  # Enable the Looker API for the user
-  api_enabled = true
+# Crie um dashboard
+resource "looker_dashboard" "my_dashboard" {
+  title   = "My Dashboard"
+  project_id = looker_project.my_project.id
+  dashboard_elements = [ # Defina elementos do dashboard
+    {
+      type = "looker_tile"
+      title = "My Tile"
+      look = "look_id"
+    }
+  ]
 }
 
-# Create a Looker content library
-resource "google_looker_content_library" "main" {
-  name         = "my-content-library"
-  description = "This is my content library"
+# Crie um alerta
+resource "looker_alert" "my_alert" {
+  name  = "My Alert"
+  title = "My Alert Title"
+  look  = "look_id" # Substitua pelo ID do Look
+  project_id = looker_project.my_project.id
 }
 
-  
+# Crie um agendamento de dados
+resource "looker_scheduled_plan" "my_plan" {
+  name      = "My Plan"
+  project_id = looker_project.my_project.id
+  schedule  = "every 24 hours"
+  look = "look_id" # Substitua pelo ID do Look
+}
+
+    

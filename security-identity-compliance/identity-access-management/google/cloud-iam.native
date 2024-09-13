@@ -1,0 +1,10 @@
+
+      # Crie um novo usuário do IAM
+gcloud iam service-accounts create my-user --display-name "My User"
+
+# Crie uma nova chave de serviço
+gcloud iam service-accounts keys create my-key.json --iam-account my-user@your-project-id.iam.gserviceaccount.com
+
+# Crie uma nova função do IAM
+gcloud projects add-iam-policy-binding your-project-id --member "serviceAccount:my-user@your-project-id.iam.gserviceaccount.com" --role roles/owner
+    

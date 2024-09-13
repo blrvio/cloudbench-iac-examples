@@ -1,0 +1,10 @@
+
+      // Crie um canal MediaPackage
+aws mediapackage create-channel --id example --description "Example MediaPackage Channel" --ingest-id example
+
+// Crie uma configuração de embalagem MediaPackage
+aws mediapackage create-packaging-configuration --id example --name example
+
+// Crie um provedor de chave SPEKE
+aws mediapackage create-origin-endpoint --id example --channel-id example --manifest-name example --startover-window-seconds 0 --time-delay-seconds 0 --hls-package-ad-markers NONE --source-endpoint-source-selection AUTO
+    

@@ -1,0 +1,26 @@
+
+      // Crie um espaço de trabalho do Stream Analytics usando o Azure CLI
+az stream analytics job create -g example-resource-group -n example-stream-analytics-job --location westus2
+
+// Defina as credenciais de acesso do Event Hub
+# Substitua com as credenciais reais para a sua conta do Azure
+EVENT_HUB_CONNECTION_STRING="Endpoint=sb://example-eventhub-namespace.servicebus.windows.net/;SharedAccessKeyName=example-shared-access-policy;SharedAccessKey=example-shared-access-key"
+
+// Crie uma entrada do Event Hub
+az stream analytics job input create -g example-resource-group -n example-stream-analytics-job -i example-eventhub --eventhub-name example-eventhub --eventhub-namespace example-eventhub-namespace --consumer-group "$Default" --shared-access-policy-name example-shared-access-policy --shared-access-key example-shared-access-key
+
+// Defina a transformação de dados
+# Aqui, estamos apenas selecionando o campo "message" do evento
+TRANSFORMATION_QUERY="SELECT message FROM input"
+
+// Crie uma saída do Blob Storage
+# Substitua com a string de conexão para o armazenamento de blobs do Azure
+BLOB_CONNECTION_STRING="example-connection-string"
+az stream analytics job output create -g example-resource-group -n example-stream-analytics-job -o example-blob-output --connection-string $BLOB_CONNECTION_STRING
+
+// Defina a transformação de dados
+az stream analytics job transformation create -g example-resource-group -n example-stream-analytics-job -t example-transformation --query $TRANSFORMATION_QUERY
+
+// Inicie o espaço de trabalho do Stream Analytics
+az stream analytics job start -g example-resource-group -n example-stream-analytics-job
+    

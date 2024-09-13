@@ -1,0 +1,13 @@
+
+      // Crie um assistente Watson
+watson assistant create assistant --name "My Assistant" --description "My first Watson Assistant" --language "en"
+
+// Crie um intent
+watson assistant create intent --assistant-id <ASSISTANT_ID> --name "Greeting" --description "Intent para saudações" --user-says "Hello,Hi,Good morning"
+
+// Crie uma entidade
+watson assistant create entity --assistant-id <ASSISTANT_ID> --name "City" --description "Entidade para cidades" --values "[{"value":"New York","synonyms":["NYC"]},{"value":"London","synonyms":["Big Ben"]}]"
+
+// Crie uma resposta de diálogo
+watson assistant create dialog-node --assistant-id <ASSISTANT_ID> --dialog-node "welcome" --conditions "#greeting_intent" --output '[{"text":{"values":["Hello! How can I help you today?"]}}]
+    

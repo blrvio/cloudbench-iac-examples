@@ -1,0 +1,10 @@
+
+      // Crie um endpoint do Comprehend
+aws comprehend create-endpoint --endpoint-name my-comprehend-endpoint --language-code en --model-arn arn:aws:comprehend:us-east-1:123456789012:model/my-model
+
+// Crie um modelo de análise de sentimentos
+aws comprehend create-sentiment-detection-model --model-name my-sentiment-model --language-code en
+
+// Use o endpoint do Comprehend para análise de sentimentos
+aws comprehend start-sentiment-detection-job --endpoint-arn arn:aws:comprehend:us-east-1:123456789012:endpoint/my-comprehend-endpoint --input-data-config S3Uri=s3://my-bucket/my-file.txt --output-data-config S3Uri=s3://my-bucket/output/sentiment-results.json --model-arn arn:aws:comprehend:us-east-1:123456789012:model/my-model
+    

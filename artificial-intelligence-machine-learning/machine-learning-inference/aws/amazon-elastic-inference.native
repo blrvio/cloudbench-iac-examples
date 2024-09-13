@@ -1,0 +1,7 @@
+
+      # Crie um acelerador Elastic Inference
+aws elasticinference create-accelerator --type eia1.small --name my-elastic-inference
+
+# Crie uma instância EC2 com o acelerador associado
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --elastic-inference eia1.small --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyInstance}]'
+    

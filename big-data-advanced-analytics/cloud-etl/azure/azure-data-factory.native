@@ -1,0 +1,16 @@
+
+      // Criar um espaço de trabalho do Data Factory
+ az data factory create --name example-data-factory --location westus2 --resource-group example-resource-group
+
+// Criar um pipeline de dados
+ az data factory pipeline create --name example-pipeline --factory-name example-data-factory --resource-group example-resource-group
+
+// Criar um conjunto de dados de entrada
+ az data factory dataset create --name example-input-dataset --factory-name example-data-factory --resource-group example-resource-group --type DelimitedText --linked-service example-linked-service
+
+// Criar um conjunto de dados de saída
+ az data factory dataset create --name example-output-dataset --factory-name example-data-factory --resource-group example-resource-group --type DelimitedText --linked-service example-linked-service
+
+// Criar um serviço vinculado
+ az data factory linked-service create --name example-linked-service --factory-name example-data-factory --resource-group example-resource-group --type AzureBlobStorage --connection-string "DefaultEndpointsProtocol=https;AccountName=example-storage-account;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    

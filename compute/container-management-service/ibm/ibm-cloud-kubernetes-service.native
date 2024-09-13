@@ -1,0 +1,13 @@
+
+      # Crie um cluster Kubernetes usando a CLI do IBM Cloud
+ibmcloud ks cluster create my-cluster -r us-south -w bx2.16x64 -c 2 -v 1.23.x-default
+
+# Habilite o Istio no cluster
+ibmcloud ks cluster addon enable my-cluster istio
+
+# Crie um namespace no cluster
+kubectl create namespace my-namespace -c my-cluster
+
+# Importe o aplicativo para o cluster
+kubectl create deployment my-deployment -n my-namespace --image=my-image:latest --replicas=2
+    

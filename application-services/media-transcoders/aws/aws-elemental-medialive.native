@@ -1,0 +1,13 @@
+
+      // Crie um canal MediaLive
+aws medialive create-channel --name "main-channel" --# ... outros parâmetros
+
+// Crie uma entrada MediaLive
+aws medialive create-input --name "main-input" --# ... outros parâmetros
+
+// Crie uma saída MediaLive
+aws medialive create-output --name "main-output" --# ... outros parâmetros
+
+// Crie um ponto de acesso de mídia (MediaPackage)
+aws mediapackage create-origin-endpoint --# ... outros parâmetros
+    

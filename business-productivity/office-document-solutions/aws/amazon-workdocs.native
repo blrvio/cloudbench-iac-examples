@@ -1,0 +1,10 @@
+
+      // Crie um usuário do WorkDocs
+aws workdocs create-user --username user_name --password password
+
+// Crie uma pasta compartilhada
+aws workdocs create-folder --name "Shared Folder" --parent-folder-id "root-folder-id" --permissions "SHARED" --principals "user-id"
+
+// Crie uma pasta raiz
+aws workdocs create-folder --name "Root Folder"
+    

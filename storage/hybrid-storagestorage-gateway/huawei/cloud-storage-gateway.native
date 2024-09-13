@@ -1,0 +1,10 @@
+
+      // Crie um gateway de armazenamento
+aws storagegateway create-gateway --gateway-name my-gateway --gateway-type FILE_GATEWAY --location us-east-1 --timezone America/New_York
+
+// Crie um volume de gateway
+aws storagegateway create-volume --gateway-arn arn:aws:storagegateway:us-east-1:123456789012:gateway/my-gateway --volume-type STORED_VOLUME --source-volume-arn arn:aws:s3:::my-bucket/my-prefix --snapshot-schedule hourly
+
+// Crie um endpoint de gateway
+aws storagegateway create-endpoint --gateway-arn arn:aws:storagegateway:us-east-1:123456789012:gateway/my-gateway --endpoint-type S3 --target-path my-path --file-share-name my-share --file-share-access-control PRIVATE
+    

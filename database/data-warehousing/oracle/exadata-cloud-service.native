@@ -1,0 +1,35 @@
+
+      # Create an Exadata Cloud Service instance
+# Replace the placeholders with your own values
+
+oci exadata create-instance \
+--compartment-id "ocid1.compartment.oc1..aaaaaaaaw7y3m3v7" \
+--display-name "my-exadata-instance" \
+--shape "Exadata_X8_24" \
+--subnet-id "ocid1.subnet.oc1..aaaaaaaa3885g77w" \
+--cluster-size 2 \
+--storage-size 100
+
+# Get the Exadata Cloud Service instance ID
+instance_id=$(oci exadata list-instances --compartment-id "ocid1.compartment.oc1..aaaaaaaaw7y3m3v7" | jq -r '.items[0].id')
+
+# Create an Exadata Cloud Service database
+# Replace the placeholders with your own values
+
+oci database create-database \
+--compartment-id "ocid1.compartment.oc1..aaaaaaaaw7y3m3v7" \
+--display-name "my-exadata-database" \
+--exadata-instance-id "$instance_id" \
+--admin-password "password123" \
+--character-set "AL32UTF8" \
+--edition "ENTERPRISE" \
+--edition-specific-parameters.license-model "BYOL"
+
+# Get the Exadata Cloud Service database ID
+database_id=$(oci database list-databases --compartment-id "ocid1.compartment.oc1..aaaaaaaaw7y3m3v7" | jq -r '.items[0].id')
+
+# Connect to the Exadata Cloud Service database
+# Replace the placeholders with your own values
+
+sqlplus "sys/password123@//$(oci exadata get-instance --instance-id "$instance_id" | jq -r '.db_connection_string')"/as sysdba
+    

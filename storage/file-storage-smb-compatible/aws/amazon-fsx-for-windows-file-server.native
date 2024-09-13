@@ -1,0 +1,7 @@
+
+      // Crie um sistema de arquivos FSx para Windows File Server
+aws fsx create-file-system --file-system-type WINDOWS --storage-capacity 1024 --subnet-ids subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx --tags Name=FSx for Windows File Server
+
+// Crie uma montagem para acessar o sistema de arquivos
+aws fsx create-mount-target --file-system-id fsx-xxxxxxxx --subnet-id subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx
+    

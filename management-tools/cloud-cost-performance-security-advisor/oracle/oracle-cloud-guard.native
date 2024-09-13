@@ -1,0 +1,7 @@
+
+      # Crie uma regra de Cloud Guard
+oci cloud-guard detector-recipe create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --display-name My Detector Recipe --description "A custom detector recipe for my environment" --detector-rule '{\"name\": \"Example Rule\", ...}'
+
+# Crie um detector
+oci cloud-guard detector create --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --display-name My Detector --description "A custom detector for my environment" --detector-recipe-id ocid1.cloudguarddetectorrecipe.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --target-type COMPARTMENT --target-value ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    

@@ -1,0 +1,14 @@
+
+      // Crie um perfil de revisor do CodeGuru
+aws codeguru-profiler create-profiling-group --name default
+
+// Crie um perfil de revisor do CodeGuru
+aws codeguru-reviewer create-repository-association --repository-id arn:aws:codecommit:us-east-1:123456789012:my-repository --repository-provider CodeCommit
+
+// Crie um perfil de revisor do CodeGuru
+aws codeguru-reviewer create-repository-association --repository-id https://github.com/my-organization/my-repository --repository-provider GitHub
+
+// Crie um perfil de revisor do CodeGuru
+aws codeguru-reviewer create-repository-association --repository-id https://gitlab.com/my-organization/my-repository --repository-provider GitLab
+
+    

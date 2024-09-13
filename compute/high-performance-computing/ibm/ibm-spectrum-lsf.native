@@ -1,0 +1,13 @@
+
+      // Configure the LSF cluster
+# lsfadmin -c 'cluster.name' -m add -h hostname -r resources -p partitions -d 'description' -o 'operating system' -a 'architecture' -t 'type of node'
+
+// Define a job resource
+# lsfadmin -c 'cluster.name' -r add -j job_name -R resources
+
+// Define a job queue
+# lsfadmin -c 'cluster.name' -p add -q queue_name -j job_name
+
+// Submit a job
+# bsub -q queue_name -R resources 'command to run'
+    

@@ -1,0 +1,10 @@
+
+      // Define a new stack
+const stack = new cdk.Stack(app, 'MyStack');
+
+// Create an S3 bucket
+new s3.Bucket(stack, 'MyBucket');
+
+// Deploy the stack
+cdk.deploy(app);
+    

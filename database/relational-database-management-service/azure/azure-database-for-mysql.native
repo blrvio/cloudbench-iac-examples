@@ -1,0 +1,13 @@
+
+      // Crie um servidor do Azure Database for MySQL
+az mysql server create -n example-mysql-server -l westus2 -g example-resources -u myadmin -p "P@$$w0rd!" -v 5.7 --sku GP_Gen5_2
+
+// Crie um banco de dados no servidor
+az mysql db create -n example-db -g example-resources -s example-mysql-server --charset utf8mb4 --collation utf8mb4_general_ci
+
+// Crie um usuário com acesso ao banco de dados
+az mysql user create -n example-user -g example-resources -s example-mysql-server -l exampleuser -p "P@$$w0rd!"
+
+// Conceda permissões ao usuário para o banco de dados
+az mysql db user add -n example-user -g example-resources -s example-mysql-server -d example-db
+    

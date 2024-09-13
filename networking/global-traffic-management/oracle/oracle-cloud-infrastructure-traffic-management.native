@@ -1,0 +1,10 @@
+
+      // Crie um balanceador de carga
+oci load-balancer create --name my-load-balancer --shape SILVER --subnet-ids ocid1.subnet.oc1..aaaaaaaax766w5678 --availability-domain us-ashburn-1a
+
+// Crie um backend set
+oci load-balancer backend-set create --load-balancer-id ocid1.loadbalancer.oc1..aaaaaaaax766w5678 --name my-backend-set --backend-servers "[{"name":"example","ip":"10.0.0.1","port":"80","weight":10}]"
+
+// Crie uma regra de balanceamento de carga
+oci load-balancer rule create --load-balancer-id ocid1.loadbalancer.oc1..aaaaaaaax766w5678 --name my-load-balancer-rule --backend-set-id ocid1.loadbalancerbackendset.oc1..aaaaaaaax766w5678 --policy ROUND_ROBIN --match-conditions "[{"host":"www.example.com","path":"/","method":"GET"}]"
+    

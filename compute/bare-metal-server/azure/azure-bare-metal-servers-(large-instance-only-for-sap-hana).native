@@ -1,0 +1,13 @@
+
+      az group create -n my-resource-group -l westus2
+
+az baremetal-server create -g my-resource-group -n my-bare-metal-server -l westus2 --size Standard_A80_v2 --os-disk Standard_LRS --offer Standard_A80_v2 --sku Standard_A80_v2 --hardware-profile SAP --nic my-nic --public-ip my-public-ip
+
+az network nic create -g my-resource-group -n my-nic -l westus2 --subnet my-subnet --private-ip-address 10.0.0.4
+
+az network vnet create -g my-resource-group -n my-vnet -l westus2 --address-prefixes 10.0.0.0/16
+
+az network subnet create -g my-resource-group -n my-subnet -v my-vnet -l westus2 --address-prefixes 10.0.0.0/24
+
+az network public-ip create -g my-resource-group -n my-public-ip -l westus2 --allocation-method Static
+    

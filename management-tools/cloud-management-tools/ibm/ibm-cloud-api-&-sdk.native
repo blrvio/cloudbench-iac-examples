@@ -1,0 +1,8 @@
+
+      // Use a CLI ou SDK para gerenciar APIs
+# Criar um serviço de API
+# ibmcloud apis create my-api-service --plan basic
+
+# Criar uma chave de API
+# ibmcloud apis keys create my-api-service --name my-api-key
+    

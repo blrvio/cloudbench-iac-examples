@@ -1,0 +1,17 @@
+
+      // Crie um domínio Elasticsearch
+aws es create-elasticsearch-domain --domain-name my-elasticsearch-domain --elasticsearch-version 7.10 --ebs-enabled true --volume-type gp2 --volume-size 10 --node-to-node-encryption-enabled true --access-policies '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::123456789012:root" }, "Action": [ "es:ESHttpGet", "es:ESSearch", "es:ESHttpPost", "es:ESHttpPut", "es:ESHttpDelete", "es:ESHttpHead", "es:ESHttpOptions", "es:ESHttpPatch" ], "Resource": "arn:aws:es:us-east-1:123456789012:domain/my-elasticsearch-domain/*" } ] }' 
+
+// Crie um VPC para o domínio
+aws es update-elasticsearch-domain --domain-name my-elasticsearch-domain --vpc-options '{"SecurityGroupIds": ["sg-xxxxxxxx"], "SubnetIds": ["subnet-xxxxxxxx"]}' 
+
+// Crie um grupo de segurança para o domínio
+aws ec2 create-security-group --group-name es-sg --description "Security group for Elasticsearch domain" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name es-sg --protocol tcp --port 443 --cidr 0.0.0.0/0
+
+// Crie uma sub-rede para o domínio
+aws ec2 create-subnet --vpc-id vpc-xxxxxxxx --cidr-block 10.0.0.0/24 --availability-zone us-east-1a
+
+    

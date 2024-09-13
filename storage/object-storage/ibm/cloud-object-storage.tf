@@ -1,27 +1,19 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
+      # Configure o provedor (ex: AWS, GCP, Azure)
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a Cloud Object Storage service instance
-resource "ibm_cos_instance" "main" {
-  name = "my-cos-instance"
-  location = "us-south"
-  resource_group_id = "your-resource-group-id"
-  storage_class = "standard"
+# Crie um bucket
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "my-bucket-name"
+  acl    = "private"
 }
 
-# Create a Cloud Object Storage bucket
-resource "ibm_cos_bucket" "main" {
-  name = "my-bucket"
-  instance_id = ibm_cos_instance.main.id
+# Crie um objeto no bucket
+resource "aws_s3_bucket_object" "my_object" {
+  bucket = aws_s3_bucket.my_bucket.id
+  key    = "my-object.txt"
+  source = "my-object.txt"
 }
-
-# Create an object in the bucket
-resource "ibm_cos_object" "main" {
-  bucket_name = ibm_cos_bucket.main.name
-  name = "my-object.txt"
-  content = "Hello, world!"
-}
-  
+    

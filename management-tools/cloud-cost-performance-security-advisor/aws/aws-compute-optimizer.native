@@ -1,0 +1,13 @@
+
+      // Ative o Compute Optimizer para sua conta
+aws compute-optimizer configure --auto-mode true --status active
+
+// Crie um plano de otimização para EC2
+aws compute-optimizer export-recommendations --name ec2-optimization-plan --recommendation-types ec2
+
+// Crie um plano de otimização para Amazon RDS
+aws compute-optimizer export-recommendations --name rds-optimization-plan --recommendation-types rds
+
+// Crie um plano de otimização para Amazon ECS
+aws compute-optimizer export-recommendations --name ecs-optimization-plan --recommendation-types ecs
+    

@@ -1,30 +1,28 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region = "us-south"
+      # Configure o provedor do IBM Cloud
+provider "ibm" {
+  api_key = "<your_ibm_cloud_api_key>
+  region  = "<your_ibm_cloud_region>"
 }
 
-# Create a container registry
-resource "ibm_container_registry" "main" {
-  name     = "my-registry"
-  location = "us-south"
+# Crie um repositório de contêineres
+resource "ibm_container_registry_repository" "my_repo" {
+  name   = "my_repo"
+  namespace = "<your_ibm_cloud_namespace>"
 }
 
-# Create a namespace within the registry
-resource "ibm_container_registry_namespace" "main" {
-  name       = "my-namespace"
-  registry_id = ibm_container_registry.main.id
+# Importe uma imagem de contêiner
+resource "ibm_container_registry_image" "my_image" {
+  repository = ibm_container_registry_repository.my_repo.name
+  namespace  = ibm_container_registry_repository.my_repo.namespace
+  source     = "<your_docker_hub_image_name>"
 }
 
-# Push an image to the registry
-resource "ibm_container_registry_image" "main" {
-  name = "my-image:latest"
-  # This is the Docker image path, replace with your actual image
-  # e.g. "docker.io/library/nginx:latest"
-  source = "docker.io/library/nginx:latest"
-  namespace = ibm_container_registry_namespace.main.name
-  registry_id = ibm_container_registry.main.id
+# Publique uma imagem de contêiner
+resource "ibm_container_registry_image" "my_image" {
+  repository = ibm_container_registry_repository.my_repo.name
+  namespace  = ibm_container_registry_repository.my_repo.namespace
+  source     = "<your_local_image_path>"
 }
 
-  
+    

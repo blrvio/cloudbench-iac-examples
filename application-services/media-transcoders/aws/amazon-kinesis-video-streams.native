@@ -1,0 +1,10 @@
+
+      // Crie um stream de vídeo Kinesis
+aws kinesisvideo create-stream --stream-name example-stream --data-retention-in-hours 12 --tags Name=example-stream
+
+// Crie um endpoint de gravação para o stream
+aws kinesisvideo get-recording-endpoints --stream-name example-stream
+
+// Crie um endpoint de reprodução para o stream
+aws kinesisvideo get-playback-endpoints --stream-name example-stream
+    

@@ -1,62 +1,41 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use the latest version of the provider
+  features {} # Substitua pelas suas funcionalidades
 }
 
-# Create a Firewall Policy
-resource "azurerm_firewall_policy" "example" {
-  name                = "example-firewall-policy"
-  location            = "westus2"
-  resource_group_name = "example-resources"
-
-  # Define the firewall policy rules
-  firewall_policy_rule_collection_group {
-    name             = "example-collection"
-    priority         = 100
-    rule_collection {
-      name   = "example-rule-collection"
-      action = "Allow"
-
-      rule {
-        name           = "allow-ssh"
-        protocol       = "Tcp"
-        source_ports    = ["22"]
-        destination_ports = ["22"]
-      }
-
-      rule {
-        name           = "allow-http"
-        protocol       = "Tcp"
-        source_ports    = ["80"]
-        destination_ports = ["80"]
-      }
-
-      rule {
-        name           = "allow-https"
-        protocol       = "Tcp"
-        source_ports    = ["443"]
-        destination_ports = ["443"]
-      }
-    }
-  }
-}
-
-# Create a Firewall Manager for a Virtual Network
-resource "azurerm_firewall_manager_network" "example" {
+# Crie um Firewall Manager
+resource "azurerm_firewall_manager" "example" {
   name                = "example-firewall-manager"
+  location            = "West Europe"
   resource_group_name = "example-resources"
-  location            = "westus2"
-  virtual_network_id  = azurerm_virtual_network.example.id
-  firewall_policy_id = azurerm_firewall_policy.example.id
+
+  # Defina as configurações do Firewall Manager
+  # ...
 }
 
-# Create a Virtual Network
-resource "azurerm_virtual_network" "example" {
-  name                = "example-vnet"
+# Crie uma política de Firewall Manager
+resource "azurerm_firewall_manager_policy" "example" {
+  name                = "example-firewall-manager-policy"
+  location            = "West Europe"
   resource_group_name = "example-resources"
-  location            = "westus2"
-  address_space       = ["10.0.0.0/16"]
+  firewall_manager_id = azurerm_firewall_manager.example.id
+
+  # Defina as configurações da política
+  # ...
 }
 
-  
+# Crie uma regra de política do Firewall Manager
+resource "azurerm_firewall_manager_policy_rule" "example" {
+  name                = "example-firewall-manager-policy-rule"
+  policy_id          = azurerm_firewall_manager_policy.example.id
+  priority            = 100
+  action              = "Allow"
+  protocol            = "TCP"
+  source_addresses    = ["10.0.0.0/16"]
+  destination_addresses = ["192.168.0.0/16"]
+  source_ports        = ["80"]
+  destination_ports    = ["80"]
+  # ...
+}
+    

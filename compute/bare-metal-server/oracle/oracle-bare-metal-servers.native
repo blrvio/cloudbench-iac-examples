@@ -1,0 +1,7 @@
+
+      // Crie um grupo de segurança
+oci core network-security-group create --compartment-id ocid1.compartment.oc1... --name allow_ssh --ingress-source-type CIDR_BLOCK --ingress-source 0.0.0.0/0 --ingress-protocol tcp --ingress-port-range 22
+
+// Crie um servidor Bare Metal
+oci core bare-metal-instance create --compartment-id ocid1.compartment.oc1... --availability-domain AD-1 --shape BM.Standard.2.8 --network-security-groups ocid1.networksecuritygroup.oc1... --display-name "Web Server"
+    

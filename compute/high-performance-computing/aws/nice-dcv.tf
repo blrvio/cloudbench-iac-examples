@@ -1,29 +1,48 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1"
 }
 
-# Create an AWS NICE DCV Session
-resource "aws_dcv_session" "main" {
-  name = "my-dcv-session" # Name of the NICE DCV session
-  # Select the NICE DCV endpoint to use
-  endpoint_id = aws_dcv_endpoint.main.id
-  # Specify the type of NICE DCV session to create
-  session_type = "single" # Options: single, multi
-  # Optional settings for the NICE DCV session
-  # e.g., session_duration, session_timeout, etc.
-  # ...
+# Crie um espaço de trabalho do AppStream 2.0
+resource "aws_appstream_fleet" "example" {
+  name               = "example"
+  compute_capacity    = "standard"
+  instance_type      = "stream.standard.small"
+  fleet_type         = "ALWAYS_ON"
+  disconnect_timeout_in_seconds = 600
+  streaming_experience = "DEFAULT"
+
+  image_name        = "Amazon Linux 2023.03.00 (64-bit)"
+
+  # Configure o acesso à rede
+  vpc_config {
+    subnet_ids = ["subnet-xxxxxxxx"]
+    security_group_ids = ["sg-xxxxxxxx"]
+  }
+
+  # Configure a senha padrão
+  user_settings {
+    enable_default_user_experience = true
+    user_portal_name = "example"
+    default_user_password = "password"
+  }
 }
 
-# Create an AWS NICE DCV Endpoint
-resource "aws_dcv_endpoint" "main" {
-  name = "my-dcv-endpoint" # Name of the NICE DCV endpoint
-  # Select the NICE DCV port range to use
-  port_range = "10000-20000"
-  # Optional settings for the NICE DCV endpoint
-  # e.g., security_group_ids, subnet_ids, etc.
-  # ...
+# Crie um usuário para o espaço de trabalho
+resource "aws_appstream_user" "example" {
+  name              = "example"
+  first_name        = "John"
+  last_name         = "Doe"
+  authentication_type = "USER_POOL"
+
+  # Configure a senha padrão
+  password = "password"
+
+  # Associe o usuário ao espaço de trabalho
+  appstream_user_settings {
+    fleet_name = aws_appstream_fleet.example.name
+  }
 }
 
-  
+    

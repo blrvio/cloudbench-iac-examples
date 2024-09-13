@@ -1,0 +1,10 @@
+
+      # Crie um projeto Mobile Hub
+aws mobile create-project --project-name my-mobile-hub-project
+
+# Crie um backend para o projeto Mobile Hub
+aws mobile create-backend --project-name my-mobile-hub-project --backend-name my-backend
+
+# Crie um aplicativo móvel
+aws mobile create-app --project-name my-mobile-hub-project --app-name my-app --backend-name my-backend
+    

@@ -1,0 +1,7 @@
+
+      // Crie uma distribuição CloudFront
+aws cloudfront create-distribution --origin-domain-name s3-bucket-name.s3.amazonaws.com --default-root-object index.html --comment "Minha distribuição CloudFront"
+
+// Crie um registro DNS para apontar um nome de domínio para a distribuição CloudFront
+aws route53 change-resource-record-sets --hosted-zone-id Zxxxxxxxxxxxxx --change-batch '{ "Changes": [ { "Action": "UPSERT", "ResourceRecordSet": { "Name": "mydomain.com", "Type": "A", "TTL": 300, "ResourceRecords": [ { "Value": "Exxxxxxxxxx.cloudfront.net" } ] } } ] }'
+    

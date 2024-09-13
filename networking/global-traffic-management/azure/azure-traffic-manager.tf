@@ -1,43 +1,39 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable features for Azure provider
+  features {} # Verifique se o provedor é compatível com o recurso desejado
 }
 
-# Create a Traffic Manager Profile
-resource "azurerm_traffic_manager_profile" "main" {
-  name     = "my-traffic-manager-profile"
-  resource_group_name = "my-resource-group"
-  # Define the Traffic Manager profile type
-  # Possible values are "Performance", "Priority", "Weighted"
-  traffic_routing_method = "Performance"
-  # Configure the DNS configuration
+# Crie um perfil do Traffic Manager
+resource "azurerm_traffic_manager_profile" "example" {
+  name     = "example-profile"
+  resource_group_name = "example-resources"
   dns_config {
-    relative_name = "my-domain.com"
-    ttl           = 300
+    relative_name = "example"
+    ttl            = 30
   }
+  monitor_config {
+    protocol  = "HTTP"
+    port      = 80
+    path      = "/"
+    interval  = 30
+    timeout   = 10
+    healthy_threshold  = 2
+    unhealthy_threshold = 2
+  }
+
+  # Defina o método de roteamento
+  # Opções: "Performance", "Priority", "Weighted", "Geographic", "Subnet"
+  routing_method = "Performance"
 }
 
-# Create a Traffic Manager Endpoint
-resource "azurerm_traffic_manager_endpoint" "main" {
-  name                 = "my-endpoint"
-  profile_name         = azurerm_traffic_manager_profile.main.name
-  resource_group_name = azurerm_traffic_manager_profile.main.resource_group_name
-  # Define the endpoint type
-  # Possible values are "AzureEndpoint", "ExternalEndpoint"
-  type = "AzureEndpoint"
-  # Configure the endpoint target
-  target {
-    # Specify the Azure resource ID of the backend service
-    # e.g., "\/subscriptions\/\/resourcegroups\/my-resource-group\/providers\/microsoft.web\/sites\/my-web-app"
-    azure_resource_id = "your-backend-resource-id"
-  }
-  # Define the endpoint weight
-  # Only applicable to "Weighted" routing method
-  weight = 10
-  # Define the endpoint priority
-  # Only applicable to "Priority" routing method
-  priority = 1
+# Crie um endpoint do Traffic Manager
+resource "azurerm_traffic_manager_endpoint" "example" {
+  name     = "example-endpoint"
+  profile_name    = azurerm_traffic_manager_profile.example.name
+  resource_group_name = azurerm_traffic_manager_profile.example.resource_group_name
+  type     = "AzureEndpoints"
+  target   = "https://example.azurewebsites.net"
 }
 
-  
+    

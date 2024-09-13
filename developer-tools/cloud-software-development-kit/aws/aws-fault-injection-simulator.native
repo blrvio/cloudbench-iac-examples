@@ -1,0 +1,7 @@
+
+      // Crie um experimento de injeção de falhas
+aws fis create-experiment --name My Experiment --description "My experiment description" --targets '[{"resourceType":"aws:ec2:instance","resourceId":"i-xxxxxxxx"}]' --actions '[{"actionType":"aws:ec2:terminate","parameters":{"instanceId":"i-xxxxxxxx"}}]' --tags '[{"Key":"Name","Value":"My Experiment"}]'
+
+// Crie um cronograma para executar o experimento
+aws fis create-schedule --name My Schedule --experiment-arn arn:aws:fis:us-east-1:123456789012:experiment:my-experiment --start-time "2023-12-31T23:59:59Z" --end-time "2024-01-01T00:00:00Z" --frequency onetime
+    

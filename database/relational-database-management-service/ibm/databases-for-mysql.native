@@ -1,0 +1,7 @@
+
+      // Crie um grupo de sub-redes
+aws rds create-db-subnet-group --db-subnet-group-name default --db-subnet-group-description "Default subnet group" --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx
+
+// Crie um instância do RDS para MySQL
+aws rds create-db-instance --db-instance-identifier mysql-instance --db-instance-class db.t3.micro --engine mysql --engine-version 5.7.33 --allocated-storage 10 --db-subnet-group-name default --master-user-name admin --master-user-password password
+    

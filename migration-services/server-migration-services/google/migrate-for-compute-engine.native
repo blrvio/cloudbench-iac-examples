@@ -1,0 +1,8 @@
+
+      // Example of how to migrate a VM from Compute Engine to a different region using the Google Cloud CLI
+
+gcloud compute instances migrate 
+    --source-zone us-central1-a
+    --destination-zone us-east1-b
+    --source-instance my-vm-instance
+    

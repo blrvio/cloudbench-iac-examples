@@ -1,0 +1,10 @@
+
+      # Crie um grupo de segurança
+ az ad group create --display-name "Example Group" --description "Um grupo de exemplo" --id [tenant_id]
+
+# Crie um usuário no grupo de segurança
+ az ad user create --display-name "Example User" --user-principal-name [user_principal_name] --password [password] --id [tenant_id]
+
+# Adicione o usuário ao grupo
+ az ad group member add --id [group_object_id] --member-id [user_object_id]
+    

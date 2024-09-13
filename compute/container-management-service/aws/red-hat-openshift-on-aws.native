@@ -1,0 +1,16 @@
+
+      // Crie um VPC
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+// Crie uma sub-rede
+aws ec2 create-subnet --vpc-id vpc-xxxxxxxx --cidr-block 10.0.1.0/24 --availability-zone us-east-1a
+
+// Crie um grupo de segurança
+aws ec2 create-security-group --group-name openshift_security_group --description "OpenShift Security Group" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name openshift_security_group --protocol tcp --port 8443 --cidr 0.0.0.0/0
+
+// Crie uma instância EC2
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t3.xlarge --key-name key_name --security-groups openshift_security_group --subnet-id subnet-xxxxxxxx --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=OpenShift Master}]'
+    

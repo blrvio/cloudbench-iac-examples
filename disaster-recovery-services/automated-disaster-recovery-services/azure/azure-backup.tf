@@ -1,58 +1,44 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {}  # Optional: Enable specific Azure features
+  features {} # Use este bloco para habilitar recursos pré-lançados
 }
 
-# Create a Recovery Services Vault
-resource "azurerm_recovery_services_vault" "main" {
-  name                = "my-recovery-services-vault"
-  resource_group_name = "my-resource-group"
-  location             = "westus2"
-  # Optional: Add tags to the vault
-  tags = {
-    Environment = "Production"
-  }
+# Crie um cofre de backup
+resource "azurerm_backup_vault" "example" {
+  name                = "example-vault"
+  resource_group_name = "example-resource-group"
+  location            = "westus"
+  # Configure o armazenamento associado ao cofre de backup
+  # storage_model       = "LocallyRedundant"
+  # storage_type        = "Standard"
 }
 
-# Create a Backup Policy
-resource "azurerm_backup_policy" "main" {
-  name                = "my-backup-policy"
-  resource_group_name = "my-resource-group"
-  vault_name          = azurerm_recovery_services_vault.main.name
-  # Define backup schedule
-  schedule {
-    frequency = "Daily"
-    retention_duration = 365  # Retention policy
-  }
+# Crie uma política de backup
+resource "azurerm_backup_policy" "example" {
+  name                = "example-policy"
+  resource_group_name = "example-resource-group"
+  vault_name          = azurerm_backup_vault.example.name
+
+  # Configure a programação de backup
+  # schedule_policy {
+  #   schedule_frequency = "Daily"
+  #   retention_policy {
+  #     daily_retention_range = 10
+  #   }
+  # }
 }
 
-# Create a Backup Protection Container
-resource "azurerm_backup_protection_container" "main" {
-  name                = "my-backup-container"
-  resource_group_name = "my-resource-group"
-  vault_name          = azurerm_recovery_services_vault.main.name
-  # Define the type of resource to backup
-  backup_management_type = "AzureIaasVM"
+# Crie um backup para um recurso Azure
+resource "azurerm_backup_protection" "example" {
+  name                = "example-protection"
+  resource_group_name = "example-resource-group"
+  vault_name          = azurerm_backup_vault.example.name
+  # Configure o recurso a ser protegido, como uma máquina virtual
+  # source_vm {
+  #   virtual_machine_name = "example-vm"
+  # }
+  # Configure a política de backup associada
+  policy_name = azurerm_backup_policy.example.name
 }
-
-# Create a Backup Policy Assignment
-resource "azurerm_backup_policy_assignment" "main" {
-  name                = "my-backup-policy-assignment"
-  resource_group_name = "my-resource-group"
-  vault_name          = azurerm_recovery_services_vault.main.name
-  container_name      = azurerm_backup_protection_container.main.name
-  policy_name         = azurerm_backup_policy.main.name
-}
-
-# Create a Backup Job
-resource "azurerm_backup_job" "main" {
-  name                = "my-backup-job"
-  resource_group_name = "my-resource-group"
-  vault_name          = azurerm_recovery_services_vault.main.name
-  # Define the container and policy to use
-  container_name = azurerm_backup_protection_container.main.name
-  policy_name     = azurerm_backup_policy.main.name
-}
-
-  
+    

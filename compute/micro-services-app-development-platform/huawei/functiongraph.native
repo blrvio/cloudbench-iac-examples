@@ -1,0 +1,36 @@
+
+      // Define a function
+const { FunctionGraph, FunctionGraphInvoke } = require('@aws-sdk/client-functiongraph');
+
+const functionGraph = new FunctionGraph();
+const functionGraphInvoke = new FunctionGraphInvoke();
+
+const code = `
+  // Your Lambda code goes here
+  console.log('Hello from FunctionGraph!');
+  return 'Hello, world!';
+`;
+
+// Create a new FunctionGraph function
+functionGraph.createFunction({ 
+  name: 'myFunction', 
+  code, 
+  runtime: 'nodejs16.x', 
+  memorySize: 128, 
+  timeout: 30
+}).then((data) => { 
+  console.log('Function created:', data.functionArn);
+
+  // Invoke the function
+  functionGraphInvoke.invokeFunction({ 
+    functionArn: data.functionArn 
+  }).then((data) => { 
+    console.log('Function invoked:', data.payload);
+  }).catch((error) => { 
+    console.error('Error invoking function:', error);
+  });
+}).catch((error) => { 
+  console.error('Error creating function:', error);
+});
+
+    

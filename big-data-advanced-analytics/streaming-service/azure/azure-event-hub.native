@@ -1,0 +1,25 @@
+
+      // Crie um namespace do Event Hub
+azurerm eventhub namespace create --resource-group example-resources --name example-namespace --location westus --sku Basic
+
+// Crie um Event Hub
+azurerm eventhub create --resource-group example-resources --namespace-name example-namespace --name example-eventhub --partition-count 2 --message-retention P7
+
+// Configure uma conexão com o Event Hub no aplicativo
+// Substitua o nome da sua aplicação e o nome da sua conexão pelo nome do Event Hub
+// Exemplo:
+// importanto o SDK do Azure para Node.js
+const { EventHubClient } = require("@azure/event-hubs");
+const connectionString = "Endpoint=sb://example-namespace.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+const client = new EventHubClient(connectionString);
+
+// Enviando uma mensagem para o Event Hub
+const sendEvent = async () => {
+  const batch = await client.createBatchSender(example-eventhub); // Substitua por `example-eventhub`
+  const message = { body: "Olá, mundo!" };
+  batch.send(message);
+  console.log(`Mensagem enviada: ${message.body}`);
+}
+
+sendEvent().catch(error => console.error(error));
+    

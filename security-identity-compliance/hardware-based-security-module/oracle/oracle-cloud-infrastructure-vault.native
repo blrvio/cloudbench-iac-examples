@@ -1,0 +1,10 @@
+
+      // Crie um cofre
+oci vault create-vault --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb --name vault-name --description "Example vault"
+
+// Crie uma chave
+oci vault create-key --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb --vault-id ocid1.vault.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb --key-shape 2048 --description "Example key" --key-type RSA
+
+// Crie uma política
+oci vault create-policy --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb --statements '[{"effect": "Allow", "actions": ["vault:ReadKey", "vault:Decrypt", "vault:Sign", "vault:Verify"], "resources": ["ocid1.key.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb"]}]'
+    

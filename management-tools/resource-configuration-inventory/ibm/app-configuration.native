@@ -1,0 +1,16 @@
+
+      // Crie um aplicativo App Configuration
+aws appconfig create-application --application-name example
+
+// Crie um ambiente App Configuration
+aws appconfig create-environment --application-id application-id --environment-name example
+
+// Crie um perfil de configuração App Configuration
+aws appconfig create-configuration-profile --application-id application-id --configuration-profile-name example --location-uri s3://bucket-name/key/
+
+// Crie uma estratégia de implantação App Configuration
+aws appconfig create-deployment-strategy --application-id application-id --deployment-strategy-name example --deployment-config '{ "canaryInterval": 10, "canaryPercentage": 10, "deploymentDurationInMinutes": 10, "finalBakeTimeInMinutes": 10 }'
+
+// Crie uma versão App Configuration
+aws appconfig create-configuration-version --application-id application-id --configuration-profile-id configuration-profile-id --content-type application/json --content '{ "key1": "value1", "key2": "value2" }'
+    

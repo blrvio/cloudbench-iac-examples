@@ -1,0 +1,13 @@
+
+      // Crie um cluster Redis
+aws elasticache create-cache-cluster --engine redis --engine-version 6.x --cache-node-type cache.t2.small --num-cache-nodes 1 --replication-mode cluster --cluster-mode num-node-groups=1,replicas-per-node-group=1 --cache-cluster-id my_redis_cluster --tag-name "My Redis Cluster"
+
+// Crie um grupo de segurança
+aws ec2 create-security-group --group-name redis_sg --description "Allow access to Redis cluster" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name redis_sg --protocol tcp --port 6379 --cidr 0.0.0.0/0
+
+// Associe o grupo de segurança ao cluster Redis
+aws elasticache modify-cache-cluster --cache-cluster-id my_redis_cluster --security-group-ids redis_sg
+    

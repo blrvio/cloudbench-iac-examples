@@ -1,0 +1,8 @@
+
+      // This service is deprecated and is not supported by Terraform. Consider using AWS Transit Gateway or AWS Client VPN instead.
+// Create a VPN connection
+aws ec2 create-vpn-connection --type ipsec --vpn-gateway-id vgw-xxxxxxxx --customer-gateway-id cg-xxxxxxxx --tunnel-options --pre-shared-key "secretkey" --inside-cidr "10.0.0.0/16" --outside-cidr "172.16.0.0/16"
+
+// Configure a VPN route
+aws ec2 create-vpn-route --destination-cidr-block "10.0.0.0/16" --vpn-gateway-id vgw-xxxxxxxx --route-table-id rtb-xxxxxxxx
+    

@@ -1,23 +1,31 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use this to enable new features in this provider
+  features {} # Habilita os recursos mais recentes
 }
 
-# Create a Cost Management Budget
-resource "azurerm_cost_management_budget" "example" {
-  name                = "example-cost-management-budget"
-  time_grain          = "Monthly"
-  time_period_end     = "2023-12-31"
-  time_period_start    = "2023-01-01"
-  filter              = "ResourceGroup == 'example-resource-group'"
-  amount              = 1000
-  budget_threshold_type = "Actual"
-  notification_type    = "Email"
-  notification_recipients = [
-    "user@example.com"
-  ]
-  resource_group_name = "example-resource-group"
+# Crie um grupo de custos
+resource "azurerm_cost_management_group" "example" {
+  name     = "example-cost-group"
+  display_name = "Example Cost Group"
+  scope    = "subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Substitua pela sua assinatura
 }
 
-  
+# Crie uma regra de alerta de custos
+resource "azurerm_cost_management_alert" "example" {
+  name     = "example-alert"
+  scope    = "subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Substitua pela sua assinatura
+  display_name = "Example Alert"
+  enabled = true
+  time_period = "MonthToDate"
+  threshold = 100
+  operator = "GreaterThan"
+
+  filter {
+    type = "Dimension"
+    name = "ResourceGroup"
+    values = ["example-resource-group"]
+  }
+}
+
+    

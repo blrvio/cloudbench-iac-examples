@@ -1,0 +1,13 @@
+
+      // Create a dedicated virtual machine host
+# ocpc compute instance-create --host-type "Dedicated" ...
+
+// Assign a virtual machine to a dedicated host
+# ocpc compute instance-create --host-id "host_id" ...
+
+// Detach a virtual machine from a dedicated host
+# ocpc compute instance-detach --instance-id "instance_id"
+
+// Delete a dedicated virtual machine host
+# ocpc compute instance-delete --host-id "host_id"
+    

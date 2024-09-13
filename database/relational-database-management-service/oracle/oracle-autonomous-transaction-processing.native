@@ -1,0 +1,4 @@
+
+      // Criar uma instância do Autonomous Transaction Processing (ATP)
+oci db create-autonomous-database --autonomous-database-name atp-instance --admin-password <ADMIN_PASSWORD> --compartment-id <COMPARTMENT_ID> --db-version 19c --edition SHARED --subnet-id <SUBNET_ID>
+    

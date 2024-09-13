@@ -1,49 +1,37 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilita recursos beta do Terraform
 }
 
-# Create a Resource Group
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "example" {
   name     = "example-rg"
-  location = "West Europe"
+  location = "westus2"
 }
 
-# Create a Container Instance
+# Crie uma instância de contêiner
 resource "azurerm_container_group" "example" {
-  name                = "example-container-group"
+  name                = "example-aci"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   os_type            = "Linux"
-  # Define the container instance configuration
   containers {
-    name  = "example-container"
-    image = "mcr.microsoft.com/azuredocs/aci-helloworld"
-    ports {
-      port     = 80
-      protocol = "tcp"
-    }
-    resources {
-      requests {
-        cpu = 1
-        memory_in_gb = 1
-      }
-    }
-  }
-  # Configure the container instance networking
-  ip_address {
+    name  = "nginx"
+    image = "nginx:latest"
     ports {
       port     = 80
       protocol = "tcp"
     }
   }
-  # Configure the container instance logging
-  logs {
-    enabled = true
-  }
-  # Configure the container instance restart policy
   restart_policy = "Always"
 }
 
-  
+# Expose a porta para acesso externo
+resource "azurerm_container_group_outbound_port" "example" {
+  container_group_name = azurerm_container_group.example.name
+  resource_group_name  = azurerm_resource_group.example.name
+  port                = 80
+  protocol             = "tcp"
+}
+    

@@ -1,0 +1,10 @@
+
+      // Criar uma rede Blockchain
+aws managed-blockchain create-network --name example-network --framework ethereum --# ... other configuration ...
+
+// Criar um membro da rede
+aws managed-blockchain create-member --name example-member --network-id example-network --# ... other configuration ...
+
+// Criar um nó de rede
+aws managed-blockchain create-node --member-id example-member --# ... other configuration ...
+    

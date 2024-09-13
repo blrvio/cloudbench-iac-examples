@@ -1,0 +1,10 @@
+
+      // Crie um cluster Fargate
+aws ecs create-cluster --cluster-name fargate-cluster
+
+// Crie uma tarefa Fargate
+aws ecs register-task-definition --family fargate-task --network-mode awsvpc --requires-compatibilities FARGATE --cpu 256 --memory 512 --execution-role-arn arn:aws:iam::xxxxxxxx:role/ecsTaskExecutionRole --container-name app --image amazon/amazon-ecs-sample --port-mappings containerPort=80,hostPort=80,protocol=tcp
+
+// Crie um serviço Fargate
+aws ecs create-service --cluster fargate-cluster --service-name fargate-service --desired-count 1 --launch-type FARGATE --task-definition fargate-task --network-configuration '{"awsvpcConfiguration":{"subnets":["subnet-xxxxxxxx"],"securityGroups":["sg-xxxxxxxx"],"assignPublicIp":true}}'
+    

@@ -1,0 +1,10 @@
+
+      // Crie uma chave KMS
+aws kms create-key --description "Chave KMS para exemplo"
+
+// Criptografe dados usando a chave KMS
+aws kms encrypt --key-id "your-key-id" --plaintext "your-data-to-encrypt"
+
+// Descifre dados usando a chave KMS
+aws kms decrypt --ciphertext-blob "your-encrypted-data" --key-id "your-key-id"
+    

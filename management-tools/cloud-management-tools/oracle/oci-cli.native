@@ -1,0 +1,30 @@
+
+      // Install the OCI CLI
+#  Refer to the OCI CLI documentation for installation instructions
+
+# Configure the OCI CLI
+# oci config set tenancy_id "ocid1.tenancy.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd"
+# oci config set user_ocid "ocid1.user.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd"
+# oci config set region "us-ashburn-1"
+
+# List all available compartments
+oci compartment list
+
+# Create a new compartment
+oci compartment create --compartment-id "ocid1.tenancy.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --name "MyNewCompartment"
+
+# Create a new VCN
+oci core vcn create --compartment-id "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --cidr-block "10.0.0.0/16" --display-name "MyNewVCN"
+
+# Create a new subnet
+oci core subnet create --compartment-id "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --vcn-id "ocid1.vcn.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --cidr-block "10.0.1.0/24" --display-name "MyNewSubnet"
+
+# Create a new instance
+oci compute instance create --compartment-id "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --availability-domain "us-ashburn-1a" --shape "VM.Standard.E2.1.Micro" --image "ocid1.image.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --subnet-id "ocid1.subnet.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd" --display-name "MyNewInstance" --ssh-authorized-keys "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD..."
+
+# Start the instance
+oci compute instance start --instance-id "ocid1.instance.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd"
+
+# Stop the instance
+oci compute instance stop --instance-id "ocid1.instance.oc1..aaaaaaaabbbbbbbbbccccccccccdddddddd"
+    

@@ -1,0 +1,10 @@
+
+      // Crie um instance Lightsail
+aws lightsail create-instance --availability-zone us-east-1a --blueprint-id amazon-linux-2 --bundle-id nano_1_0 --key-pair-name key_name --instance-name web-server --user-data 'echo "Instale o Nginx"'
+
+// Crie um endpoint DNS
+aws lightsail create-domain --domain-name example.com --instance-name web-server
+
+// Crie um registro DNS
+aws lightsail create-domain-entry --domain-name example.com --instance-name web-server --name www --record-type A --target public_ip
+    

@@ -1,0 +1,7 @@
+
+      // Criar um cluster MSK com o AWS CLI
+aws msk create-cluster --cluster-name msk-cluster --broker-node-group-info InstanceType=kafka.m5.large,ClientSubnets=subnet-xxxxxxxx,subnet-xxxxxxxx --kafka-version 2.6.0
+
+// Criar um tópico no cluster MSK
+aws msk create-topic --cluster-arn arn:aws:kafka:us-east-1:123456789012:cluster/msk-cluster --topic-name my-topic
+    

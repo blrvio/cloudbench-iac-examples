@@ -1,36 +1,41 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  region    = "us-south"
-  account_id = "your_account_id"
+  region = "us-south"
+  api_key = "your_api_key"
 }
 
-# Create a load balancer group
-resource "ibm_is_load_balancer_group" "main" {
-  name                 = "my-load-balancer-group"
-  load_balancer_type    = "public"
-  instance_group_id     = "your_instance_group_id"
-  health_check_interval = 30
-  health_check_timeout  = 5
-  health_check_retries  = 2
-  # Create a default listener
-  listeners = {
-    "http" = {
-      port      = 80
-      protocol = "http"
-    }
+# Crie um Load Balancer
+resource "ibm_lb_load_balancer" "main" {
+  name     = "my-load-balancer"
+  vpc_id   = "vpc-xxxxxxxx"
+  subnet_ids = ["subnet-xxxxxxxx"]
+  listener {
+    port = 80
+    protocol = "http"
+    target_group_id = ibm_lb_target_group.main.id
   }
 }
 
-# Create a backend pool
-resource "ibm_is_load_balancer_pool" "main" {
-  load_balancer_group_id = ibm_is_load_balancer_group.main.id
-  name                    = "my-backend-pool"
-  health_check_type        = "ping"
-  health_check_path        = "/"
-  members                  = ["your_instance_id"]
-  # Add a backend pool to the listener
-  listener = "http"
+# Crie um Target Group
+resource "ibm_lb_target_group" "main" {
+  name        = "my-target-group"
+  vpc_id      = "vpc-xxxxxxxx"
+  health_check {
+    protocol = "tcp"
+    port      = 80
+    timeout   = 5
+    interval  = 10
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+  }
 }
 
-  
+# Adicione servidores ao Target Group
+resource "ibm_lb_target" "web_server" {
+  target_group_id = ibm_lb_target_group.main.id
+  target_type = "instance"
+  instance_id = "instance-xxxxxxxx"
+  port = 80
+}
+    

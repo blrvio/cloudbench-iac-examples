@@ -1,40 +1,34 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..aaaaaaaaz7k7d76j764"
-  user    = "ocid1.user.oc1..aaaaaaaasg3w7g6464"
-  key     = "your_api_key"
+  # Substitua pelos seus credenciais do OCI
+  region     = "us-ashburn-1"
+  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
+  user_ocid  = "ocid1.user.oc1..aaaaaaaaxxxxxx"
+  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  private_key_path = "~/.oci/oci_api_key.pem"
 }
 
-# Create a Stream
-resource "oci_streaming_stream" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw54t575563"
-  name            = "my-stream"
-  # Optional: Set the stream's retention duration in hours
-  retention_duration_in_hours = 24
-  # Optional: Enable encryption at rest
-  encryption_in_transit_config {
-    # Define encryption in transit configurations for the stream
-  }
-  # Optional: Define the stream's partitions
-  # partitions { 
-  #  partition_key_name = "partition_key"
-  # }
+# Crie um stream
+resource "oci_streaming_stream" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx" # Substitua pelo ID do compartimento
+  name          = "example-stream"
+  # ... outras configurações
 }
 
-# Create a Stream Consumer Group
-resource "oci_streaming_consumer_group" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw54t575563"
-  stream_id     = oci_streaming_stream.main.id
-  name            = "my-consumer-group"
+# Crie um consumidor
+resource "oci_streaming_consumer" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx" # Substitua pelo ID do compartimento
+  stream_id     = oci_streaming_stream.example.id
+  name          = "example-consumer"
+  # ... outras configurações
 }
 
-# Create a Stream Producer
-resource "oci_streaming_producer" "main" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaw54t575563"
-  stream_id     = oci_streaming_stream.main.id
-  name            = "my-producer"
+# Crie um produtor
+resource "oci_streaming_producer" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxx" # Substitua pelo ID do compartimento
+  stream_id     = oci_streaming_stream.example.id
+  name          = "example-producer"
+  # ... outras configurações
 }
-
-  
+    

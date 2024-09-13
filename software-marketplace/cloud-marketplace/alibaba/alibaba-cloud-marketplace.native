@@ -1,0 +1,8 @@
+
+      # Crie uma lista de produtos de marketplace
+# alibabacloud marketplace list-products --name "example"
+# alibabacloud marketplace create-product-list --name "example" --description "A list of marketplace products" --product-ids "product-id-1" "product-id-2"
+
+# Crie uma instância de produto do marketplace
+# alibabacloud marketplace create-product-instance --product-id "product-id" --quantity 1 --parameters '{"key-1":"value-1", "key-2":"value-2"}'
+    

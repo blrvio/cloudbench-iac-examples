@@ -1,0 +1,16 @@
+
+      // Crie um produto do Service Catalog
+aws servicecatalog create-product --name "My Product" --type AWS_CLOUDFORMATION --provisioning-artifact-parameters '{ "ParameterKey1": "ParameterValue1", "ParameterKey2": "ParameterValue2" }' --owner "aws-account-id" --description "My Product Description"
+
+// Crie um portfólio do Service Catalog
+aws servicecatalog create-portfolio --name "My Portfolio" --provider "aws-account-id" --description "My Portfolio Description"
+
+// Associe o produto ao portfólio
+aws servicecatalog associate-product-with-portfolio --portfolio-id portfolio-xxxxxxxx --product-id product-xxxxxxxx
+
+// Crie um provisionamento do produto
+aws servicecatalog provision-product --product-id product-xxxxxxxx --provisioning-artifact-id artifact-xxxxxxxx --path "path/to/provisioned/product"
+
+// Exiba o estado do provisionamento
+aws servicecatalog describe-provisioned-product --provisioned-product-id pp-xxxxxxxx
+    

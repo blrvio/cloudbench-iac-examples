@@ -1,0 +1,10 @@
+
+      // Crie uma rede virtual privada (VPC)
+oci core create-vcn --compartment-id ocid1.compartment.oc1.... --cidr-block 10.0.0.0/16 --display-name main-vcn
+
+// Crie uma sub-rede na VPC
+oci core create-subnet --vcn-id <vcn_id> --cidr-block 10.0.1.0/24 --display-name main-subnet
+
+// Crie uma instância do Autonomous Data Warehouse
+oci database create-autonomous-database --compartment-id ocid1.compartment.oc1.... --display-name main-adb --edition ENTERPRISE --database-version 19c --database-type DEDICATED --data-storage-size-in-tbs 100 --admin-password <password> --subnet-id <subnet_id> --nsg-ids <nsg_id>
+    

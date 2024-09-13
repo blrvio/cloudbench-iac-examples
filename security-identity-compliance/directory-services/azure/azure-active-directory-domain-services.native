@@ -1,0 +1,17 @@
+
+      # Crie um domínio do Azure Active Directory Domain Services
+# Use o Azure CLI para criar um domínio do Azure Active Directory Domain Services
+az ad domain create \
+  --resource-group example-resources \
+  --name example-domain \
+  --location westus2 \
+  --subnet subnet-xxxxxxxx # Substitua pelo ID da subnet
+  # Opcional: Define as configurações do DNS
+  # --dns-suffix corp.contoso.com \
+  # --dns-forwarder-ip 10.0.0.1 \
+  # Opcional: Especifica o servidor de DNS primário
+  # --primary-dns-server 10.0.0.1 \
+  # Opcional: Especifica o servidor de DNS secundário
+  # --secondary-dns-server 10.0.0.2
+
+    

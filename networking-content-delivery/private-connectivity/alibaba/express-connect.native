@@ -1,0 +1,11 @@
+
+      // Crie uma conexão Express Connect
+aws directconnect create-connection --location us-east-1 --bandwidth 1Gbps --connection-name example --connection-type dedicated --provider-name "xxxxxxxx" --provider-asn "xxxxxxxx" --vlan "xxxxxxxx"
+
+// Crie uma rota para o gateway Express Connect
+aws ec2 create-route --destination-cidr-block 0.0.0.0/0 --route-table-id rtb-xxxxxxxx --gateway-id dxgw-xxxxxxxx
+
+// Crie um gateway Express Connect
+aws directconnect create-direct-connect-gateway --amazon-side-asn "xxxxxxxx" --gateway-name example --vpc-id vpc-xxxxxxxx
+
+    

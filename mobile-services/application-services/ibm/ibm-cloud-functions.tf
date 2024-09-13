@@ -1,26 +1,28 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region  = "us-south"
+  api_key = "your_ibm_cloud_api_key"
+  region   = "us-south"
 }
 
-# Create an IBM Cloud Functions action
-resource "ibm_functions_action" "main" {
-  name     = "my-function"
-  runtime  = "nodejs:16"
-  code     = "// Your function code here"
-  memory   = 128
-  timeout  = 60
-  trigger  = "http"
-  location = "us-south"
+# Crie um namespace para as funções
+resource "ibm_functions_namespace" "default" {
+  name = "my-namespace"
 }
 
-# Create an IBM Cloud Functions package
-resource "ibm_functions_package" "main" {
-  name     = "my-package"
-  location = "us-south"
-  actions  = [ibm_functions_action.main.name]
+# Crie uma função
+resource "ibm_functions_action" "hello_world" {
+  namespace = ibm_functions_namespace.default.name
+  name       = "hello-world"
+  runtime    = "nodejs:16"
+  code       = "// Coloque o código da função aqui"
+  kind       = "http"
 }
 
-  
+# Crie um gatilho para a função
+resource "ibm_functions_trigger" "hello_world_trigger" {
+  namespace = ibm_functions_namespace.default.name
+  action     = ibm_functions_action.hello_world.name
+  kind       = "http"
+}
+    

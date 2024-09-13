@@ -1,28 +1,24 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a translation job
-resource "aws_translate_job" "main" {
-  job_name   = "my-translation-job"
+# Crie um endpoint do Amazon Translate
+resource "aws_translate_endpoint" "my_endpoint" {
+  name = "my-endpoint"
+  language_code = "en"
+}
+
+# Traduza um texto
+output "translation" {
+  value = aws_translate_translate_text.my_translation.translated_text
+}
+
+resource "aws_translate_translate_text" "my_translation" {
   source_language_code = "en"
-  target_language_code = "es"
-  # Specify the input data source
-  data_source {
-    s3_source {
-      bucket = "my-bucket"
-      key    = "my-file.txt"
-    }
-  }
-  # Configure the output data location
-  data_target {
-    s3_target {
-      bucket = "my-output-bucket"
-      key    = "my-translated-file.txt"
-    }
-  }
+  target_language_code = "pt"
+  text = "Hello, world!"
+  endpoint_id = aws_translate_endpoint.my_endpoint.id
 }
-
-  
+    

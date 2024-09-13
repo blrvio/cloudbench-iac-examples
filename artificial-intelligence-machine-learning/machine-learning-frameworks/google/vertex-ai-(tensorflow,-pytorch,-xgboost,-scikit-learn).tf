@@ -1,33 +1,27 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1" # Adjust based on your region
+  project = "gcp-project-id"
+  region  = "us-central1"
 }
 
-# Create a Vertex AI Endpoint
-resource "google_vertex_ai_endpoint" "main" {
-  display_name = "my-vertex-ai-endpoint"
-  location     = "us-central1"
-  
-  # Define the machine type for the endpoint
-  machine_type = "n1-standard-1"
-  
-  # Attach the model to the endpoint
+# Crie um modelo de treinamento de Vertex AI
+resource "google_vertex_ai_model" "my_model" {
+  display_name = "my-model"
+  description  = "Modelo de treinamento de exemplo"
   model {
-    model = google_vertex_ai_model.main.id # ID of the model to deploy
+    artifact_uri = "gs://my-bucket/my-model"
   }
 }
 
-# Create a Vertex AI Model
-resource "google_vertex_ai_model" "main" {
-  display_name = "my-vertex-ai-model"
-  location     = "us-central1"
-  
-  # Define the container image to use for the model
-  container_spec {
-    image_uri = "us-docker.pkg.dev/cloud-aiplatform/example-models/mnist_keras_cpu:latest"
+# Crie um endpoint de Vertex AI para servir o modelo
+resource "google_vertex_ai_endpoint" "my_endpoint" {
+  display_name = "my-endpoint"
+  description  = "Endpoint de serviço de exemplo"
+  deployed_models {
+    model = google_vertex_ai_model.my_model.name
   }
+  machine_type = "n1-standard-1"
 }
 
-  
+    

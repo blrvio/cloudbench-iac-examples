@@ -1,0 +1,17 @@
+
+      // Crie um job de Snowball
+aws snowball create-job --description "My Snowball job" --job-type IMPORT --resources '{"S3Resources": [{"S3Bucket": "my-bucket", "S3KeyPrefix": "my-prefix"}]}'
+
+// Crie um endereço de envio
+aws snowball create-address --job-id job-xxxxxxxx --address-type SHIPPING --name "My shipping address" --address '{"Street1": "123 Main Street", "City": "Anytown", "State": "CA", "PostalCode": "91234", "Country": "US"}'
+
+// Crie um endereço de retorno
+aws snowball create-address --job-id job-xxxxxxxx --address-type RETURN --name "My return address" --address '{"Street1": "456 Elm Street", "City": "Othertown", "State": "NY", "PostalCode": "10001", "Country": "US"}'
+
+// Crie um usuário no AWS Snowball
+aws snowball create-user --job-id job-xxxxxxxx --email "my-user@example.com" --role USER --password "my-password" --is-admin false --is-password-reset-required false
+
+// Crie uma política de Snowball
+aws snowball create-policy --job-id job-xxxxxxxx --policy '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "arn:aws:iam::123456789012:user/my-user"}, "Action": ["snowball:DescribeJob", "snowball:ListJobs", "snowball:UpdateJob", "snowball:CancelJob"]}]}'
+
+    

@@ -1,0 +1,10 @@
+
+      // Crie um bucket S3
+aws s3api create-bucket --bucket example-bucket --acl private --region us-east-1 --create-bucket-configuration LocationConstraint=us-east-1
+
+// Crie uma política para o bucket
+aws s3api put-bucket-policy --bucket example-bucket --policy '{"Version":"2012-10-17","Statement":[{"Sid":"AllowGlacierAccess","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::123456789012:root"},"Action":["s3:GetBucketLocation","s3:PutObject","s3:GetObject","s3:DeleteObject"],"Resource":["arn:aws:s3:::example-bucket/*"]}]}' 
+
+// Crie uma regra de ciclo de vida para o bucket
+aws s3api put-bucket-lifecycle-configuration --bucket example-bucket --lifecycle-configuration '{ "Rules": [ { "ID": "archive_old_objects", "Status": "Enabled", "Prefix": "old-objects/", "Transitions": [ { "Days": 365, "StorageClass": "GLACIER" } ] } ] }'
+    

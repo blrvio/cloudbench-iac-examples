@@ -1,0 +1,17 @@
+
+      // Crie um EventBus
+aws events create-event-bus --name example
+
+// Crie uma regra de evento
+aws events put-rule --name example --event-bus-name example --event-pattern '{"source": ["aws.ec2"], "detail-type": ["EC2 Instance State-change Notification"]}' --targets Id=example,Arn=arn:aws:lambda:us-east-1:123456789012:function:example
+
+// Crie uma função Lambda
+aws lambda create-function --function-name example --runtime nodejs16.x --handler index.handler --role arn:aws:iam::123456789012:role/example --zip-file fileb://lambda_function.zip
+
+// Crie um papel IAM para a função Lambda
+aws iam create-role --role-name example --assume-role-policy '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}' --description "Lambda role"
+
+// Adicione uma política IAM para o papel Lambda
+aws iam put-role-policy --role-name example --policy-name example --policy '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["events:PutEvents"], "Resource": "*"}]}'
+
+    

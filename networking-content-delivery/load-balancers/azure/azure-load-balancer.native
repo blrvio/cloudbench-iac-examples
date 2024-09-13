@@ -1,0 +1,13 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name example-resources --location "West Europe"
+
+// Crie um balanceador de carga
+azurerm lb create --name example-lb --resource-group example-resources --location "West Europe" --sku Standard --frontend-ip-configuration name=example-frontend subnet-id subnet_id --backend-address-pool name=example-pool
+
+// Crie um conjunto de regras de balanceador de carga
+azurerm lb rule create --name example-rule --resource-group example-resources --loadbalancer-id example-lb --frontend-port 80 --backend-port 80 --protocol tcp --probe-id example-probe --load-distribution Default
+
+// Crie uma sonda de integridade
+azurerm lb probe create --name example-probe --resource-group example-resources --loadbalancer-id example-lb --protocol tcp --port 80 --interval 5 --timeout 2 --unhealthy-threshold 2 --healthy-threshold 2
+    

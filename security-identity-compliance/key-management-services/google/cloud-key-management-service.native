@@ -1,0 +1,11 @@
+
+      // Crie uma chave KMS
+aws kms create-key --description "Chave KMS para criptografia de dados" --enable-key-rotation
+
+// Crie uma chave KMS com chave mestre
+aws kms create-key --description "Chave KMS com chave mestre" --enable-key-rotation
+--policy file://policy.json
+
+// Crie uma chave KMS com um alias
+aws kms create-alias --alias-name alias/example-alias --target-key-id "key-xxxxxxxxxxxxx"
+    

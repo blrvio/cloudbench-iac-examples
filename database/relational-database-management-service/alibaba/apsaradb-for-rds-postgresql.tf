@@ -1,47 +1,40 @@
 
-    # Configure the Alibaba Cloud Provider
+      # Configure o provedor Alibaba Cloud
 provider "alicloud" {
-  region = "cn-hangzhou"
-  # Replace with your Alibaba Cloud region
+  region = "cn-hangzhou" # Substitua pela sua região desejada
 }
 
-# Create an ApsaraDB for RDS PostgreSQL instance
-resource "alicloud_rds_instance" "main" {
-  # Replace with your desired values
-  engine         = "PostgreSQL"
-  engine_version = "12.0"
-  instance_type   = "rds.pg.t2.small"
+# Crie um banco de dados ApsaraDB for RDS PostgreSQL
+resource "alicloud_rds_instance" "postgres_db" {
+  engine           = "PostgreSQL"
+  engine_version   = "12"
+  instance_type    = "rds.pg.s1.small"
   instance_charge_type = "PostPaid"
-  db_name        = "my_database"
-  db_instance_class = "db.m5.large"
-  # ... other relevant configurations
+  database_name     = "my_database"
+  database_password = "password123"
+  vpc_id           = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+  vswitch_id        = "vswitch-xxxxxxxx" # Substitua pelo ID da sua VSwitch
+  security_group_ids = ["sg-xxxxxxxx"] # Substitua pelo ID do seu grupo de segurança
+  tags = {
+    Name = "My PostgreSQL Database"
+  }
 }
 
-# Create a security group for the RDS instance
-resource "alicloud_security_group" "main" {
-  name = "rds-sg"
-  description = "Security group for RDS instance"
-  # ... other relevant configurations
+# Crie um usuário do banco de dados
+resource "alicloud_rds_account" "postgres_user" {
+  db_instance_id  = alicloud_rds_instance.postgres_db.id
+  account_name    = "postgres_user"
+  account_password = "password123"
+  account_type     = "Normal"
 }
 
-# Create a rule to allow connections to the RDS instance from your IP
-resource "alicloud_security_group_rule" "ingress" {
-  type              = "ingress"
-  security_group_id = alicloud_security_group.main.id
-  # ... other relevant configurations
+# Conceda permissões ao usuário do banco de dados
+resource "alicloud_rds_privilege" "postgres_user_permissions" {
+  db_instance_id = alicloud_rds_instance.postgres_db.id
+  account_name    = alicloud_rds_account.postgres_user.account_name
+  db_name         = alicloud_rds_instance.postgres_db.database_name
+  privilege        = "SUPER"
+  host             = "%"
 }
 
-# Associate the security group with the RDS instance
-resource "alicloud_rds_instance_attribute" "main" {
-  db_instance_id = alicloud_rds_instance.main.id
-  security_ips   = [alicloud_security_group.main.id]
-}
-
-# Create a user account for the RDS instance
-resource "alicloud_rds_account" "main" {
-  db_instance_id = alicloud_rds_instance.main.id
-  account_name = "my_user"
-  account_password = "my_password"
-  # ... other relevant configurations
-}
-  
+    

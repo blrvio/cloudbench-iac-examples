@@ -1,0 +1,10 @@
+
+      # Criar um workspace do Azure Synapse Analytics
+ az synapse workspace create -n "example-workspace" -l "westus2" -g "example-resources" -a "admin" -p "examplepassword"
+
+# Criar um pool dedicado do Azure Synapse Analytics
+ az synapse sql pool create -n "example-pool" -l "westus2" -g "example-resources" -w "example-workspace"
+
+# Criar uma tabela no pool dedicado
+ az synapse sql table create -n "example-table" -s "dbo" -l "westus2" -g "example-resources" -w "example-workspace" -p "example-pool" 
+    

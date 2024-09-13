@@ -1,93 +1,45 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a MediaTailor configuration
-resource "aws_mediatailor_configuration" "main" {
-  name = "my-mediatailor-config"
-  # Configure the source location for the content
-  source_location_name = "my-source-location"
-  # Define the playback configuration
-  playback_configuration {
-    ad_marker_passthrough = "ENABLED" # Enable ad marker passthrough
-    # Configure the manifest source for the content
-    manifest_source {
-      # Use the S3 bucket to store the manifest file
-      s3_source {
-        bucket_name = "my-s3-bucket"
-        key_prefix  = "my-manifest-path/"
-      }
-    }
-  }
-  # Define the logs configuration
-  log_configuration {
-    log_level = "INFO" # Set the log level
-    # Configure the destination for the logs
-    cloudwatch_logs_configuration {
-      # Create a new CloudWatch log group
-      log_group_name = "my-mediatailor-logs"
-    }
+# Crie um perfil de origem
+resource "aws_mediatailor_origin_endpoint" "my_origin_endpoint" {
+  name              = "my_origin_endpoint"
+  channel_name       = "my_channel"
+  origin_manifest_url = "https://example.com/manifest.mpd"
+  source_selection  = "SINGLE_SOURCE"
+  playback_mode    = "LIVE"
+}
+
+# Crie um canal
+resource "aws_mediatailor_channel" "my_channel" {
+  name     = "my_channel"
+  playback_mode  = "LIVE"
+  hls_ingest {
+    ingest_endpoints = [aws_mediatailor_origin_endpoint.my_origin_endpoint.ingest_endpoint]
   }
 }
 
-# Create a MediaTailor source location
-resource "aws_mediatailor_source_location" "main" {
-  name = "my-source-location"
-  # Define the HTTPS endpoint for the content source
-  http_package_source {
-    # Define the content source URL
-    source_url = "https://example.com/my-content/"
-    # Specify the content source type
-    source_type = "S3_SOURCE"
-    # Configure the HLS packaging for the source location
-    hls_source {
-      # Define the HLS manifest URL
-      hls_manifest_uri = "https://example.com/my-content/manifest.m3u8"
-      # Specify the HLS segment duration
-      segment_duration = "10" # In seconds
-    }
-  }
-  # Define the access configuration for the source location
-  access_configuration {
-    # Define the security group IDs that will be used to access the source location
-    security_group_ids = [aws_security_group.main.id]
-  }
+# Crie um perfil de entrega
+resource "aws_mediatailor_playback_configuration" "my_playback_configuration" {
+  name    = "my_playback_configuration"
+  ad_decision_server_url  = "https://example.com/ads"
+  manifest_name           = "my_manifest"
+  channel_name            = aws_mediatailor_channel.my_channel.id
 }
 
-# Create a security group for the MediaTailor source location
-resource "aws_security_group" "main" {
-  name   = "sg-mediatailor"
-  # Define the ingress and egress rules for the security group
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie um usuário
+resource "aws_mediatailor_user" "my_user" {
+  name  = "my_user"
+  role  = "VIEWER"
+  ad_marker_passthrough = false
 }
 
-# Create a MediaTailor playback endpoint
-resource "aws_mediatailor_playback_endpoint" "main" {
-  name           = "my-playback-endpoint"
-  configuration_name = aws_mediatailor_configuration.main.name
-  # Define the playback endpoint URL
-  playback_endpoint_url = "https://my-playback-endpoint.mediatailor.us-east-1.amazonaws.com"
-  # Define the logging configuration for the playback endpoint
-  log_configuration {
-    # Configure the destination for the logs
-    cloudwatch_logs_configuration {
-      # Create a new CloudWatch log group
-      log_group_name = "my-playback-endpoint-logs"
-    }
-  }
+# Crie um token para o usuário
+resource "aws_mediatailor_token" "my_token" {
+  user_id = aws_mediatailor_user.my_user.id
 }
 
-  
+    

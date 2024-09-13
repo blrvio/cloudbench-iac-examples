@@ -1,0 +1,11 @@
+
+      # Use a IBM Cloud CLI para criar um namespace
+ibmcloud fn namespace create my_namespace
+
+# Crie uma função
+ibmcloud fn action create my_function --kind nodejs:16 --runtime nodejs:16 --memory 128 --timeout 60 --namespace my_namespace --code "// Código da função
+console.log('Hello, world!');"
+
+# Crie um trigger para a função
+ibmcloud fn trigger create my_trigger --kind http --action my_function --namespace my_namespace
+    

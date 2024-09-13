@@ -1,47 +1,28 @@
 
-    # Configure the Oracle Cloud Infrastructure provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region  = "us-ashburn-1"
-  tenancy = "ocid1.tenancy.oc1..aaaaaaaaz45fqz7u"
-  user    = "ocid1.user.oc1..aaaaaaaaz5r57c7o"
-  key_file = "~/.oci/config"
+  region = "us-ashburn-1" # Substitua pela sua região desejada
 }
 
-# Create a vault
+# Crie um cofre
 resource "oci_vault_vault" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7472j56"
-  display_name   = "my-vault"
-  # Optional: Specify a description for the vault
-  # description = "This is my vault"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb"
+  name          = "vault-name"
+  description   = "Example vault"
 }
 
-# Create a secret in the vault
-resource "oci_vault_secret" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7472j56"
-  vault_id       = oci_vault_vault.example.id
-  display_name   = "my-secret"
-  # Optional: Specify a description for the secret
-  # description = "This is my secret"
-  # Optional: Set the secret content (value)
-  # content = "secret_value"
+# Crie uma chave
+resource "oci_vault_key" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb"
+  vault_id      = oci_vault_vault.example.id
+  key_shape      = "2048"
+  description   = "Example key"
+  key_type      = "RSA"
 }
 
-# Create a secret version
-resource "oci_vault_secret_version" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7472j56"
-  vault_id       = oci_vault_vault.example.id
-  secret_id      = oci_vault_secret.example.id
-  # Optional: Set the secret version content
-  # content = "secret_version_value"
+# Crie uma política para controlar o acesso à chave
+resource "oci_vault_policy" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb"
+  statements  = [{"effect": "Allow", "actions": ["vault:ReadKey", "vault:Decrypt", "vault:Sign", "vault:Verify"], "resources": ["ocid1.key.oc1..aaaaaaaaaaaaabbbbbbbbbbbbbb"]}]
 }
-
-# Create a policy to grant access to the vault
-resource "oci_identity_policy" "example" {
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz7472j56"
-  name           = "my-vault-policy"
-  statements     = <<EOF
-Allow group "ocid1.group.oc1..aaaaaaaaz7472j56" to manage vault in compartment "ocid1.compartment.oc1..aaaaaaaaz7472j56"
-EOF
-}
-
-  
+    

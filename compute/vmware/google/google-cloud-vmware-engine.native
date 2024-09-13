@@ -1,0 +1,7 @@
+
+      # Crie um cluster do VMware Engine
+gcloud vmware engine private-clouds create my-private-cloud --location us-central1 --network default --project your-project-id
+
+# Crie uma máquina virtual no cluster
+gcloud vmware engine vm create my-vm --private-cloud my-private-cloud --project your-project-id
+    

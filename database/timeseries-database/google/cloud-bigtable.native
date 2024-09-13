@@ -1,0 +1,7 @@
+
+      // Crie uma instância do Cloud Bigtable
+gcloud beta bigtable instances create my-instance --display-name "My Bigtable Instance" --cluster-name my-cluster --cluster-location us-central1-b --cluster-serve-nodes 3 --cluster-storage-type SSD
+
+// Crie uma tabela no Cloud Bigtable
+gcloud beta bigtable tables create my-table --instance my-instance --column-family cf1
+    

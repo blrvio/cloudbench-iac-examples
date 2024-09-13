@@ -1,41 +1,30 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Proton service
-resource "aws_proton_service" "main" {
-  name = "my-proton-service"
-  # Specify the service template
-  template = "my-service-template"
-  # Configure the service environment
-  environment {
-    name = "dev"
-    # Optionally define service environment settings
-    service_settings {
-      # Define service settings
-    }
-  }
-  # Specify the service instance
-  instance {
-    name = "my-service-instance"
-    # Optionally define service instance settings
-    instance_settings {
-      # Define instance settings
-    }
+# Crie um serviço Proton
+resource "proton_service" "my_service" {
+  name = "my-service"
+  service_instance_name = "my-service-instance"
+  template {
+    # Define o template do serviço
   }
 }
 
-# Create a Proton service template
-resource "aws_proton_service_template" "main" {
-  name = "my-service-template"
-  # Specify the service template type
-  template_type = "ecs"
-  # Configure the service template settings
-  template_settings {
-    # Define service template settings
-  }
+# Crie um ambiente Proton
+resource "proton_environment" "my_environment" {
+  name = "my-environment"
+  # Define as configurações do ambiente
 }
 
-  
+# Crie uma pipeline Proton
+resource "proton_pipeline" "my_pipeline" {
+  name = "my-pipeline"
+  service = proton_service.my_service.id
+  environment = proton_environment.my_environment.id
+  # Define a pipeline
+}
+
+    

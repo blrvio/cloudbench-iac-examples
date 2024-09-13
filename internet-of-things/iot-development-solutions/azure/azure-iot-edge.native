@@ -1,0 +1,14 @@
+
+      // Crie um grupo de recursos
+azurerm resource-group create -n myResourceGroup -l westus2
+
+// Crie um dispositivo IoT Edge
+azurerm iot edge device create -g myResourceGroup -n myIotEdgeDevice -i myIotHub
+
+// Crie um módulo IoT Edge
+azurerm iot edge module create -g myResourceGroup -n myModule -i myIotHub -d myIotEdgeDevice
+
+// Crie uma configuração de módulo IoT Edge
+azurerm iot edge module-configuration create -g myResourceGroup -n myModuleConfiguration -i myIotHub -d myIotEdgeDevice --module-list '[{"name":"myModule","version":"1.0","type":"docker","settings":{"image":"mcr.microsoft.com/azureiotedge-samples/temperature-sensor:latest"}}]'
+
+    

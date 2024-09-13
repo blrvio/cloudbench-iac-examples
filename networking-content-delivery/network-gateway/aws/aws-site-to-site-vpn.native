@@ -1,0 +1,13 @@
+
+      // Crie uma VPN Gateway
+aws ec2 create-vpn-gateway --type ipsec.1 --tag-specification ResourceType=vpn-gateway,Tags=[{Key=Name,Value=VPN Gateway}]
+
+// Crie uma VPN Connection
+aws ec2 create-vpn-connection --vpn-gateway-id vgw-xxxxxxxx --customer-gateway-id cgw-xxxxxxxx --type ipsec.1
+
+// Crie um Customer Gateway
+aws ec2 create-customer-gateway --bgp-asn 65000 --ip-address 10.0.0.1 --type ipsec.1
+
+// Crie um endpoint VPN para o VPN Gateway
+aws ec2 create-vpn-gateway-route-propagation --vpn-gateway-id vgw-xxxxxxxx
+    

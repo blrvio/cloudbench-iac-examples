@@ -1,0 +1,10 @@
+
+      // Crie um Data Hub
+aws analytics-hub create-data-hub --name example-data-hub --tags Name=example-data-hub
+
+// Crie um Data Source
+aws analytics-hub create-data-source --data-hub-id example-data-hub-id --data-source-id example-data-source --data-source-type example-data-source-type --description "example-data-source-description" --tags Name=example-data-source
+
+// Crie um Data Set
+aws analytics-hub create-data-set --data-hub-id example-data-hub-id --data-set-id example-data-set --description "example-data-set-description" --data-source-id example-data-source-id --tags Name=example-data-set
+    

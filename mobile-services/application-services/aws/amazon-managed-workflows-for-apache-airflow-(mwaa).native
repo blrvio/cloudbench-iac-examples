@@ -1,0 +1,16 @@
+
+      // Crie um ambiente MWAA
+aws mwaa create-environment --name my-mwaa-env --airflow-version 2.2.2 --airflow-configuration-options "{"core.scheduler_interval": "30"}..."
+
+// Crie uma função Lambda para o webhook do MWAA
+aws lambda create-function --function-name mwaa-webhook --runtime python3.9 --handler main.handler --role arn:aws:iam::123456789012:role/mwaa-webhook-role
+
+// Crie um papel IAM para a função Lambda
+aws iam create-role --role-name mwaa-webhook-role --assume-role-policy "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Principal\": {\"Service\": \"lambda.amazonaws.com\"}, \"Action\": \"sts:AssumeRole\"}]}"
+
+// Adicione uma política IAM à função Lambda para permitir o acesso ao ambiente MWAA
+aws iam put-role-policy --role-name mwaa-webhook-role --policy-name mwaa-webhook-policy --policy "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": [\"mwaa:GetEnvironment\", \"mwaa:UpdateEnvironment\", \"mwaa:DeleteEnvironment\"], \"Resource\": \"arn:aws:mwaa:*:123456789012:environment/my-mwaa-env\"}]}"
+
+// Adicione uma política IAM à função Lambda para permitir o acesso ao S3
+aws iam put-role-policy --role-name mwaa-webhook-role --policy-name mwaa-webhook-s3-policy --policy "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": [\"s3:GetObject\", \"s3:PutObject\"], \"Resource\": \"arn:aws:s3:::my-bucket/*\"}]}"
+    

@@ -1,0 +1,14 @@
+
+      // Crie uma função
+oci functions create-function --name my_function --runtime java11 --source-code "// Código da função em Java
+import com.oracle.bmc.functions.runtime.Context;
+
+public class MyFunction {
+  public String handleRequest(Context context, String input) {
+    return "Olá, mundo!";
+  }
+}" --handler MyFunction.handleRequest --memory 128 --timeout-in-seconds 60
+
+// Crie um endpoint para a função
+oci functions create-endpoint --function-id <function_id> --name my_endpoint
+    

@@ -1,0 +1,13 @@
+
+      // Crie um domínio SWF
+aws swf create-domain --name example-domain --description "Example SWF Domain" --workflowExecutionRetentionPeriodInDays 30
+
+// Crie um tipo de tarefa SWF
+aws swf register-task-list --name example-task-list --taskList {"name":"example-task-list"}
+
+// Crie um tipo de workflow SWF
+aws swf register-workflow-type --domain example-domain --name example-workflow-type --version 1.0 --defaultTaskList {"name":"example-task-list"} --childPolicy TERMINATE
+
+// Crie um tipo de atividade SWF
+aws swf register-activity-type --domain example-domain --name example-activity-type --version 1.0 --defaultTaskList {"name":"example-task-list"}
+    

@@ -1,20 +1,19 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY" # Replace with your IBM Cloud API key
-  region = "us-south"
+      # Configure o provedor IBM Cloud
+provider "ibm" {
+  api_key = "YOUR_IBM_CLOUD_API_KEY" # Substitua pela sua API Key do IBM Cloud
+  region  = "us-south" # Substitua pela sua região desejada
 }
 
-# Create a Cloudant instance
-resource "ibm_cloudant_instance" "main" {
-  name  = "my-cloudant-instance" # Replace with your desired instance name
-  plan  = "lite"
-  region = "us-south"
+# Crie um banco de dados Cloudant
+resource "ibm_cloudant_database" "my_database" {
+  name = "my_database" # Substitua pelo nome do seu banco de dados
+  db_type = "json"
 }
 
-# Create a Cloudant database
-resource "ibm_cloudant_database" "main" {
-  name    = "my-cloudant-database"
-  instance = ibm_cloudant_instance.main.id
+# Crie um usuário Cloudant
+resource "ibm_cloudant_user" "my_user" {
+  username = "my_user" # Substitua pelo nome do seu usuário
+  password = "my_password" # Substitua pela senha do seu usuário
 }
-  
+    

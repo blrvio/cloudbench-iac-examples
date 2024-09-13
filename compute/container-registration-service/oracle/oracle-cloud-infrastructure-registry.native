@@ -1,0 +1,10 @@
+
+      // Create a namespace
+oci registry create-namespace --namespace mynamespace --compartment-id ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa
+
+// Create a registry
+oci registry create-repository --namespace mynamespace --repository myregistry
+
+// Upload an image to the registry
+oci registry push mynamespace/myregistry:latest --image-name myimage:latest --manifest oci_registry_image.example.manifest
+    

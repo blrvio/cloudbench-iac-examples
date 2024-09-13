@@ -1,0 +1,13 @@
+
+      // Crie um cluster HSM
+aws hsm create-cluster --type hsm1-m4 --subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx --security-group-ids sg-xxxxxxxx --cluster-name main
+
+// Crie um HSM
+aws hsm create-hsm --cluster-id hsm-cluster-xxxxxxxx --hsm-type hsm1-m4 --serial-number xxxxxxxxxxxxxx
+
+// Crie um certificado HSM
+aws hsm create-certificate --hsm-cluster-id hsm-cluster-xxxxxxxx
+
+// Crie uma chave HSM
+aws hsm create-key --hsm-cluster-id hsm-cluster-xxxxxxxx --key-name main
+    

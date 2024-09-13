@@ -1,0 +1,28 @@
+
+      # Crie um grupo de recursos
+azurerm resource-group create -n logic-app-rg -l westus2
+
+# Crie um aplicativo lógico
+azurerm logic-app create -n logic-app -g logic-app-rg -l westus2 -s storage-account
+
+# Crie uma definição de fluxo de trabalho
+azurerm logic-app workflow create -n workflow -g logic-app-rg -a logic-app -l westus2 -d @workflow-definition.json
+
+# Conteúdo do arquivo workflow-definition.json
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-08-01/logic-app-definition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "actions": {
+    "Http": {
+      "type": "Http",
+      "inputs": {
+        "method": "GET",
+        "uri": "https://example.com/api"
+      },
+      "runAfter": {}
+    }
+  }
+}
+
+    

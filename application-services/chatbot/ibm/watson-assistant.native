@@ -1,0 +1,16 @@
+
+      // Crie um assistente
+watson-assistant create-assistant --name "My Assistant" --description "My first assistant" --language "en"
+
+// Crie um intent
+watson-assistant create-intent --assistant-id {assistant_id} --name "Welcome Intent" --description "Welcome the user" --examples "Hello, Hi, Good morning"
+
+// Crie uma entidade
+watson-assistant create-entity --assistant-id {assistant_id} --name "Location" --description "Location of the user" --values "New York, London, Tokyo"
+
+// Crie uma ação de diálogo
+watson-assistant create-dialog-node --assistant-id {assistant_id} --name "Welcome Node" --description "Welcome the user and ask for their location" --conditions "$welcome_intent" --output "text:Hello! What is your location?"
+
+// Crie um exemplo de treinamento
+watson-assistant create-training-example --assistant-id {assistant_id} --intent-id {intent_id} --text "Hello, I'm in New York" --entities "entity:Location,value:New York"
+    

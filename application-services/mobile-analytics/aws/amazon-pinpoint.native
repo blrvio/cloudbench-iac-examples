@@ -1,0 +1,13 @@
+
+      // Crie um aplicativo Pinpoint
+aws pinpoint create-app --application-id "MyApp"
+
+// Crie um segmento
+aws pinpoint create-segment --application-id "MyApp" --name "MySegment" --dimensions '{/* Defina as dimensões do segmento */}' 
+
+// Configure o canal SMS
+aws pinpoint update-sms-channel --application-id "MyApp" --enabled true --# Configure as credenciais do SMS 
+
+// Crie uma campanha SMS
+aws pinpoint create-campaign --application-id "MyApp" --name "MyCampaign" --segment-id "segmentid" --message-config '{ "SMSMessage": { "Body": "Olá! Esta é uma mensagem de teste." } }'
+    

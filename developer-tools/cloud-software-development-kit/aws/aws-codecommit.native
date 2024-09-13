@@ -1,0 +1,16 @@
+
+      // Crie um repositório CodeCommit
+aws codecommit create-repository --repository-name my-repo
+
+// Crie um usuário IAM
+aws iam create-user --user-name codecommit-user
+
+// Crie uma chave de acesso para o usuário
+aws iam create-access-key --user-name codecommit-user
+
+// Crie uma política IAM para acesso ao repositório CodeCommit
+aws iam create-policy --policy-name codecommit-policy --policy-document '{ "Version": "2012-10-17", "Statement": [{ "Effect": "Allow", "Action": ["codecommit:GitPull", "codecommit:GitPush"], "Resource": ["arn:aws:codecommit:us-east-1:123456789012:my-repo"] }] }'
+
+// Adicione a política ao usuário
+aws iam attach-user-policy --user-name codecommit-user --policy-arn arn:aws:iam::123456789012:policy/codecommit-policy
+    

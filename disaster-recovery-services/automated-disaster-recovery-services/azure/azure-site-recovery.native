@@ -1,0 +1,16 @@
+
+      // Crie um vault de recuperação de sítio
+# azurerm recovery-services vault create -g example-resources -n example-vault -l westus
+
+// Crie um grupo de proteção
+# azurerm recovery-services protectiongroup create -g example-resources -n example-pg -v example-vault
+
+// Adicione uma máquina virtual à proteção
+# azurerm recovery-services protectioncontainer create -g example-resources -n example-pc -v example-vault --fabric-type Azure --fabric-location "example-location"
+
+// Crie um plano de recuperação
+# azurerm recovery-services recoveryplan create -g example-resources -n example-rp -v example-vault
+
+// Adicione o grupo de proteção ao plano de recuperação
+# azurerm recovery-services recoveryplan group create -g example-resources -n example-rpg -v example-vault -rp example-rp -pg example-pg
+    

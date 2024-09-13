@@ -1,33 +1,39 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  region     = "us-south"
-  api_key    = "your_api_key"
-  account_id = "your_account_id"
+      # Configure o provedor do IBM Cloud
+provider "ibm" {
+  region    = "us-south"
+  api_key  = "xxxxxxxx"
+  account_id = "xxxxxxxx"
 }
 
-# Create a Code Engine namespace
-resource "ibm_codeengine_namespace" "main" {
-  name    = "my-namespace"
-  location = "us-south"
+# Crie um serviço Code Engine
+resource "ibm_codeengine_service" "my_service" {
+  name        = "my-service"
+  location    = "us-south"
+  runtime     = "nodejs-16"
+  git_source  = {
+    url = "https://github.com/example/my-app"
+  }
+  build_config = {
+    type = "docker"
+    dockerfile = "Dockerfile"
+  }
 }
 
-# Create a Code Engine application
-resource "ibm_codeengine_application" "main" {
-  name       = "my-application"
-  namespace  = ibm_codeengine_namespace.main.name
-  runtime    = "nodejs-16"
-  location   = "us-south"
-  build_image = "us.icr.io/ibm-codeengine/nodejs:16-ubi8"
+# Crie um deployment
+resource "ibm_codeengine_deployment" "my_deployment" {
+  name           = "my-deployment"
+  service_name  = ibm_codeengine_service.my_service.id
+  scale_strategy = "auto"
+  replicas = 1
 }
 
-# Create a Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name       = "my-service"
-  application = ibm_codeengine_application.main.name
-  namespace  = ibm_codeengine_namespace.main.name
-  location   = "us-south"
-  route      = "my-service.my-namespace.us-south.codeengine.appdomain.cloud"
+# Crie uma rota
+resource "ibm_codeengine_route" "my_route" {
+  name             = "my-route"
+  deployment_name  = ibm_codeengine_deployment.my_deployment.id
+  host             = "my-app.example.com"
+  route_type        = "http"
 }
 
-  
+    

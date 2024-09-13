@@ -1,0 +1,13 @@
+
+      // Crie um trail
+aws cloudtrail create-trail --name my-trail --s3-bucket-name my-bucket-name --is-multi-region-trail --include-global-service-events --enable-log-file-validation
+
+// Configure eventos para registro
+aws cloudtrail add-trail-event-selectors --name my-trail --event-selectors '[{ReadWriteType=[Read,Write],DataResources=[s3:Bucket],IncludeManagementEvents=true}]'
+
+// Crie um bucket S3
+aws s3api create-bucket --bucket my-bucket-name --acl private --server-side-encryption-configuration '{"Rule":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+
+// Crie uma política para o bucket S3
+aws s3api put-bucket-policy --bucket my-bucket-name --policy '{"Version": "2012-10-17", "Statement": [{"Sid": "AllowCloudTrailAccess", "Effect": "Allow", "Principal": {"Service": "cloudtrail.amazonaws.com"}, "Action": ["s3:GetBucketAcl", "s3:GetBucketLocation", "s3:PutObject", "s3:GetObject", "s3:ListBucket"], "Resource": ["arn:aws:s3:::my-bucket-name", "arn:aws:s3:::my-bucket-name/*"]}]}'
+    

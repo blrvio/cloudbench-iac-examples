@@ -1,60 +1,36 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region = "us-south"
-  # Replace with your IBM Cloud API key
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a CDN instance
-resource "ibm_cdn_instance" "main" {
-  name = "my-cdn-instance"
-  # Replace with your IBM Cloud resource group ID
-  resource_group_id = "YOUR_RESOURCE_GROUP_ID"
-  # Define the CDN configuration
-  cdn_config {
-    origin {
-      # Replace with your origin server hostname
-      hostname = "my-origin-server.com"
-    }
-    # Define the CDN cache behavior
-    cache_behavior {
-      # Set the default cache duration
-      default_ttl = 3600
-    }
+# Crie um bucket S3 para armazenar os arquivos estáticos
+resource "aws_s3_bucket" "static_content" {
+  bucket = "my-static-content"
+  acl    = "public-read"
+}
+
+# Crie um distribuição CloudFront
+resource "aws_cloudfront_distribution" "static_distribution" {
+  origin {
+    domain_name = aws_s3_bucket.static_content.bucket_regional_domain_name
+    origin_id  = "s3-origin"
   }
-}
 
-# Create a CDN origin
-resource "ibm_cdn_origin" "main" {
-  # Replace with your CDN instance ID
-  instance_id = ibm_cdn_instance.main.id
-  # Replace with your origin server hostname
-  hostname = "my-origin-server.com"
-  # Define the origin health check
-  health_check {
-    # Set the health check interval
-    interval = 10
-    # Set the health check timeout
-    timeout = 2
-    # Define the health check type
-    type = "HTTP"
-    # Define the health check path
-    path = "/"
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods    = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = "s3-origin"
+    viewer_protocol_policy = "allow-all"
+    min_ttl              = 0
+    max_ttl              = 31536000
+    default_ttl          = 86400
   }
+  enabled = true
 }
 
-# Create a CDN rule
-resource "ibm_cdn_rule" "main" {
-  # Replace with your CDN instance ID
-  instance_id = ibm_cdn_instance.main.id
-  # Define the rule pattern
-  pattern = "/*"
-  # Define the rule action
-  action {
-    # Set the cache duration for this rule
-    cache_ttl = 300
-  }
+# Configure o endpoint do CloudFront
+output "cloudfront_domain" {
+  value = aws_cloudfront_distribution.static_distribution.domain_name
 }
-
-  
+    

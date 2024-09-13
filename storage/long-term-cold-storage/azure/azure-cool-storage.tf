@@ -1,35 +1,38 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # This is an optional block to enable new features
+  features {} # Adicione features se necessário
 }
 
-# Create a storage account with the Cool Storage Tier
-resource "azurerm_storage_account" "cool_storage" {
-  name                     = "mycoolstorageaccount"
-  resource_group_name     = "myresourcegroup"
-  location                 = "westus2"
-  account_tier             = "Cool"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
+  location = "West Europe"
+}
+
+# Crie uma conta de armazenamento
+resource "azurerm_storage_account" "example" {
+  name                     = "example-storage"
+  resource_group_name       = azurerm_resource_group.example.name
+  location                 = azurerm_resource_group.example.location
+  account_tier             = "Standard"
   account_replication_type = "LRS"
-  # This is an optional block to enable the 'blob' service
-  # For cool storage you need to enable it
-  # This can be enabled for other tiers as well
-  # If this is not enabled, then an error will be returned
-  # If it is enabled on a storage account with a different tier, it is ignored.
-  # To see if your storage account has the blob service enabled, you can use the azurerm_storage_account_blob_service resource.
-  blob_service {
-    enabled = true
-  }
 }
 
-# Example of creating a blob container
-resource "azurerm_storage_container" "cool_storage" {
-  name                = "mycoolcontainer"
-  storage_account_name = azurerm_storage_account.cool_storage.name
-  # Optional: Set public access levels
-  # public_access = "container"
-  # Optional: Enable versioning
-  # versioning = true
+# Crie um contêiner de armazenamento
+resource "azurerm_storage_container" "example" {
+  name                  = "example-container"
+  storage_account_name = azurerm_storage_account.example.name
 }
 
-  
+# Crie um blob de armazenamento frio
+resource "azurerm_storage_blob" "example" {
+  name                  = "example-blob"
+  storage_account_name = azurerm_storage_account.example.name
+  container_name       = azurerm_storage_container.example.name
+  source                = "path/to/your/file"
+  content_type          = "text/plain"
+  tier                  = "Cool"
+}
+
+    

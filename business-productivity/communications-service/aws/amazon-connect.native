@@ -1,0 +1,16 @@
+
+      // Crie um Instance de Amazon Connect
+aws connect create-instance --instance-name example-connect-instance --instance-type STANDARD
+
+// Crie um fluxo de contato
+aws connect create-contact-flow --instance-id i-xxxxxxxx --name example-contact-flow --content '{"flowId": "example-contact-flow", "flowType": "CONTACT_FLOW", "flowContent": "# ... (Conteúdo do fluxo de contato)"}'
+
+// Crie um número de telefone
+aws connect create-phone-number --instance-id i-xxxxxxxx --phone-number 1234567890 --phone-number-type TOLL_FREE
+
+// Crie um usuário
+aws connect create-user --instance-id i-xxxxxxxx --username example-user --password example-password --phone-number 1234567890 --security-profile-ids sp-xxxxxxxx
+
+// Crie um perfil de segurança
+aws connect create-security-profile --instance-id i-xxxxxxxx --name example-security-profile --permissions admin
+    

@@ -1,0 +1,16 @@
+
+      // Crie um REST API
+aws apigateway create-rest-api --name My API
+
+// Crie um recurso para a API
+aws apigateway create-resource --rest-api-id restapi-xxxxxxxx --parent-id resource-xxxxxxxx --path-part myresource
+
+// Crie um método para o recurso
+aws apigateway put-method --rest-api-id restapi-xxxxxxxx --resource-id resource-xxxxxxxx --http-method GET --authorizationType NONE
+
+// Crie uma integração para o método
+aws apigateway put-integration --rest-api-id restapi-xxxxxxxx --resource-id resource-xxxxxxxx --http-method GET --integrationType AWS_PROXY --integrationUri "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:my-function/invocations"
+
+// Crie um modelo de resposta para a integração
+aws apigateway put-integration-response --rest-api-id restapi-xxxxxxxx --resource-id resource-xxxxxxxx --http-method GET --statusCode 200 --selectionPattern "(.*)" --responseTemplates '{\"application/json\": \"{\"message\": \"Hello from API Gateway!\"}"}'
+    

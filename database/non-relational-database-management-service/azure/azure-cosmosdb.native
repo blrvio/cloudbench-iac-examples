@@ -1,0 +1,13 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name cosmosdb-rg --location westus
+
+// Crie uma conta do Azure Cosmos DB
+azurerm cosmosdb create --name example-cosmosdb --resource-group cosmosdb-rg --location westus --kind GlobalDocumentDB --offer-type Standard --consistency-level Session --location-mode Regional --throughput 4000
+
+// Crie um banco de dados
+azurerm cosmosdb database create --name example-database --resource-group cosmosdb-rg --account-name example-cosmosdb
+
+// Crie um contêiner
+azurerm cosmosdb container create --name example-container --resource-group cosmosdb-rg --account-name example-cosmosdb --database-name example-database --throughput 4000 --partition-key-path /id
+    

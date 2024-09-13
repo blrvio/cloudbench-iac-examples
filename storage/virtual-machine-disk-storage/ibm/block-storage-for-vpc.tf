@@ -1,31 +1,27 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  region  = "us-south"
-  api_key = "YOUR_IBM_API_KEY"
-  # Optional: Set if using a specific IBM Cloud account
-  # account_id = "YOUR_IBM_CLOUD_ACCOUNT_ID"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1"
 }
 
-# Create a block storage volume
-resource "ibm_vpc_block_storage" "main" {
-  name = "my-block-storage-volume"
-  # Select a zone for the volume
-  zone = "us-south-1"
-  # Specify the size of the volume
-  size = 100 # in GB
-  # Choose a volume type (e.g., 'standard', 'performance', 'iops')
-  type = "standard"
-  # Optionally, select an encryption key to encrypt the volume
-  # encryption_key_id = "YOUR_ENCRYPTION_KEY_ID"
+# Crie um volume de armazenamento
+resource "aws_ebs_volume" "my_volume" {
+  availability_zone = "us-east-1a"
+  size = 100
+  type = "gp3"
 }
 
-# Create a volume attachment
-resource "ibm_vpc_block_storage_attachment" "main" {
-  volume_id = ibm_vpc_block_storage.main.id
-  instance_id = "YOUR_INSTANCE_ID"
+# Crie uma instância EC2
+resource "aws_instance" "my_instance" {
+  ami = "ami-xxxxxxxx"
+  instance_type = "t2.micro"
+  # ... outros atributos da instância ...
 }
 
-# Note: Replace "YOUR_IBM_API_KEY", "YOUR_INSTANCE_ID", and other placeholders
-# with your actual values.
-  
+# Anexar o volume à instância
+resource "aws_volume_attachment" "my_attachment" {
+  device_name = "/dev/sdf"
+  instance_id = aws_instance.my_instance.id
+  volume_id = aws_ebs_volume.my_volume.id
+}
+    

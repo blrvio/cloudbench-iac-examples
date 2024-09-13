@@ -1,0 +1,20 @@
+
+      # Install the Azure PowerShell module
+Install-Module -Name Az
+
+# Connect to your Azure account
+Connect-AzAccount
+
+# Create a resource group
+New-AzResourceGroup -Name "myResourceGroup" -Location "westus2"
+
+# Create a virtual network
+New-AzVirtualNetwork -Name "myVNet" -ResourceGroupName "myResourceGroup" -Location "westus2" -AddressSpace "10.0.0.0/16"
+
+# Create a subnet
+New-AzVirtualNetworkSubnet -Name "mySubnet" -VirtualNetworkName "myVNet" -ResourceGroupName "myResourceGroup" -AddressPrefix "10.0.1.0/24"
+
+# Create a virtual machine
+New-AzVM -ResourceGroupName "myResourceGroup" -Name "myVM" -Location "westus2" -VirtualNetworkName "myVNet" -SubnetName "mySubnet" -Size "Standard_A2_v2" -OsType "Linux" -ProvisionVMAgent "true" -OpenSSHPublicKey "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC..." -NetworkInterfaceName "myNic"
+
+    

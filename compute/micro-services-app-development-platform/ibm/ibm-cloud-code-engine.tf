@@ -1,44 +1,34 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
+      # Configure o provedor IBM Cloud
+provider "ibm" {
+  api_key = "YOUR_API_KEY"
   region  = "us-south"
 }
 
-# Create a Code Engine project
-resource "ibm_codeengine_project" "main" {
-  name = "my-codeengine-project"
+# Crie um namespace para o Code Engine
+resource "ibm_codeengine_namespace" "my_namespace" {
+  name = "my-namespace"
   location = "us-south"
 }
 
-# Create a Code Engine application
-resource "ibm_codeengine_application" "main" {
-  name        = "my-codeengine-app"
-  project_id  = ibm_codeengine_project.main.id
-  runtime     = "nodejs-16"
-  build_source {
-    git {
-      url  = "https://github.com/your-username/your-repo.git"
-      branch = "main"
-    }
-  }
-  # Configure the ingress
-  ingress {
-    enabled = true
-  }
+# Crie um serviço Code Engine
+resource "ibm_codeengine_service" "my_service" {
+  name = "my-service"
+  namespace_id = ibm_codeengine_namespace.my_namespace.id
+  runtime = "nodejs-16"
+  image = "us-docker.pkg.dev/cloudrun/container/nodejs"
+  replicas = 1
+  timeout_seconds = 120
+  memory = "1Gi"
 }
 
-# Create a Code Engine service
-resource "ibm_codeengine_service" "main" {
-  name        = "my-codeengine-service"
-  project_id  = ibm_codeengine_project.main.id
-  application  = ibm_codeengine_application.main.name
-  route        = "my-codeengine-service.us-south.codeengine.appdomain.cloud"
-  # Define the service's resources
-  resources {
-    cpu     = "1"
-    memory = "256Mi"
-  }
+# Crie um roteamento para o serviço Code Engine
+resource "ibm_codeengine_route" "my_route" {
+  name = "my-route"
+  namespace_id = ibm_codeengine_namespace.my_namespace.id
+  service_name = ibm_codeengine_service.my_service.name
+  domain = "my-domain.com"
+  path = "/"
 }
 
-  
+    

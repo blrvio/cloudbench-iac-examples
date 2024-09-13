@@ -1,0 +1,16 @@
+
+      // Crie um grupo de segurança
+aws ec2 create-security-group --group-name allow_ssh --description "Allow SSH access" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name allow_ssh --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+// Crie uma instância EC2
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups allow_ssh --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Web Server}]'
+
+// Crie um endereço IP elástico
+aws ec2 allocate-address --domain vpc
+
+// Associe o endereço IP elástico à instância EC2
+aws ec2 associate-address --instance-id i-xxxxxxxx --allocation-id eipalloc-xxxxxxxx
+    

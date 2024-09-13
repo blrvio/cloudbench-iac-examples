@@ -1,0 +1,7 @@
+
+      // Crie um certificado SSL
+aws acm request-certificate --domain-name example.com --validation-method DNS
+
+// Crie uma validação DNS
+aws route53 change-resource-record-sets --hosted-zone-id Zxxxxxxxxxxxxx --change-batch '{ "Changes": [ { "Action": "UPSERT", "ResourceRecordSet": { "Name": "_*.example.com", "Type": "TXT", "TTL": 300, "ResourceRecords": [ { "Value": "xxxxxxxxxxxxxxxxxxxxxxxx" } ] } } ] }'
+    

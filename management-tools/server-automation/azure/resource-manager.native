@@ -1,0 +1,16 @@
+
+      // Create a new organization
+gcloud organizations create my-organization --display-name "My Organization"
+
+// Create a new folder
+gcloud organizations create-folder my-folder --parent organizations/0 --display-name "My Folder"
+
+// Create a new project
+gcloud projects create my-project --project-id my-project-id --organization my-organization --folder my-folder --billing-account billing-account-id --labels environment=production
+
+// Create a new service account
+gcloud iam service-accounts create my-service-account --display-name "My Service Account" --project my-project-id
+
+// Create a new IAM role
+gcloud projects add-iam-member "roles/owner" serviceAccount:${google_service_account.my_service_account.email} --project my-project-id
+    

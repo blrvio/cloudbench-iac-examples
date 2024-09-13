@@ -1,60 +1,43 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use AzureRM features
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "main" {
-  name     = "my-resource-group"
-  location = "eastus"
-}
+# Crie um serviço de migração de banco de dados
+resource "azurerm_dms_instance" "example" {
+  name                = "example-dms"
+  location            = "eastus"
+  resource_group_name = "example-resources"
 
-# Create a database migration service
-resource "azurerm_dms_instance" "main" {
-  name     = "my-dms-instance"
-  resource_group_name = azurerm_resource_group.main.name
-  location = azurerm_resource_group.main.location
+  # Use um SKU padrão, mas você pode escolher outro
   sku {
-    name = "Standard"
+    name     = "Standard"
+    tier    = "Standard"
+    capacity = 1
   }
 }
 
-# Create a database migration project
-resource "azurerm_dms_project" "main" {
-  name               = "my-dms-project"
-  resource_group_name = azurerm_resource_group.main.name
-  source_platform     = "SQLServer"
-  target_platform     = "PostgreSQL"
-  dms_instance_name  = azurerm_dms_instance.main.name
+# Crie uma tarefa de migração
+resource "azurerm_dms_task" "example" {
+  name                     = "example-task"
+  resource_group_name      = "example-resources"
+  dms_instance_name       = azurerm_dms_instance.example.name
+  source_connection_name  = "example-source-connection"
+  target_connection_name = "example-target-connection"
+
+  # Crie a tarefa de migração, usando uma opção de migração pré-definida
+  # Você pode configurar outras opções de migração
+  task_type = "FullMigrationTask"
+
+  # Defina as configurações de migração (exemplo: SQL Server para Azure SQL)
+  # Se necessário, configure outras opções de migração
+  sql_server_migration {
+    source_server_version        = "SQL Server 2019"
+    target_server_version        = "Azure SQL Database v12"
+    target_server_edition        = "General Purpose"
+    target_server_compute_units = 2
+  }
 }
 
-# Create a database migration task
-resource "azurerm_dms_task" "main" {
-  name               = "my-dms-task"
-  resource_group_name = azurerm_resource_group.main.name
-  project_name        = azurerm_dms_project.main.name
-  source_connection_id = azurerm_dms_connection.source.id
-  target_connection_id = azurerm_dms_connection.target.id
-  source_database_name   = "my-source-database"
-  target_database_name   = "my-target-database"
-  # ... add more task configuration options here ...
-}
-
-# Create a source connection
-resource "azurerm_dms_connection" "source" {
-  name               = "my-source-connection"
-  resource_group_name = azurerm_resource_group.main.name
-  connection_type      = "Source"
-  # ... add more connection configuration options here ...
-}
-
-# Create a target connection
-resource "azurerm_dms_connection" "target" {
-  name               = "my-target-connection"
-  resource_group_name = azurerm_resource_group.main.name
-  connection_type      = "Target"
-  # ... add more connection configuration options here ...
-}
-
-  
+    

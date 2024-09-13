@@ -1,0 +1,10 @@
+
+      // Crie um domínio WorkLink
+aws worklink create-fleet --name worklink-fleet --fleet-name worklink-fleet --directory-id d-xxxxxxxx --company-code xxxxxxxx --identity-provider-type cognito --cognito-identity-provider-user-pool-arn arn:aws:cognito-idp:us-east-1:123456789012:userpool/us-east-1_XXXXXXXX --audit-stream-s3-bucket bucket-name --audit-stream-s3-prefix worklink-audit-logs --network-vpc-id vpc-xxxxxxxx --network-subnet-ids subnet-xxxxxxxx subnet-xxxxxxxx
+
+// Crie uma aplicação WorkLink
+aws worklink create-web-url --fleet-arn arn:aws:worklink:us-east-1:123456789012:fleet/worklink-fleet --company-code xxxxxxxx --url https://www.example.com
+
+// Crie uma associação WorkLink
+aws worklink associate-user --fleet-arn arn:aws:worklink:us-east-1:123456789012:fleet/worklink-fleet --user-arn arn:aws:iam::123456789012:user/user-name
+    

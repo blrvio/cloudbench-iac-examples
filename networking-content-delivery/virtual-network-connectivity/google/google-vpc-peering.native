@@ -1,0 +1,8 @@
+
+      gcloud compute networks peerings create peering-connection --network your-network-name --network-project-id project-id-da-outra-rede-VPC --peer-network outra-rede-VPC-name --auto-create-routes --export-custom-routes --import-custom-routes
+gcloud compute instances create instance --machine-type n1-standard-1 --zone us-central1-a --boot-disk-initialize-params image=centos-cloud/centos-7 --network-interface network=your-network-name,subnetwork=projects/your-project-id/regions/us-central1/subnetworks/default --can-ip-forward
+gcloud compute forwarding-rules create forwarding-rule --network your-network-name --region us-central1 --ip-protocol tcp --load-balancing-scheme INTERNAL --all-ports --target instance-self-link --subnetwork projects/your-project-id/regions/us-central1/subnetworks/default
+gcloud compute url-maps create url-map --default-service forwarding-rule-self-link
+gcloud compute target-http-proxies create target-http-proxy --url-map url-map-self-link
+gcloud compute global-forwarding-rules create global-forwarding-rule --ip-protocol TCP --load-balancing-scheme INTERNAL_SELF_MANAGED --port-range 80 --subnetwork projects/your-project-id/regions/us-central1/subnetworks/default --target target-http-proxy-self-link --ip-address 1.2.3.4
+    

@@ -1,0 +1,11 @@
+
+      // Crie um serviço IBM Graph
+bom -c 'ibmcloud resource service-create my-graph-db cloudant -p free'
+
+// Crie um banco de dados
+bom -c 'ibmcloud resource service-instance-create my-graph-db-database cloudant -p free -s my-graph-db'
+
+// Crie um índice para o banco de dados
+bom -c 'ibmcloud resource service-instance-create my-graph-db-index cloudant -p free -s my-graph-db'
+
+    

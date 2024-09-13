@@ -1,0 +1,11 @@
+
+      // Crie um workspace do Azure Operational Insights
+# az monitor workspace create -n my-workspace -g my-resource-group -l westus2 -s per_gb
+
+// Configure um agente do Log Analytics para coletar dados de uma VM
+# az monitor log-analytics workspace agent install -w my-workspace -g my-resource-group -r vm-id
+
+// Crie uma pesquisa no Azure Operational Insights (KQL)
+# az monitor log-analytics query --workspace-id my-workspace -k 'Perf | where TimeGenerated >= ago(1h) | summarize count() by Computer'
+
+    

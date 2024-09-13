@@ -1,0 +1,13 @@
+
+      // Crie um grupo de gerenciamento de sistema operacional
+oci os-management management-group create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7g7zq5r --display-name "My Management Group" --description "My Management Group Description" --is-default false --is-system-group false --state ENABLED
+
+// Crie uma política de gerenciamento de sistema operacional
+oci os-management policy create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7g7zq5r --display-name "My Policy" --description "My Policy Description" --management-group-id <management-group-id> --policy-content '{}' --state ENABLED
+
+// Crie uma tarefa de gerenciamento de sistema operacional
+oci os-management task create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7g7zq5r --display-name "My Task" --description "My Task Description" --management-group-id <management-group-id> --policy-id <policy-id> --state ENABLED
+
+// Crie um agente de gerenciamento de sistema operacional
+oci os-management agent create --compartment-id ocid1.compartment.oc1..aaaaaaaaw7g7zq5r --display-name "My Agent" --description "My Agent Description" --management-group-id <management-group-id> --agent-type AGENT_TYPE_UNSPECIFIED --state ENABLED
+    

@@ -1,32 +1,44 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1"
+  project = "gcp-project-id"
 }
 
-# Create a Cloud VPN Gateway
-resource "google_compute_vpn_gateway" "main" {
-  name    = "my-vpn-gateway"
-  region  = "us-central1"
-  network = "default"
-  # Optional: Configure IP address
-  # network_interface { ip_address = "10.128.0.1" }
-}
-
-# Create a Cloud VPN Tunnel
+# Crie um túnel VPN
 resource "google_compute_vpn_tunnel" "main" {
-  name          = "my-vpn-tunnel"
-  region        = "us-central1"
+  name     = "my-vpn-tunnel"
+  region   = "us-central1"
   target_vpn_gateway = google_compute_vpn_gateway.main.id
-  # Configure the tunnel endpoint
-  peer_gcp_gateway = "projects/your-gcp-project-id/regions/us-central1/vpnGateways/your-gcp-vpn-gateway"
-  #[Optional: Configure the tunnel endpoint]
-  #peer_instance { ip_address = "10.128.0.2" }
-  # Optional: Configure the shared secret
-  #shared_secret = "your-shared-secret"
-  # Optional: Configure the tunnel routing mode
-  #routing_mode = "REGIONAL"
+  peer_ip = "10.128.0.2"
+  shared_secret = "secret"
 }
 
-  
+# Crie um gateway VPN
+resource "google_compute_vpn_gateway" "main" {
+  name     = "my-vpn-gateway"
+  region   = "us-central1"
+  network  = google_compute_network.main.id
+  interface = "nic0"
+  peer_ip = "10.128.0.1"
+}
+
+# Crie uma rede VPC
+resource "google_compute_network" "main" {
+  name    = "my-network"
+  auto_create_subnetworks = false
+}
+
+# Crie uma rota VPN
+resource "google_compute_global_address" "main" {
+  name    = "my-vpn-address"
+  address_type = "EXTERNAL"
+}
+
+resource "google_compute_route" "vpn" {
+  name    = "my-vpn-route"
+  network = google_compute_network.main.id
+  dest_range  = "10.128.0.0/20"
+  next_hop_ip = google_compute_global_address.main.address
+  priority = 100
+}
+    

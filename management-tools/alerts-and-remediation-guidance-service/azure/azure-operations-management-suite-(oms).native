@@ -1,0 +1,19 @@
+
+      // Crie um workspace do Log Analytics
+azurerm log-analytics workspace create --name example-workspace --resource-group example-resources --location westeurope --retention 30
+
+// Crie uma máquina virtual Linux
+azurerm vm create --resource-group example-resources --name example-vm --location westeurope --size Standard_B2s --admin-username azureuser --admin-password password123 --network-interface example-nic --os-disk-caching ReadWrite --os-disk-storage-account-type Standard_LRS --os-disk-source "Canonical:UbuntuServer:18.04-LTS:latest"
+
+// Crie uma interface de rede
+azurerm network nic create --resource-group example-resources --name example-nic --location westeurope --network-security-group example-nsg --subnet example-subnet
+
+// Crie um grupo de segurança de rede
+azurerm network nsg create --resource-group example-resources --name example-nsg --location westeurope
+
+// Crie uma sub-rede
+azurerm network subnet create --resource-group example-resources --name example-subnet --location westeurope --virtual-network example-vnet --address-prefixes 10.0.0.0/24
+
+// Crie uma rede virtual
+azurerm network vnet create --resource-group example-resources --name example-vnet --location westeurope --address-space 10.0.0.0/16
+    

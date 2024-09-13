@@ -1,0 +1,5 @@
+
+      // Crie um projeto CodeBuild
+aws codebuild create-project --name example --source "type=GITHUB,location=example/repo,auth=GITHUB_TOKEN,oauth_token=YOUR_GITHUB_TOKEN" --artifacts "type=NO_ARTIFACTS" --environment "computeType=BUILD_GENERAL1_SMALL,image=aws/codebuild/standard:4.0" --service-role YOUR_SERVICE_ROLE_ARN
+
+    

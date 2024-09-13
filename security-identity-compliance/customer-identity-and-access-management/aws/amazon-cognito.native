@@ -1,0 +1,16 @@
+
+      // Crie um pool de usuários Cognito
+aws cognito-idp create-user-pool --pool-name my-user-pool
+
+// Crie um grupo de usuários Cognito
+aws cognito-idp create-group --user-pool-id us-east-1_xxxxxxxx --group-name admin
+
+// Crie uma identidade federada Cognito
+aws cognito-identity create-identity-pool --identity-pool-name my-identity-pool --allow-unauthenticated-identities false
+
+// Adicione um provedor de identidade Cognito à identidade federada
+aws cognito-identity create-identity-provider --identity-pool-id us-east-1:xxxxxxxx --provider-name cognito-idp.us-east-1.amazonaws.com/us-east-1_xxxxxxxx --provider-client-id xxxxxxxx
+
+// Crie um aplicativo Cognito
+aws cognito-idp create-user-pool-client --user-pool-id us-east-1_xxxxxxxx --client-name web-client --generate-secret false --allowed-oauth-flows code --allowed-oauth-scopes phone,email,openid,profile --callback-urls https://www.example.com --logout-urls https://www.example.com
+    

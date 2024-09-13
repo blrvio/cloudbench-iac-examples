@@ -1,67 +1,37 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all AzureRM features
+  features {} # Ensure you are using the latest version of the provider
 }
 
-# Define the resource group
-resource "azurerm_resource_group" "main" {
-  name     = "my-iot-edge-resource-group"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "myResourceGroup"
   location = "westus2"
 }
 
-# Define the IoT Hub
-resource "azurerm_iot_hub" "main" {
-  name                = "my-iot-hub"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  sku                 = "S1"
-  # Configure the IoT Edge Deployment
-  deployment_config {
-    max_device_count = 10
-  }
+# Crie um dispositivo IoT Edge
+resource "azurerm_iot_edge_device" "example" {
+  name                = "myIotEdgeDevice"
+  resource_group_name = azurerm_resource_group.example.name
+  iot_hub_name      = "myIotHub"
 }
 
-# Define the IoT Edge Device
-resource "azurerm_iot_edge_device" "main" {
-  name                = "my-edge-device"
-  resource_group_name = azurerm_resource_group.main.name
-  iot_hub_name        = azurerm_iot_hub.main.name
-  # Assign a device ID
-  id                  = "my-device-id"
+# Crie um módulo IoT Edge
+resource "azurerm_iot_edge_module" "example" {
+  name                = "myModule"
+  resource_group_name = azurerm_resource_group.example.name
+  iot_hub_name      = "myIotHub"
+  device_id          = azurerm_iot_edge_device.example.id
 }
 
-# Define the IoT Edge Module
-resource "azurerm_iot_edge_module" "main" {
-  name                = "my-edge-module"
-  resource_group_name = azurerm_resource_group.main.name
-  iot_hub_name        = azurerm_iot_hub.main.name
-  # Define the image source for the module
-  image              = "my-module-image:latest"
-  # Configure module settings
-  settings            = "{
-    "key1": "value1",
-    "key2": "value2"
-  }"
+# Crie uma configuração de módulo IoT Edge
+resource "azurerm_iot_edge_module_configuration" "example" {
+  name                = "myModuleConfiguration"
+  resource_group_name = azurerm_resource_group.example.name
+  iot_hub_name      = "myIotHub"
+  device_id          = azurerm_iot_edge_device.example.id
+  modules             = [{"name": "myModule", "version": "1.0", "type": "docker", "settings": {"image": "mcr.microsoft.com/azureiotedge-samples/temperature-sensor:latest"}}]
 }
 
-# Deploy the module to the device
-resource "azurerm_iot_edge_deployment" "main" {
-  name                = "my-edge-deployment"
-  resource_group_name = azurerm_resource_group.main.name
-  iot_hub_name        = azurerm_iot_hub.main.name
-  # Define the device and module to deploy
-  device_id           = azurerm_iot_edge_device.main.id
-  modules             = [
-    {
-      module_id = azurerm_iot_edge_module.main.name
-      # Configure deployment settings
-      settings = "{
-        "key1": "value1",
-        "key2": "value2"
-      }"
-    }
-  ]
-}
-
-  
+    

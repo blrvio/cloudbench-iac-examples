@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+az group create --name example-rg --location westus2
+
+// Crie uma função Azure
+az functionapp create --resource-group example-rg --name example-function-app --storage-account example-storage-account --app-service-plan example-app-service-plan-id --consumption-plan --runtime python
+
+// Defina as configurações de uma função individual
+az functionapp function create --name example-function --resource-group example-rg --function-app example-function-app --script-file example.py --entry-point main
+    

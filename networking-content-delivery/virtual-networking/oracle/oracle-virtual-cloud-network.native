@@ -1,0 +1,13 @@
+
+      // Crie uma rede virtual
+oci core create-vcn --compartment-id ocid1.compartment.oc1..aaaaaaaaz53hdx7g --cidr-block 10.0.0.0/16 --display-name Main VCN
+
+// Crie um subnet
+oci core create-subnet --compartment-id ocid1.compartment.oc1..aaaaaaaaz53hdx7g --vcn-id ocid1.vcn.oc1..aaaaaaaaz53hdx7g --cidr-block 10.0.1.0/24 --display-name Subnet 1
+
+// Crie uma tabela de rotas
+oci core create-route-table --compartment-id ocid1.compartment.oc1..aaaaaaaaz53hdx7g --vcn-id ocid1.vcn.oc1..aaaaaaaaz53hdx7g --display-name Main Route Table
+
+// Crie uma regra de rota
+oci core create-route-rule --route-table-id ocid1.routetable.oc1..aaaaaaaaz53hdx7g --network-entity-id ocid1.vcn.oc1..aaaaaaaaz53hdx7g --destination 0.0.0.0/0 --destination-type CIDR_BLOCK --is-default true
+    

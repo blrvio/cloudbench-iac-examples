@@ -1,0 +1,8 @@
+
+      bx api create-catalog -o catalog_id
+bx api create-plan -c catalog_id -n example_plan -d "example plan description" -p true
+bx api create-api -c catalog_id -n example_api -d "example api description" -p example_plan_id
+bx api create-product -n example_product -d "example product description" -p example_plan_id
+bx api create-key -p example_product_id -n example_api_key
+bx api create-security-policy -c catalog_id -n example_security_policy -d "example security policy description" -p "your_policy_json"
+    

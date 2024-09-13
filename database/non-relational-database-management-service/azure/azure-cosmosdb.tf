@@ -1,46 +1,46 @@
 
-    # Configure the Azure provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use the latest features
+  features {} # Define o provedor Azure
 }
 
-# Create a CosmosDB Account
-resource "azurerm_cosmosdb_account" "main" {
-  name                = "my-cosmosdb-account"
-  location             = "westus2"
-  resource_group_name = "my-resource-group"
-  kind                 = "globalDocumentDB"
-  # Set the default consistency level
+# Crie um grupo de recursos Azure
+resource "azurerm_resource_group" "example" {
+  name     = "cosmosdb-rg" # Nome do grupo de recursos
+  location = "westus" # Região desejada
+}
+
+# Crie uma conta do Azure Cosmos DB
+resource "azurerm_cosmosdb_account" "example" {
+  name                = "example-cosmosdb"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.example.location
+  kind                = "GlobalDocumentDB"
+  offer_type          = "Standard"
   consistency_policy {
     consistency_level = "Session"
   }
-  # Set the default capacity
-  capabilities {
-    enable_automatic_capacity = true
+  location_mode       = "Regional"
+  capacity {
+    throughput = 4000
   }
 }
 
-# Create a CosmosDB database
-resource "azurerm_cosmosdb_database" "main" {
-  name                 = "my-database"
-  resource_group_name  = azurerm_cosmosdb_account.main.resource_group_name
-  account_name         = azurerm_cosmosdb_account.main.name
-  # Set the default throughput for the database
-  throughput            = 400
+# Crie um banco de dados
+resource "azurerm_cosmosdb_database" "example" {
+  name                = "example-database"
+  resource_group_name = azurerm_resource_group.example.name
+  account_name        = azurerm_cosmosdb_account.example.name
 }
 
-# Create a CosmosDB container
-resource "azurerm_cosmosdb_container" "main" {
-  name                 = "my-container"
-  resource_group_name  = azurerm_cosmosdb_account.main.resource_group_name
-  account_name         = azurerm_cosmosdb_account.main.name
-  database_name        = azurerm_cosmosdb_database.main.name
-  # Set the default throughput for the container
-  throughput            = 400
-  # Configure indexing policy
-  indexing_policy {
-    automatic = true
-  }
+# Crie um contêiner
+resource "azurerm_cosmosdb_container" "example" {
+  name                = "example-container"
+  resource_group_name = azurerm_resource_group.example.name
+  account_name        = azurerm_cosmosdb_account.example.name
+  database_name       = azurerm_cosmosdb_database.example.name
+  throughput          = 4000
+  partition_key_path  = "/id"
 }
 
-  
+    

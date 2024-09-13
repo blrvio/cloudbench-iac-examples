@@ -1,0 +1,16 @@
+
+      // Connect to InfluxDB
+influx -url "https://example.com" -token "example_token"
+
+// Create a database
+influx -database "my_database"
+
+// Create a measurement
+influx -database "my_database" -execute "CREATE MEASUREMENT my_measurement"
+
+// Write data to the measurement
+influx -database "my_database" -execute "INSERT my_measurement,tag1=value1,tag2=value2 value=1.0"
+
+// Query data from the measurement
+influx -database "my_database" -execute "SELECT * FROM my_measurement WHERE time > now() - 1h"
+    

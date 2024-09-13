@@ -1,0 +1,13 @@
+
+      // Criar uma conta de organização
+aws organizations create-organization --feature-set ALL
+
+// Criar uma conta de membro
+aws organizations create-account --email example@example.com --account-name "Member Account" --parent-id ou-xxxxxxxx --role "ROOT"
+
+// Criar uma política de serviço
+aws organizations create-policy --name "service-control-policy" --description "Policy to control AWS services" --content '{\"Statement\":[\"\"\",{\"Effect\":\"Allow\",\"Principal\": {\"AWS\": \"arn:aws:iam::123456789012:root\"},\"Action\": [\"ec2:DescribeInstances\"]},\"\"\"}"' --type SERVICE_CONTROL_POLICY
+
+// Adicionar a política de serviço à conta de membro
+aws organizations attach-policy --policy-id p-xxxxxxxx --target-id ou-xxxxxxxx
+    

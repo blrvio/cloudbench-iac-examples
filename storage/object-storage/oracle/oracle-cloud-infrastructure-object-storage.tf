@@ -1,32 +1,27 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region     = "us-ashburn-1"
-  tenancy    = "ocid1.tenancy.oc1..aaaaaaaaxxxxxx"
-  user       = "ocid1.user.oc1..aaaaaaaayyyyyy"
-  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxx"
-  # Use your real credentials
-  # Make sure you have set up the OCI CLI and have credentials configured.
-  # See: https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm
+  region = "us-ashburn-1"
+  # Substitua pela sua região desejada
+  # Adicione as credenciais necessárias
 }
 
-# Create an Object Storage Bucket
-resource "oci_objectstorage_bucket" "example" {
-  name       = "my-bucket"
-  namespace  = "example"
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaa"
-  # Set an optional storage tier
-  storage_tier = "Standard"
+# Crie um bucket de armazenamento de objetos
+resource "oci_objectstorage_bucket" "my_bucket" {
+  namespace = "my-namespace"
+  # Substitua pelo namespace desejado
+  name     = "my-bucket"
+  # Substitua pelo nome do bucket desejado
 }
 
-# Create an Object in the Bucket
-resource "oci_objectstorage_object" "example" {
-  name       = "my-object.txt"
-  bucket     = oci_objectstorage_bucket.example.name
-  namespace  = oci_objectstorage_bucket.example.namespace
-  content    = "This is my object content."
-  # Set an optional Content-Type
-  content_type = "text/plain"
+# Carregue um objeto para o bucket
+resource "oci_objectstorage_object" "my_object" {
+  bucket   = oci_objectstorage_bucket.my_bucket.name
+  namespace = oci_objectstorage_bucket.my_bucket.namespace
+  name     = "my-object"
+  # Substitua pelo nome do objeto desejado
+  source   = "path/to/my-object"
+  # Substitua pelo caminho do arquivo local
 }
 
-  
+    

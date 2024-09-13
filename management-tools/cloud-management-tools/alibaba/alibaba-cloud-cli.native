@@ -1,0 +1,27 @@
+
+      # Install the Alibaba Cloud CLI
+# On macOS
+brew install alibabacloud-cli
+# On Linux
+sudo apt install alibabacloud-cli
+# On Windows
+Download the installer from [https://www.alibabacloud.com/help/en/doc-detail/40652.htm](https://www.alibabacloud.com/help/en/doc-detail/40652.htm)
+and install it.
+
+# Configure the CLI
+# Login using the access key ID and access key secret
+# (Replace the placeholders with your actual credentials)
+# Create a new configuration file or edit the existing one.
+# For example, using the following command to edit the config file:
+# vim ~/.alibabacloud/config
+# Then add your access key ID and access key secret:
+[default]
+# Your access key ID
+access_key_id = "your_access_key_id"
+# Your access key secret
+access_key_secret = "your_access_key_secret"
+
+# Example command
+# List all available ECS instances
+# alibabacloud ecs describe-instances
+    

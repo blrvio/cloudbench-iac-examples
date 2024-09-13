@@ -1,0 +1,10 @@
+
+      gcloud compute firewall-rules create allow-ssh --network default --allow tcp:22 --source-ranges 0.0.0.0/0
+
+gcloud compute instances create web-server --machine-type n1-standard-1 --zone us-central1-a --boot-disk-size 100GB --boot-disk-type pd-standard --boot-disk-source-image centos-cloud/centos-7 --network default --metadata startup-script='#!/bin/bash\n# Instale o Apache\nyum update -y\nyum install httpd -y\n# Inicie o servidor web\nsystemctl enable httpd\nsystemctl start httpd'
+
+gcloud compute addresses create web-server-ip --global --address-type EXTERNAL
+
+gcloud compute instances create web-server-association --machine-type n1-standard-1 --zone us-central1-a --boot-disk-size 100GB --boot-disk-type pd-standard --boot-disk-source-image centos-cloud/centos-7 --network default --metadata startup-script='#!/bin/bash\n# Instale o Apache\nyum update -y\nyum install httpd -y\n# Inicie o servidor web\nsystemctl enable httpd\nsystemctl start httpd' --network-interface network=default,subnetwork=projects/gcp-project-id/regions/us-central1/subnetworks/default,subnetwork-project=gcp-project-id,network-ip=google_compute_address.web_server_ip.address
+
+    

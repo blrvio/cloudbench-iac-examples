@@ -1,0 +1,46 @@
+
+      // Define o nome do projeto do Google Cloud
+const projectId = 'your-project-id';
+
+// Define a função de detecção de informações confidenciais
+const dl = require('@google-cloud/dlp');
+
+const client = new dl.DlpServiceClient();
+
+// Crie um objeto de configuração de detecção de informações confidenciais
+const inspectConfig = {
+  infoTypes: [{
+    name: 'US_SOCIAL_SECURITY_NUMBER'
+  }],
+  includeQuote: true,
+  minLikelihood: 'LIKELIHOOD_POSSIBLE'
+};
+
+// Define o arquivo de dados para análise
+const fileSet = {
+  url: 'gs://your-bucket/your-file.csv'
+};
+
+// Crie a solicitação de detecção de informações confidenciais
+const request = {
+  parent: `projects/${projectId}/locations/global`,
+  inspectConfig: inspectConfig,
+  item: {
+    byteItem: {
+      source: {
+        byteData: fileSet
+      }
+    }
+  }
+};
+
+// Execute a solicitação de detecção de informações confidenciais
+client.inspectContent(request)
+  .then(responses => {
+    console.log('Detecção de informações confidenciais concluída');
+    console.log(responses[0]);
+  })
+  .catch(err => {
+    console.error('Erro na detecção de informações confidenciais:', err);
+  });
+    

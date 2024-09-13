@@ -1,0 +1,7 @@
+
+      // Crie um grupo de gerenciamento
+# az group create --name example-mg --location "global" --display-name "Example Management Group"
+
+// Atribua uma política de gerenciamento ao grupo de gerenciamento
+# az policy assignment create --name example-policy-assignment --management-group example-mg --policy-definition "{your policy definition id}" --scope "managementGroup/example-mg" --display-name "Example Policy Assignment" --enforcement-mode Default
+    

@@ -1,0 +1,10 @@
+
+      // Crie um Data Lake
+aws healthlake create-data-lake --data-lake-name healthlake-datalake --kms-key-id arn:aws:kms:us-east-1:123456789012:key/xxxxxxxxxxxxxxxxxxxxxxxx --data-lake-storage-type S3 --data-lake-storage-path s3://my-healthlake-bucket
+
+// Crie um FHIR Data Store
+aws healthlake create-fhir-datastore --data-lake-id data-lake-id --fhir-version R4 --datastore-type FHIR_STORE --preferred-name example-datastore --predefined-data-format FHIR
+
+// Crie uma regra de acesso
+aws healthlake create-data-access-policy --data-lake-id data-lake-id --name healthlake-access-policy --access-pattern ALL --allow-all-object-access true
+    

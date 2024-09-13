@@ -1,0 +1,7 @@
+
+      // Crie um recurso de Cloud Shell
+azurerm cloud-shell create -n my-cloud-shell -l westus2 -t Standard_LRS
+
+// Opcionalmente, configure um script de inicialização personalizado
+azurerm cloud-shell profile create -n my-profile -g my-cloud-shell-resource-group -s "echo 'Hello from Cloud Shell!'"  --cloud-shell-id my-cloud-shell
+    

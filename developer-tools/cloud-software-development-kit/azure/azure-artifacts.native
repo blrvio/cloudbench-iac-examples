@@ -1,0 +1,33 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location westus2
+
+// Crie um projeto Azure DevOps
+azurerm devops project create --name "example-project" --visibility private --location westus2 --resource-group example-rg
+
+// Crie um feed Azure Artifacts
+azurerm devops feed create --name "example-feed" --project-id example-project --description "My example feed" --visibility private
+
+// Defina as permissões do feed
+azurerm devops feed permission create --feed-id example-feed --identity-descriptor "{principalName}" --access-level Contribute --permissions View Contribute Manage
+
+// Crie uma pipeline YAML
+azurerm devops pipeline create --project-id example-project --name "example-pipeline" --yaml "trigger: none
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: NuGetToolInstaller@2
+            inputs:
+              version: '4.x'
+          - task: NuGetAuthenticate@2
+            inputs:
+              feed: "example-feed"
+              scope: "project"
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "example.sln""
+
+    

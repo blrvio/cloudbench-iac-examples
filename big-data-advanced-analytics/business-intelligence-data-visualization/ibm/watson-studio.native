@@ -1,0 +1,7 @@
+
+      // Crie um projeto no Watson Studio
+bom -c 'ibmcloud resource create-project --name "My Project" --description "My first Watson Studio project"' 
+
+// Crie um espaço de trabalho no Watson Studio
+bom -c 'ibmcloud resource create-workspace --project "My Project" --name "My Workspace"'
+    

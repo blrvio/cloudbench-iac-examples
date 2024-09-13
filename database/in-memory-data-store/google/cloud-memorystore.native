@@ -1,0 +1,9 @@
+
+      // Crie um cluster do Cloud MemoryStore for Redis
+aws memorydb create-cluster --engine redis --engine-version 6.x --node-type cache.t2.small --num-shards 1 --snapshot-retention-limit 0 --snapshot-window "05:00-09:00" --security-group-ids sg-xxxxxxxx --cluster-name example
+
+// Crie um grupo de segurança para o cluster do Cloud MemoryStore
+aws ec2 create-security-group --group-name memorydb_security_group --description "Security group for Cloud MemoryStore cluster" --vpc-id vpc-xxxxxxxx
+
+aws ec2 authorize-security-group-ingress --group-name memorydb_security_group --protocol tcp --port 6379 --cidr 0.0.0.0/0
+    

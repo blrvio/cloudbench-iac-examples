@@ -1,0 +1,7 @@
+
+      gcloud compute instances create instance-1 --machine-type n1-standard-1 --zone us-central1-a --disk type=pd-standard,boot=true,auto-delete=true,disk-size=100GB,source-image=centos-cloud/centos-7 --network default --project gcp-project-id
+
+gcloud compute addresses create external-ip --address-type EXTERNAL --project gcp-project-id
+
+gcloud compute instances add-external-ip instance-1 --address external-ip --project gcp-project-id
+    

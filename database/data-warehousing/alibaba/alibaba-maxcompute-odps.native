@@ -1,0 +1,13 @@
+
+      # Create a project
+aws odps create-project --project-name example-project --region cn-hangzhou
+
+# Create a table
+aws odps create-table --project-name example-project --table-name example_table --schema "id bigint, name string, age int"
+
+# Create a job
+aws odps create-job --project-name example-project --job-name example_job --type SQL --sql "INSERT OVERWRITE TABLE example_table SELECT 1, 'John Doe', 30;" 
+
+# Run the job
+aws odps run-job --job-id example_job
+    

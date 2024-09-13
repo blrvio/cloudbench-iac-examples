@@ -1,35 +1,35 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Red Hat OpenShift on AWS (ROSA) cluster
-resource "aws_rosa_cluster" "main" {
-  name = "my-rosa-cluster" # Name of your ROSA cluster
-  # Set the Red Hat OpenShift version
-  version = "4.11"
-  # Set the desired number of worker nodes
-  worker_nodes = 2
-  # Define the Kubernetes network configuration
-  kubernetes_network_config {
-    service_cidr = "10.128.0.0/16"
-    pod_cidr     = "10.129.0.0/16"
-  }
-  # Configure the cluster's security settings
-  security_group_ids = [aws_security_group.main.id]
+# Crie um VPC para o OpenShift
+resource "aws_vpc" "openshift_vpc" {
+  cidr_block = "10.0.0.0/16" # Substitua pelo CIDR desejado
+  enable_dns_hostnames = true
+  enable_dns_support = true
 }
 
-# Create a security group for the ROSA cluster
-resource "aws_security_group" "main" {
-  name = "my-rosa-sg"
-  # Define ingress and egress rules for the security group
+# Crie uma sub-rede para o OpenShift
+resource "aws_subnet" "openshift_subnet" {
+  vpc_id = aws_vpc.openshift_vpc.id
+  cidr_block = "10.0.1.0/24" # Substitua pelo CIDR desejado
+  availability_zone = "us-east-1a" # Substitua pela zona de disponibilidade desejada
+}
+
+# Crie um grupo de segurança para o OpenShift
+resource "aws_security_group" "openshift_security_group" {
+  name   = "openshift_security_group"
+  vpc_id = aws_vpc.openshift_vpc.id
+
   ingress {
-    from_port   = 22
-    to_port     = 22
+    from_port   = 8443
+    to_port     = 8443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -38,42 +38,16 @@ resource "aws_security_group" "main" {
   }
 }
 
-# Create an S3 bucket for storing ROSA cluster data
-resource "aws_s3_bucket" "main" {
-  bucket = "my-rosa-bucket" # Name of your S3 bucket
-  # Configure the bucket's ACL for access control
-  acl = "private"
-}
+# Crie uma instância EC2 para o OpenShift
+resource "aws_instance" "openshift_master" {
+  ami           = "ami-xxxxxxxx" # Substitua pela AMI desejada
+  instance_type = "t3.xlarge" # Substitua pelo tipo de instância desejado
+  key_name     = "key_name" # Substitua pelo nome da chave SSH
+  security_groups = [aws_security_group.openshift_security_group.id]
+  subnet_id     = aws_subnet.openshift_subnet.id
 
-# Create a KMS key for encrypting ROSA cluster data
-resource "aws_kms_key" "main" {
-  description = "KMS key for ROSA cluster encryption"
-  # Configure the KMS key's deletion protection
-  enable_key_rotation = true
+  tags = {
+    Name = "OpenShift Master"
+  }
 }
-
-# Create an IAM role for the ROSA cluster
-resource "aws_iam_role" "main" {
-  name = "my-rosa-role"
-  # Configure the IAM role's permissions
-  assume_role_policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Principal" : {
-          "Service" : "ec2.amazonaws.com"
-        },
-        "Action" : "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-# Attach policies to the IAM role
-resource "aws_iam_role_policy_attachment" "main" {
-  role       = aws_iam_role.main.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
-}
-
-  
+    

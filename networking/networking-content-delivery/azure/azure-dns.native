@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+azurerm deployment group create -g example-rg -l westus --name example-deployment
+
+// Crie uma zona DNS
+azurerm dns zone create -g example-rg -n example.com
+
+// Crie um registro A
+azurerm dns record-set a create -g example-rg -z example.com -n www --ttl 3600 --record-set-type A --records 10.0.0.4
+    

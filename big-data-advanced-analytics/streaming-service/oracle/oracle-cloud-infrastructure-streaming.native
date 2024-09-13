@@ -1,0 +1,10 @@
+
+      # Crie um stream
+oci streaming create-stream --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --name example-stream --stream-type PUSH --retention-in-hours 24
+
+# Crie um consumidor
+oci streaming create-consumer --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --stream-id ocid1.stream.oc1..aaaaaaaaxxxxxx --name example-consumer
+
+# Crie um produtor
+oci streaming create-producer --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --stream-id ocid1.stream.oc1..aaaaaaaaxxxxxx --name example-producer
+    

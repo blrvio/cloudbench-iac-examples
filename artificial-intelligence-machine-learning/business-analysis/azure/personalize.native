@@ -1,0 +1,24 @@
+
+      // Crie um conjunto de dados de usuários
+aws personalize create-dataset --name users --dataset-type USERS --schema-arn arn:aws:personalize:us-east-1:123456789012:schema/schema-123456789012-123456789012
+
+// Crie um conjunto de dados de itens
+aws personalize create-dataset --name items --dataset-type ITEMS --schema-arn arn:aws:personalize:us-east-1:123456789012:schema/schema-123456789012-123456789012
+
+// Crie um conjunto de dados de interações
+aws personalize create-dataset --name interactions --dataset-type INTERACTIONS --schema-arn arn:aws:personalize:us-east-1:123456789012:schema/schema-123456789012-123456789012
+
+// Crie um grupo de conjuntos de dados
+aws personalize create-dataset-group --name dataset_group
+
+// Importe os dados para os conjuntos de dados
+aws personalize create-dataset-import --dataset-arn arn:aws:personalize:us-east-1:123456789012:dataset/users --data-source s3://my-bucket/users.csv
+aws personalize create-dataset-import --dataset-arn arn:aws:personalize:us-east-1:123456789012:dataset/items --data-source s3://my-bucket/items.csv
+aws personalize create-dataset-import --dataset-arn arn:aws:personalize:us-east-1:123456789012:dataset/interactions --data-source s3://my-bucket/interactions.csv
+
+// Crie um modelo de recomendação
+aws personalize create-solution --name recommendations --recipe-arn arn:aws:personalize:us-east-1:123456789012:recipe/recipe-123456789012-123456789012 --dataset-group-arn arn:aws:personalize:us-east-1:123456789012:dataset-group/dataset_group
+
+// Treine o modelo de recomendação
+aws personalize create-solution --name recommendations --recipe-arn arn:aws:personalize:us-east-1:123456789012:recipe/recipe-123456789012-123456789012 --dataset-group-arn arn:aws:personalize:us-east-1:123456789012:dataset-group/dataset_group
+    

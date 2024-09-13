@@ -1,31 +1,27 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor do AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Inspector assessment target
-resource "aws_inspector_assessment_target" "main" {
-  name = "my-assessment-target"
-  # Define the resource groups to be assessed
-  resource_group_arn = "arn:aws:ec2:us-east-1:123456789012:instance/i-0123456789abcdef0"
+# Crie um perfil de avaliação do Inspector
+resource "aws_inspector_assessment_target" "example" {
+  name = "example"
+  resource_group_arn = "arn:aws:ec2:us-east-1:123456789012:instance/i-xxxxxxxx"
 }
 
-# Create an Inspector assessment template
-resource "aws_inspector_assessment_template" "main" {
-  assessment_target_arn = aws_inspector_assessment_target.main.arn
-  name                     = "my-assessment-template"
-  # Define the assessment rules to be used
-  rules_package_arns = ["arn:aws:inspector:us-east-1:770794393852:rulespackage/0-AmznManagedRules-EC2_Linux"
-]
+# Crie uma avaliação
+resource "aws_inspector_assessment_template" "example" {
+  assessment_target_arn = aws_inspector_assessment_target.example.arn
+  duration              = 3600
+  name                  = "example"
+  rules_package_arns     = ["arn:aws:inspector:us-east-1:770794393483:rulespackage/0-AmznManagedRules-Linux-1.0"]
 }
 
-# Run an Inspector assessment
-resource "aws_inspector_assessment" "main" {
-  assessment_template_arn = aws_inspector_assessment_template.main.arn
-  name                      = "my-assessment"
-  # Optional configuration for assessment duration
-  duration_in_seconds       = 3600 # 1 hour
+# Execute a avaliação
+resource "aws_inspector_assessment_run" "example" {
+  assessment_template_arn = aws_inspector_assessment_template.example.arn
+  name                    = "example"
 }
 
-  
+    

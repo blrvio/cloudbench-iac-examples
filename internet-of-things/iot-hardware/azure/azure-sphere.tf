@@ -1,46 +1,41 @@
 
-    # Configure the Azure provider
+      /* Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Omitendo para uma resposta concisa
 }
 
-# Create an Azure Sphere Security Service
-resource "azurerm_sphere_security_service" "example" {
-  name                = "example-sphere-security-service"
-  resource_group_name = "example-resource-group"
-  location            = "westus2"
-  # Optional configuration for IoT Hub
-  iot_hub {
-    # Use existing IoT Hub
-    existing_iot_hub_name = "example-iot-hub"
-    # Create a new IoT Hub
-    # name                = "example-iot-hub"
-    # location           = "westus2"
-    # sku {
-    #   name      = "F1"
-    #   capacity = 1
-    # }
-    # partition           = "westus2"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
+  location = "westus2"
+}
+
+# Crie um dispositivo Azure Sphere
+resource "azurerm_sphere_device" "example" {
+  name                 = "example-device"
+  resource_group_name  = azurerm_resource_group.example.name
+  device_properties = {
+    device_id      = "device-id"
+    device_secret = "device-secret"
   }
 }
 
-# Create an Azure Sphere Security Service Configuration
-resource "azurerm_sphere_security_service_config" "example" {
-  name                = "example-sphere-security-service-config"
-  resource_group_name = "example-resource-group"
-  location            = "westus2"
-  security_service_id  = azurerm_sphere_security_service.example.id
+# Crie um aplicativo Azure Sphere
+resource "azurerm_sphere_application" "example" {
+  name                 = "example-application"
+  resource_group_name  = azurerm_resource_group.example.name
+  application_properties = {
+    application_id = "application-id"
+    application_key = "application-key"
+  }
 }
 
-# Create an Azure Sphere Security Service Update
-resource "azurerm_sphere_security_service_update" "example" {
-  name                = "example-sphere-security-service-update"
-  resource_group_name = "example-resource-group"
-  location            = "westus2"
-  security_service_id  = azurerm_sphere_security_service.example.id
-  # Optional parameters
-  # security_service_config_id = azurerm_sphere_security_service_config.example.id
-  # content_path                = "path/to/content"
-}
-
-  
+# Crie um certificado Azure Sphere
+resource "azurerm_sphere_certificate" "example" {
+  name                 = "example-certificate"
+  resource_group_name  = azurerm_resource_group.example.name
+  certificate_properties = {
+    certificate_data = "certificate-data"
+  }
+}*/
+    

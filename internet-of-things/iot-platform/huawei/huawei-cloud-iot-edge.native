@@ -1,0 +1,13 @@
+
+      // Create an IoT Edge device
+# You will need to provide the device ID and authentication information
+# ...
+# Register a device
+iot_edge_device_register --device-id <device_id>
+
+# Configure the device
+iot_edge_device_config --device-id <device_id>
+
+# Deploy an application to the device
+iot_edge_app_deploy --device-id <device_id> --app-id <app_id> --app-version <version>
+    

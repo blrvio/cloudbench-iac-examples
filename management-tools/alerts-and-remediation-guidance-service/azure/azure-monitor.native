@@ -1,0 +1,11 @@
+
+      # Crie um grupo de recursos
+azurerm resourcegroup create -n example-resources -l "West Europe"
+
+# Crie uma conta de Log Analytics
+azurerm log-analytics workspace create -n example-workspace -g example-resources -l "West Europe" -s Free
+
+# Crie uma regra de alerta
+azurerm monitor alert-rule create -g example-resources -n example-alert -l "West Europe" -w example-workspace -d "Exemplo de regra de alerta" -e true --condition "{\"windowSize\": \"PT1M\", \"timeAggregation\": \"Average\", \"operator\": \"GreaterThan\", \"threshold\": 10, \"metricNamespace\": \"Microsoft.Compute/virtualMachines\", \"metricName\": \"PercentageCPU\", \"dimensionNameValuePairs\": [{\"Name\": \"ResourceGroupName\", \"Value\": \"example-resources\"}]}" --action "{\"actionGroupName\": \"example-action-group\"}"
+
+    

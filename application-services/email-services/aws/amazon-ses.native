@@ -1,0 +1,11 @@
+
+      # Verificar domínio
+aws ses verify-domain-identity --domain example.com
+
+# Criar remetente de email
+aws ses verify-email-identity --email example@example.com
+
+# Enviar email
+aws ses send-email --from example@example.com --to recipient@example.com --subject "Assunto do email" --text "Conteúdo do email"
+
+    

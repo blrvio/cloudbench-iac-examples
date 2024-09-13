@@ -1,0 +1,16 @@
+
+      // Crie um detector de fraude
+aws frauddetector create-detector --name my_detector --description "My fraud detector" --event-type my_event_type --model-id my_model --rules my_rule1 my_rule2
+
+// Crie um modelo de fraude
+aws frauddetector create-model --name my_model --description "My fraud model" --event-type my_event_type --training-data-source my_training_data --model-type fraud_detection
+
+// Crie uma regra de fraude
+aws frauddetector create-rule --name my_rule --description "My fraud rule" --detector-id my_detector --expression "event.value >= 10" --outcomes FRAUD --rule-version 1 --rule-execution-mode FIRST_MATCHED
+
+// Crie um conjunto de dados de treinamento
+aws frauddetector create-training-data-source --name my_training_data --event-type my_event_type --training-data s3://my-bucket/my-training-data.csv --event-timestamp-field timestamp --label-field fraud
+
+// Crie um tipo de evento
+aws frauddetector create-event-type --name my_event_type --description "My event type" --entity-types CUSTOMER --event-variables name=value,data_type=STRING
+    

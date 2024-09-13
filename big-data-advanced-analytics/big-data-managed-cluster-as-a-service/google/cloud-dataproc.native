@@ -1,0 +1,7 @@
+
+      # Crie um cluster do DataProc
+gcloud dataproc clusters create my-dataproc-cluster --region us-central1 --master-machine-type n1-standard-1 --num-master-instances 2 --worker-machine-type n1-standard-1 --num-worker-instances 2
+
+# Crie um job do DataProc
+gcloud dataproc jobs submit pyspark --cluster my-dataproc-cluster --region us-central1 --py-file gs://your-bucket/wordcount.py
+    

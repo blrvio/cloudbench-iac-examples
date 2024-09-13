@@ -1,0 +1,10 @@
+
+      // Crie um grupo de recursos
+azurerm resourcegroup create --name example-rg --location "West Europe"
+
+// Crie uma conta de armazenamento
+azurerm storage account create --name examplestorage --resource-group example-rg --location "West Europe" --sku Standard --replication LRS
+
+// Crie um sistema de arquivos
+azurerm storage fileshare create --name example-share --resource-group example-rg --storage-account-name examplestorage --static-website-index-document index.html --static-website-error-404-document 404.html
+    

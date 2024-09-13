@@ -1,0 +1,13 @@
+
+      // Create a machine learning model
+CREATE MODEL my_model
+  USING ALGORITHM (KMEANS)
+  AS SELECT * FROM my_data;
+
+// Train the model
+EXECUTE MODEL my_model;
+
+// Predict using the trained model
+SELECT * FROM my_data
+  WHERE my_model.PREDICT(my_data) = 1;
+    

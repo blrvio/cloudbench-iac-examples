@@ -1,0 +1,27 @@
+
+      aws iot create-endpoint --endpoint-type iot_button --endpoint-id my-button-endpoint --description "Endpoint para o botão IoT"
+
+aws iot create-topic-rule --topic-rule-name my-button-topic-rule --topic my-button-topic --rule-disabled false --sql "SELECT * FROM '$aws/events/thing/+/button/click'" --actions "{"cloudwatch_metrics":{"metric_name":"ButtonClicks","metric_namespace":"MyButtonMetrics","metric_value":"1","metric_unit":"Count"}}"
+
+# Crie um certificado para o botão IoT (não disponível através da CLI)
+# Crie uma política para o botão IoT
+aws iot create-policy --policy-name button-policy --policy "{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "iot:Publish",
+          "iot:Receive"
+        ],
+        "Resource": "arn:aws:iot:*:*:topic/my-button-topic"
+      }
+    ]
+  }"
+
+# Anexa a política ao certificado (não disponível através da CLI)
+# Crie a coisa do IoT para o botão
+aws iot create-thing --thing-name my-button-thing --thing-type-name my-button-type --tags "Name=My Button"
+
+# Anexa o certificado à coisa do IoT (não disponível através da CLI)
+    

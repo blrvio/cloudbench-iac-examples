@@ -1,0 +1,7 @@
+
+      // Criar um tópico de notificação
+oci notifications create-topic --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --name example-topic --display-name "Example Topic" --description "Example Topic"
+
+// Criar uma regra de notificação
+oci notifications create-rule --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --topic-id ocid1.notificationtopic.oc1..aaaaaaaaxxxxxx --name example-rule --description "Example Rule" --action oci.action.notifications.send-email --is-enabled true --actions '[{"emailNotification":{"subject":"Example Notification","body":"Example Notification Body","toAddresses":["example@example.com"]}}]' --conditions '[{"eventType":"instance.create","namespace":"oci.compute"}]'
+    

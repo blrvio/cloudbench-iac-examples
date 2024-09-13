@@ -1,0 +1,10 @@
+
+      // Crie um domínio do CloudSearch
+aws cloudsearch create-domain --domain-name my-domain
+
+// Crie um índice de pesquisa
+aws cloudsearch create-index --domain-name my-domain --index-name my-index --index-options '{"indexFields":[{"fieldName":"title","indexFieldType":"text","fieldOptions":{"index":true,"store":true}},{"fieldName":"content","indexFieldType":"text","fieldOptions":{"index":true,"store":true}}]}'
+
+// Carregue dados no índice
+aws cloudsearch upload-documents --domain-name my-domain --documents '{"id":"1","fields":{"title":"My Document Title","content":"This is the content of my document."}}'
+    

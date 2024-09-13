@@ -1,0 +1,4 @@
+
+      // No Terraform provider exists for this service, here's an example of the native CLI command
+aws elemental-server create-job --input-path s3://my-bucket/my-input.mp4 --output-path s3://my-bucket/my-output.mp4 --pipeline-id my-pipeline-id --job-type 'transcode'
+    

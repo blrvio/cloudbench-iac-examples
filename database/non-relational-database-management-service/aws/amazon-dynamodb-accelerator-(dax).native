@@ -1,0 +1,13 @@
+
+      # Crie um grupo de sub-redes DAX
+aws dax create-subnet-group --subnet-group-name my-dax-subnet-group --subnet-ids subnet-xxxxxxxx subnet-yyyyyyyy subnet-zzzzzzzz
+
+# Crie um papel IAM para o DAX
+aws iam create-role --role-name my-dax-role --assume-role-policy-document file://assume_role_policy.json
+
+# Adicione permissões ao papel IAM
+aws iam put-role-policy --role-name my-dax-role --policy-name dax-policy --policy-document file://dax_policy.json
+
+# Crie um cluster DAX
+aws dax create-cluster --cluster-name my-dax-cluster --node-type dax.r4.large --replication-factor 3 --subnet-group-name my-dax-subnet-group --iam-role-arn arn:aws:iam::123456789012:role/my-dax-role --parameter-group-name default.dax.parameter.group
+    

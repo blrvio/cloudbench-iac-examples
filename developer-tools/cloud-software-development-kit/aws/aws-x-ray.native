@@ -1,0 +1,15 @@
+
+      aws xray get-sampling-rules
+
+# Crie um perfil de rastreamento
+aws xray create-sampling-rule --name default --rule-arn arn:aws:xray:us-east-1:123456789012:sampling-rule:default --sampling-rate 0.5 --service-name MyService --service-type AWS::Lambda::Function --host my-service.amazonaws.com --http-method GET --url-path /my-path
+
+# Crie um grupo de recursos
+aws xray create-group --group-name MyGroup --filter-name service --filter-value MyService
+
+# Crie um mapa de serviços
+aws xray create-service-map --group-name MyGroup --service-map-name MyServiceMap
+
+# Crie uma conta de instrumentação
+aws xray create-encryption-config --key-id arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    

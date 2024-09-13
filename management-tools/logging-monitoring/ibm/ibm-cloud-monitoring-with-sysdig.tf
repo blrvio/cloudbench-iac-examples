@@ -1,35 +1,33 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY" # Replace with your IBM Cloud API Key
-  region  = "us-south"
-}
-
-# Create a Sysdig Monitor instance
-resource "ibm_sysdig_monitor_instance" "main" {
-  name   = "my-sysdig-instance"
-  plan   = "basic"
   region = "us-south"
+  # Substitua pela sua região desejada
 }
 
-# Create a Sysdig Monitor alert
-resource "ibm_sysdig_monitor_alert" "main" {
-  monitor_instance_id = ibm_sysdig_monitor_instance.main.id
-  name              = "high-cpu-alert"
-  description       = "Alert when CPU usage is above 90%"
-  # Define the alert condition
-  condition {
-    metric    = "cpu"
-    operator = "gt"
-    threshold = 90
-  }
-  # Define the alert notification
-  notification {
-    type        = "email"
-    email_config {
-      email_address = "your@email.com"
-    }
-  }
+# Crie um monitoramento de aplicação
+application_monitoring "my_app_monitor" {
+  name     = "My Application Monitor"
+  app_id   = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # Substitua pelo ID da sua aplicação
 }
 
-  
+# Crie um monitoramento de infraestrutura
+infrastructure_monitoring "my_infra_monitor" {
+  name     = "My Infrastructure Monitor"
+  resource_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # Substitua pelo ID do seu recurso
+}
+
+# Crie um alerta
+alert "my_alert" {
+  name           = "My Alert"
+  monitor_type  = "application"
+  # Ou 'infrastructure'
+  monitor_id    = ibm_application_monitoring.my_app_monitor.id
+  # Ou ibm_infrastructure_monitoring.my_infra_monitor.id
+  condition      = "metric_value > 100"
+  # Substitua pela sua condição
+}
+
+    

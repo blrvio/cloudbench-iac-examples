@@ -1,0 +1,27 @@
+
+      // The Azure portal is a management console, not a service, so there
+// is no native code that can be generated.  This example shows how
+// to create a VM using the Azure CLI.  For more information, see
+// https://docs.microsoft.com/en-us/cli/azure/.
+
+# Create a resource group
+azurerm resourcegroup create --name example-rg --location westus2
+
+# Create a virtual network
+azurerm network vnet create --resource-group example-rg --name example-vnet --location westus2 --address-prefixes 10.0.0.0/16
+
+# Create a subnet
+azurerm network vnet subnet create --resource-group example-rg --name example-subnet --vnet-name example-vnet --address-prefixes 10.0.1.0/24
+
+# Create a network security group
+azurerm network nsg create --resource-group example-rg --name example-nsg --location westus2
+
+# Create an inbound security rule to allow SSH access
+azurerm network nsg rule create --resource-group example-rg --name allow-ssh --nsg-name example-nsg --priority 100 --direction Inbound --access Allow --protocol Tcp --source-port-range * --destination-port-range 22 --source-address-prefix * --destination-address-prefix *
+
+# Create a network interface
+azurerm network nic create --resource-group example-rg --name example-nic --location westus2 --network-security-group example-nsg --subnet example-subnet --vnet-name example-vnet --public-ip-address-allocation Dynamic
+
+# Create a virtual machine
+azurerm vm create --resource-group example-rg --name example-vm --location westus2 --size Standard_A2_v2 --image Canonical,UbuntuServer,18.04-LTS,Latest --nic example-nic --storage-account-type Standard_LRS --os-disk-caching ReadWrite
+    

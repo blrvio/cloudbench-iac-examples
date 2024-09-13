@@ -1,0 +1,13 @@
+
+      // Crie um bucket de origem no S3
+aws s3api create-bucket --bucket source-bucket-name
+
+// Carregue o objeto de origem no bucket de origem
+aws s3api put-object --bucket source-bucket-name --key source-object-key --body path/to/source-object
+
+// Crie um bucket de destino no S3
+aws s3api create-bucket --bucket target-bucket-name
+
+// Copie o objeto de origem para o bucket de destino
+aws s3api copy-object --copy-source /source-bucket-name/source-object-key --bucket target-bucket-name --key target-object-key
+    

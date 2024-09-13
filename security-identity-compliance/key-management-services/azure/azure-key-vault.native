@@ -1,0 +1,13 @@
+
+      // Crie um Key Vault
+az keyvault create -n example-keyvault -l westus2 -g example-resources -s standard
+
+// Crie uma chave
+az keyvault key create --vault-name example-keyvault -n example-key --kty RSA --size 2048 --ops sign verify wrapKey unwrapKey encrypt decrypt
+
+// Crie um segredo
+az keyvault secret set --vault-name example-keyvault -n example-secret -v secret-value
+
+// Crie um certificado
+az keyvault certificate create --vault-name example-keyvault -n example-certificate --password secret-password --subject "CN=example-cert" --start-date "2023-01-01T00:00:00Z" --end-date "2024-01-01T00:00:00Z" --issuer-name "Self" --key-type RSA --key-size 2048 --key-usage sign encrypt
+    

@@ -1,0 +1,7 @@
+
+      // Crie um endpoint de inferência
+aws sagemaker create-endpoint-config --endpoint-config-name my-endpoint-config --production-variants '[{"InitialInstanceCount":1,"InstanceType":"ml.t2.medium","ModelName":"my-model","VariantName":"AllTraffic"}]'
+
+// Crie um endpoint
+aws sagemaker create-endpoint --endpoint-name my-endpoint --endpoint-config-name my-endpoint-config
+    

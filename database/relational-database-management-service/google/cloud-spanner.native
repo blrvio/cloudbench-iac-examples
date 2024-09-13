@@ -1,0 +1,10 @@
+
+      // Crie uma instância do Cloud Spanner
+gcloud spanner instances create my-spanner-instance --config=regional-us-central1 --display-name="My Spanner Instance" --node-count=1
+
+// Crie um banco de dados no Cloud Spanner
+gcloud spanner databases create my-spanner-database --instance=my-spanner-instance --ddl="CREATE TABLE Singers (SingerId INT64 NOT NULL, FirstName STRING(1024), LastName STRING(1024), SingerInfo STRING(1024), PRIMARY KEY (SingerId))"
+
+// Crie um usuário do Cloud Spanner
+gcloud spanner databases add-user my-spanner-database --instance=my-spanner-instance --user=my-spanner-user --role=roles/spanner.databaseReader
+    

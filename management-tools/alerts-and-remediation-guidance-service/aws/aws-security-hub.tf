@@ -1,45 +1,23 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1"
 }
 
-# Enable Security Hub
-resource "aws_securityhub_account" "main" {
-  # Enable Security Hub for the current AWS account
-  enable = true
-}
-
-# Create a custom security standard
-resource "aws_securityhub_standards_subscription" "custom_standard" {
-  standards_subscription_arn = "arn:aws:securityhub:us-east-1:123456789012:standards/custom/my-custom-standard"
-  standards_input {
-    # Define the custom security standard rules
-    # ...
+# Habilite o Security Hub
+resource "aws_securityhub_account" "this" {
+  enable_default_findings = true
+  tags = {
+    Name = "Security Hub Account"
   }
 }
 
-# Create a custom security standard control
-resource "aws_securityhub_standards_control" "custom_control" {
-  standards_subscription_arn = "arn:aws:securityhub:us-east-1:123456789012:standards/custom/my-custom-standard"
-  control_id                 = "CUSTOM_CONTROL_1"
-  # Define the custom control details
-  # ...
+# Crie uma regra de detecção personalizada
+resource "aws_securityhub_insight" "this" {
+  name     = "My Custom Insight"
+  filters = <<FILTER
+[{"FindingTypes": [{"Value": "Software and Configuration Checks/AWS Security Best Practices"}]}, {"Severity": [{"Value": "HIGH"}]}]
+FILTER
 }
 
-# Create a custom security standard control rule
-resource "aws_securityhub_standards_control_rule" "custom_rule" {
-  standards_subscription_arn = "arn:aws:securityhub:us-east-1:123456789012:standards/custom/my-custom-standard"
-  control_id                 = "CUSTOM_CONTROL_1"
-  # Define the custom rule details
-  # ...
-}
-
-# Create a custom security standard control rule input
-resource "aws_securityhub_standards_control_rule_input" "custom_input" {
-  standards_subscription_arn = "arn:aws:securityhub:us-east-1:123456789012:standards/custom/my-custom-standard"
-  control_id                 = "CUSTOM_CONTROL_1"
-  # Define the custom input details
-  # ...
-}
-  
+    

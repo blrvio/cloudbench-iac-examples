@@ -1,40 +1,23 @@
 
-    # Configure the Google Cloud Provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
-  region  = "us-central1" # Replace with your desired region
+  project = "gcp-project-id" # Substitua pelo ID do seu projeto
+  region  = "us-central1" # Substitua pela sua região desejada
 }
 
-# Create an Identity-Aware Proxy (IAP) client
-resource "google_iap_client" "default" {
-  name     = "my-iap-client"
-  display_name = "My IAP Client"
-  project = "your-gcp-project-id"
+# Crie um serviço do Identity-Aware Proxy
+resource "google_iap_web_backend_service" "default" {
+  name     = "iap-backend-service"
+  project  = "gcp-project-id"
+  backend  = "https://my-app.example.com"
 }
 
-# Create an IAP setting
-resource "google_iap_settings" "default" {
-  name     = "my-iap-setting"
-  project = "your-gcp-project-id"
-  
-  # Optional settings
-  #  oauth_client_id = "your-oauth-client-id"
-  #  oauth_client_secret = "your-oauth-client-secret"
-  #  enabled = false # Disable IAP settings
-  #  authentication_provider = "google_account" # Use Google Account Authentication
-  #  authentication_provider = "idp_client_id" # Use Identity Provider Client ID
-  #  oidc_audience = "your-oidc-audience"
-  #  oidc_client_id = "your-oidc-client-id"
-}
+# Crie uma configuração de acesso ao serviço do IAP
+resource "google_iap_web_iam_binding" "default" {
+  project  = "gcp-project-id"
+  members  = ["allUsers"]
+  role     = "roles/iap.httpsResourceAccessor"
 
-# Create an IAP web service
-resource "google_iap_web" "default" {
-  name     = "my-iap-web-service"
-  project = "your-gcp-project-id"
-  # URL of the backend service
-  backend_url = "https://your-backend-service.example.com"
-  #  iap_settings = google_iap_settings.default.name
-  #  iap_client = google_iap_client.default.name
+  iap_web_backend_service = google_iap_web_backend_service.default.id
 }
-
-  
+    

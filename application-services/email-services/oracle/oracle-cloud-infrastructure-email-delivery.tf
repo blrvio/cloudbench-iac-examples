@@ -1,51 +1,44 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud Infrastructure
 provider "oci" {
-  region  = "us-ashburn-1"
-  # Add your tenancy OCID and user OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..<your_tenancy_ocid>"
-  user_ocid = "ocid1.user.oc1..<your_user_ocid>"
-  # Authenticate using an API key
-  # Add your API Key and Secret
-  api_key_fingerprint = "<your_api_key_fingerprint>"
-  api_key = "<your_api_key>"
+  region  = "us-ashburn-1" # Substitua pela sua região desejada
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  user    = "ocid1.user.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  fingerprint = "xxxxxxxxx"
 }
 
-# Create an Email Delivery service
-resource "oci_email_delivery_service" "main" {
-  # Configure the name of your service
-  display_name = "My-Email-Service"
-  # Configure the compartment ID
-  compartment_id = "ocid1.compartment.oc1..<your_compartment_id>"
-  # Configure the sender details
-  sender_info {
-    from_name = "My Email Name"
-    from_email = "my.email@example.com"
+# Crie um remetente de email
+resource "oci_email_sender" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  display_name   = "Example Sender"
+  sender_type     = "STANDARD"
+}
+
+# Crie uma campanha de email
+resource "oci_email_campaign" "example" {
+  compartment_id   = "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  sender_id       = oci_email_sender.example.id
+  display_name     = "Example Campaign"
+  subject         = "Example Subject"
+  content_type     = "TEXT"
+  content          = "Example content"
+}
+
+# Crie um grupo de destinatários
+resource "oci_email_recipient_group" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  display_name  = "Example Recipient Group"
+
+  recipients {
+    type     = "EMAIL"
+    recipient = "example@example.com"
   }
 }
 
-# Create an Email Delivery sender identity
-resource "oci_email_delivery_sender_identity" "main" {
-  # Configure the name of the sender identity
-  display_name = "My Sender Identity"
-  # Configure the compartment ID
-  compartment_id = "ocid1.compartment.oc1..<your_compartment_id>"
-  # Configure the email address
-  email_address = "my.sender@example.com"
-  # Configure the service OCID
-  service_ocid = oci_email_delivery_service.main.id
+# Crie um envio de email
+resource "oci_email_send" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaabbbbbbbbbbcccccccc"
+  campaign_id    = oci_email_campaign.example.id
+  recipient_group_id = oci_email_recipient_group.example.id
 }
-
-# Create an Email Delivery sending domain
-resource "oci_email_delivery_sending_domain" "main" {
-  # Configure the name of the sending domain
-  display_name = "My Sending Domain"
-  # Configure the compartment ID
-  compartment_id = "ocid1.compartment.oc1..<your_compartment_id>"
-  # Configure the domain name
-  domain_name = "example.com"
-  # Configure the service OCID
-  service_ocid = oci_email_delivery_service.main.id
-}
-
-  
+    

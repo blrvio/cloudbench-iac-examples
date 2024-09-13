@@ -1,34 +1,57 @@
 
-    # Configure the Azure Provider
+      # Configure the Azure Provider
 provider "azurerm" {
-  features {} # Enable all Azure features
+  features {} # This is needed for the Azure Security Center features
 }
 
-# Create a Security Center Contact
-resource "azurerm_security_center_contact" "example" {
-  name    = "example-security-center-contact"
-  email   = "example@example.com"
-  phone   = "1234567890"
-  location = "westus2"
-  # Specify the subscription ID for the resource
-  subscription_id = "00000000-0000-0000-0000-000000000000"
+# Enable Azure Security Center Standard for a Subscription
+resource "azurerm_security_center_subscription_pricing" "standard" {
+  subscription_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Substitute with your Subscription ID
+  pricing_tier   = "Standard"
 }
 
-# Create a Security Center Subscription
-resource "azurerm_security_center_subscription" "example" {
-  workspace_name = "example-workspace"
-  location       = "westus2"
-  # Specify the subscription ID for the resource
-  subscription_id = "00000000-0000-0000-0000-000000000000"
+# Create a Security Contact for the Subscription
+resource "azurerm_security_center_contact" "contact" {
+  subscription_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Substitute with your Subscription ID
+  email           = "security@example.com" # Substitute with your security contact email
+  phone           = "1234567890"
+  contact_type    = "Primary"
 }
 
-# Create a Security Center Workspace
-resource "azurerm_security_center_workspace" "example" {
-  location = "westus2"
-  # Specify the subscription ID for the resource
-  subscription_id = "00000000-0000-0000-0000-000000000000"
-  workspace_id     = "example-workspace"
-  # Optional - Specify the resource group where the Security Center workspace is created
-  resource_group_name = "example-resource-group"
+# Create an Azure Policy for resource tagging
+resource "azurerm_policy_definition" "resource_tagging" {
+  name         = "tag-resources"
+  policy_type  = "BuiltIn"
+  display_name = "Resource Tagging"
+  description  = "Enforces tagging of resources"
+  policy_rule  = <<EOF
+{
+  "if": {
+    "allOf": [
+      {
+        "field": "type",
+        "equals": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "field": "tags['Environment']",
+        "not": {
+          "exists": true
+        }
+      }
+    ]
+  },
+  "then": {
+    "effect": "audit"
+  }
 }
-  
+EOF
+}
+
+# Assign the Azure Policy to a Resource Group
+resource "azurerm_policy_assignment" "resource_group_assignment" {
+  name            = "tag-resources-assignment"
+  policy_definition_id = azurerm_policy_definition.resource_tagging.id
+  scope          = "resourceGroup(rg-xxxxxxxx)" # Substitute with your Resource Group Name
+}
+
+    

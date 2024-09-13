@@ -1,48 +1,24 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project  = "gcp-project-id"
-  region    = "us-central1" # Set the region to be used for resources
-  zone     = "us-central1-a" # Set the zone to be used for resources
+  project = "my-project-id"
 }
 
-# Create a Cloud Identity-Aware Proxy service configuration
-resource "google_iap_service" "default" {
-  name    = "iap-service"
-  project = "gcp-project-id"
-  
-  # Set the URL of the backend service to be protected by IAP
-  backend_service = "backend-service-url"
+# Crie um IAP serviço de proteção
+resource "google_iap_web_backend_service" "default" {
+  name     = "default"
+  backend  = "my-backend-service"
+  disable  = false
+  port_name = "http"
 }
 
-# Create a Cloud Identity-Aware Proxy client configuration
-resource "google_iap_client" "default" {
-  name = "iap-client"
-  
-  # Set the application's client ID
-  app_id = "your-app-client-id"
-  
-  # Set the application's client secret
-  app_secret = "your-app-client-secret"
+# Crie um IAP serviço de proteção
+resource "google_iap_tunnel_destination" "default" {
+  name     = "default"
+  address  = "10.128.0.1"
+  port     = 8080
+  disable  = false
+  service  = "my-service-id"
 }
 
-# Create a Cloud Identity-Aware Proxy client configuration
-resource "google_iap_web" "default" {
-  name     = "iap-web"
-  project  = "gcp-project-id"
-  service  = google_iap_service.default.name
-  
-  # Set the URL of the web application to be protected by IAP
-  target_url = "https://your-webapp-url.com"
-}
-
-# Enable Cloud Identity-Aware Proxy for a specific backend service
-#resource "google_iap_web" "default" {
-#  name     = "iap-web"
-#  project  = "gcp-project-id"
-#  service  = "backend-service-url"
-#  target_url = "https://your-webapp-url.com"
-#}
-
-
-  
+    

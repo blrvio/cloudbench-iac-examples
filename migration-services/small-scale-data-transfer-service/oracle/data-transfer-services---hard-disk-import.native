@@ -1,0 +1,3 @@
+
+      aws s3api put-object --bucket my-bucket --key my-key --body my-file.tar.gz --metadata '{"transferType": "hardDiskImport"}'
+    

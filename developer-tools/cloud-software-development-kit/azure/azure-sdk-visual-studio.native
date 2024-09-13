@@ -1,0 +1,29 @@
+
+      // Install the Azure SDK for Visual Studio
+// 1. Open Visual Studio
+// 2. Go to Tools > Extensions and Updates
+// 3. Search for "Azure SDK"
+// 4. Select the latest version of the Azure SDK
+// 5. Click "Download"
+
+// Create an Azure project
+// 1. Create a new project in Visual Studio.
+// 2. Select "Cloud" > "Azure Functions" or "Azure Web App" (depending on your needs).
+// 3. Configure the project to connect to Azure.
+// 4. Install the necessary NuGet packages for the Azure service you want to use.
+
+// Example code for creating a storage account
+// 1. Create a new Azure Storage Account
+using Microsoft.Azure.Storage.Blobs;
+using Microsoft.Azure.Storage;
+
+// Set up storage account connection
+string connectionString = "DefaultEndpointsProtocol=https;AccountName=yourStorageAccountName;AccountKey=yourStorageAccountKey";
+CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+
+// Create a new blob container
+CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+CloudBlobContainer container = blobClient.GetContainerReference("myContainer");
+container.CreateIfNotExists();
+
+    

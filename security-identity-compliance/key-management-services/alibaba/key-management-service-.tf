@@ -1,26 +1,53 @@
 
-    # Configure the Alibaba Cloud Provider
-provider "alicloud" {
-  region = "cn-hangzhou"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a KMS Key
-resource "alicloud_kms_key" "main" {
-  key_usage = "ENCRYPT_DECRYPT"
-  description = "My KMS Key"
-  key_spec  = "AES_256"
+# Crie uma chave KMS
+resource "aws_kms_key" "my_key" {
+  description = "My KMS key"
+  enable_key_rotation = true
 }
 
-# Create a KMS Key Version
-resource "alicloud_kms_key_version" "main" {
-  key_id = alicloud_kms_key.main.id
-  enabled = true
+# Crie uma política de chave KMS
+resource "aws_kms_key_policy" "my_key_policy" {
+  key_id     = aws_kms_key.my_key.id
+  policy     = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Allow access for specific user",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:user/my_user"
+      },
+      "Action": [
+        "kms:DescribeKey",
+        "kms:EnableKeyRotation",
+        "kms:DisableKeyRotation",
+        "kms:GetKeyPolicy",
+        "kms:GetPublicKey",
+        "kms:ListAliases",
+        "kms:ListGrants",
+        "kms:DescribeKey",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:CreateGrant",
+        "kms:RevokeGrant",
+        "kms:ScheduleKeyDeletion",
+        "kms:CancelKeyDeletion"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+POLICY
 }
 
-# Create a KMS Alias
-resource "alicloud_kms_alias" "main" {
-  name = "MyKMSAlias"
-  key_id = alicloud_kms_key.main.id
-}
-
-  
+    

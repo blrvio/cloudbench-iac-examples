@@ -1,0 +1,10 @@
+
+      // Crie um dataset
+gcloud bigquery datasets create my_dataset --dataset-id my_dataset --location US
+
+// Crie uma tabela
+gcloud bigquery mk --table my_dataset.my_table --schema '{"fields":[{"name":"id","type":"INTEGER","mode":"REQUIRED","description":"Unique ID"},{"name":"name","type":"STRING","mode":"NULLABLE","description":"Name of the item"}]}' --location US
+
+// Crie uma view
+gcloud bigquery mk --view my_dataset.my_view --query 'SELECT * FROM `gcp-project-id.my_dataset.my_table`' --location US
+    

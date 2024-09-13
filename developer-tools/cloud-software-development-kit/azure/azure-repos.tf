@@ -1,19 +1,20 @@
 
-    # Configure the Azure provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilita recursos beta
 }
 
-# Create an Azure DevOps Project
-resource "azurerm_devops_project" "main" {
-  name = "my-devops-project"
-  visibility = "private" # Set project visibility
+# Crie um projeto Azure DevOps
+resource "azurerm_devops_project" "example" {
+  name     = "example-project"
+  visibility = "private"
+  version_control = "Git"
 }
 
-# Create a Git repository within the Azure DevOps Project
-resource "azurerm_devops_git_repository" "main" {
-  project_id = azurerm_devops_project.main.id
-  name = "my-git-repo"
+# Crie um repositório Git
+resource "azurerm_devops_git_repository" "example" {
+  project_id = azurerm_devops_project.example.id
+  name       = "example-repo"
 }
 
-  
+    

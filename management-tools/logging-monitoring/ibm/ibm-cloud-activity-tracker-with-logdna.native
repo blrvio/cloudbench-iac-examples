@@ -1,0 +1,10 @@
+
+      // Crie um recurso de rastreamento de atividades
+ibmcloud activity-tracker create --name my_tracker --location us-south
+
+// Crie um recurso de LogDNA
+ibmcloud logdna create --name my_logdna --region us-south --plan basic --retention 30
+
+// Configure o LogDNA para receber os eventos de rastreamento
+ibmcloud activity-tracker integrations create --tracker-id <TRACKER_ID> --logdna-id <LOGDNA_ID>
+    

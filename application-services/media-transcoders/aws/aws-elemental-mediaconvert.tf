@@ -1,134 +1,134 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS Elemental MediaConvert Job Template
-resource "aws_mediaconvert_job_template" "main" {
-  name = "my-job-template"
+# Crie uma fila de conversão
+resource "aws_mediaconvert_queue" "default" {
+  name = "my-media-convert-queue"
+}
 
-  # Define the settings for the job template
-  settings {
-    # Configure the input settings
-    inputs {
-      # Define the input source
-      audio_selectors {
-        # Select the audio track
-        audio_pid = "101"
-        # Set the audio language code
-        language_code = "en-US"
-      }
-      # Specify the input file or stream
-      file_source_settings {
-        # Provide the path to the input file
-        s3_input_source {
-          bucket_name = "my-bucket"
-          key          = "input-file.mp4"
-        }
-      }
-    }
+# Crie um endpoint de MediaConvert
+resource "aws_mediaconvert_endpoint" "default" {
+  name = "my-media-convert-endpoint"
+}
 
-    # Configure the output settings
-    outputs {
-      # Specify the output container format
-      container_settings {
-        # Use the MP4 container format
-        mp4_settings {
-          # Set the MP4 output file name prefix
-          file_name_prefix = "output"
-        }
-      }
-
-      # Configure the output video settings
-      video_description {
-        # Set the output video codec
-        codec_settings {
-          # Use the H.264 video codec
-          h264_settings {
-            # Specify the output video resolution
-            resolution = "1280x720"
+# Crie uma tarefa de conversão
+resource "aws_mediaconvert_job" "example" {
+  role           = "arn:aws:iam::123456789012:role/mediaconvert-role" # Substitua pelo ARN do seu papel IAM
+  queue         = aws_mediaconvert_queue.default.id
+  settings       = {
+    inputs       = [
+      {
+        audio_selectors = [
+          {
+            audio_pid           = "1"
+            selector_type       = "pid"
+            selector_settings = {
+              pid               = 1
+            }
+          }
+        ]
+        file_source_settings = {
+          s3_settings = {
+            bucket_name = "my-bucket" # Substitua pelo nome do seu bucket S3
+            object_key  = "my-file.mp4" # Substitua pelo nome do seu arquivo de mídia
           }
         }
       }
-
-      # Configure the output audio settings
-      audio_description {
-        # Set the output audio codec
-        codec_settings {
-          # Use the AAC audio codec
-          aac_settings {
-            # Specify the output audio bitrate
-            bitrate = 128
+    ]
+    output_groups = [
+      {
+        name = "HLS Output"
+        output_group_settings = {
+          hls_group_settings = {
+            ad_markers                 = "none"
+            segment_length             = 5
+            stream_inf_resolution       = "include"
+            destination_settings       = {
+              s3_settings = {
+                bucket_name = "my-bucket" # Substitua pelo nome do seu bucket S3
+                canned_acl  = "bucket-owner-full-control"
+              }
+            }
+            hls_manifest_settings = {
+              manifest_name_modifier  = "my-hls"
+              ad_markers               = "none"
+              playlist_type            = "event"
+              playlist_duration_constraint = "max"
+            }
           }
         }
+        outputs = [
+          {
+            audio_description = [
+              {
+                audio_type_control = "follow_input"
+                codec_settings = {
+                  aac_settings = {
+                    bitrate     = 128
+                    coding_mode = "stereo"
+                    profile     = "lc"
+                    rate_control_mode = "cbr"
+                  }
+                }
+                language_code       = "en"
+                language_code_control = "follow_input"
+                sampling_rate = 48000
+              }
+            ]
+            caption_descriptions = [
+              {
+                caption_selector_settings = {
+                  language_code = "en"
+                }
+                destination_settings = {
+                  s3_settings = {
+                    bucket_name = "my-bucket" # Substitua pelo nome do seu bucket S3
+                  }
+                }
+                language_code = "en"
+              }
+            ]
+            container_settings = {
+              fmp4_settings = {
+                audio_duration = 0
+              }
+            }
+            video_description = [
+              {
+                scaling_behavior = "default"
+                width            = 1280
+                height           = 720
+                codec_settings = {
+                  h264_settings = {
+                    bitrate                  = 2000
+                    framerate                = 24
+                    par                  = "16:9"
+                    rate_control_mode       = "cbr"
+                    interlace_mode           = "progressive"
+                    scan_type               = "progressive"
+                    profile                 = "high"
+                    level                   = "auto"
+                    adaptive_quantization = "auto"
+                  }
+                }
+                height_control    = "specify_resolution"
+                width_control      = "specify_resolution"
+                resolution_mode    = "fixed_resolution"
+                aspect_ratio_mode  = "fixed_aspect_ratio"
+                frame_rate_mode = "follow_input"
+                afv_mode           = "none"
+                color_metadata = "bt709"
+              }
+            ]
+          }
+        ]
       }
-    }
+    ]
   }
+  status = "start"
 }
 
-# Create an AWS Elemental MediaConvert Job
-resource "aws_mediaconvert_job" "main" {
-  # Specify the job template to use
-  job_template_id = aws_mediaconvert_job_template.main.id
-
-  # Define the settings for the job
-  settings {
-    # Configure the input settings
-    inputs {
-      # Select the audio track
-      audio_selectors {
-        # Select the audio track
-        audio_pid = "101"
-        # Set the audio language code
-        language_code = "en-US"
-      }
-      # Specify the input file or stream
-      file_source_settings {
-        # Provide the path to the input file
-        s3_input_source {
-          bucket_name = "my-bucket"
-          key          = "input-file.mp4"
-        }
-      }
-    }
-
-    # Configure the output settings
-    outputs {
-      # Specify the output container format
-      container_settings {
-        # Use the MP4 container format
-        mp4_settings {
-          # Set the MP4 output file name prefix
-          file_name_prefix = "output"
-        }
-      }
-
-      # Configure the output video settings
-      video_description {
-        # Set the output video codec
-        codec_settings {
-          # Use the H.264 video codec
-          h264_settings {
-            # Specify the output video resolution
-            resolution = "1280x720"
-          }
-        }
-      }
-
-      # Configure the output audio settings
-      audio_description {
-        # Set the output audio codec
-        codec_settings {
-          # Use the AAC audio codec
-          aac_settings {
-            # Specify the output audio bitrate
-            bitrate = 128
-          }
-        }
-      }
-    }
-  }
-}
-
-  
+    

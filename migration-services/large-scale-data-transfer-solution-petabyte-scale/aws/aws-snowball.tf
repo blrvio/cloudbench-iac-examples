@@ -1,56 +1,25 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS Snowball Job
-resource "aws_snowball_job" "main" {
-  description = "My Snowball Job"
-  # Choose the type of job - Import or Export
-  job_type = "IMPORT"
-  # Set the number of Snowball devices
-  number_of_devices = 1
-  # Set the shipping address
-  shipping_address {
-    name         = "Your Name"
-    company      = "Your Company"
-    address1     = "Your Address"
-    address2     = "Your Address (Optional)"
-    city         = "Your City"
-    state        = "Your State"
-    zip          = "Your Zip Code"
-    country      = "Your Country"
-    phone_number = "Your Phone Number"
-  }
-  # Set the notification settings
-  notification {
-    # Set the SNS topic for notifications
-    sns_topic_arn = "arn:aws:sns:us-east-1:123456789012:my-snowball-topic"
-    # Set the S3 bucket for notifications
-    s3_bucket = "my-snowball-bucket"
-    # Set the S3 key prefix for notifications
-    s3_key_prefix = "snowball-notifications"
-  }
-  # Set the resources for the job
-  resources {
-    # Set the S3 bucket and prefix for the import job
-    s3_resources {
-      bucket = "my-snowball-bucket"
-      # Set the prefix for the import job
-      key_prefix = "snowball-data"
-    }
-  }
-
-  # Configure the resources to be imported
-  # If you're importing data, provide the S3 bucket and key prefix
-  # If you're exporting data, provide the S3 bucket and prefix
+# Crie um job de Snowball
+resource "aws_snowball_job" "example" {
+  description = "Transferir dados para o AWS S3"
+  job_type   = "IMPORT"
+  # ... outros atributos
 }
 
-# Create an AWS Snowball Device
-resource "aws_snowball_device" "main" {
-  job_id = aws_snowball_job.main.id
-  # The Snowball device will be created once the Snowball job is created
+# Crie um volume de Snowball
+resource "aws_snowball_volume" "example" {
+  job_id = aws_snowball_job.example.id
+  # ... outros atributos
 }
 
-  
+# Crie um endereço de entrega
+resource "aws_snowball_address" "example" {
+  address_type = "SHIP_TO"
+  # ... outros atributos
+}
+    

@@ -1,0 +1,6 @@
+
+      az appservice migration help
+
+# Example to migrate from an Azure App Service Web App to a new app service plan
+az appservice migration migrate --source-resource-group resource-group-name --source-app-name app-name --source-app-service-plan app-service-plan-name --target-resource-group resource-group-name --target-app-name app-name --target-app-service-plan app-service-plan-name
+    

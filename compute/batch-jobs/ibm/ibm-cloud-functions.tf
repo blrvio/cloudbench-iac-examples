@@ -1,33 +1,32 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor do IBM Cloud
 provider "ibm" {
-  ibmcloud_api_key = "YOUR_IBM_CLOUD_API_KEY" # Replace with your IBM Cloud API key
-  region = "us-south"
+  api_key = "your_api_key" # Substitua pela sua chave API do IBM Cloud
+  region  = "us-south" # Substitua pela sua região desejada
 }
 
-# Create an IBM Cloud Function
-resource "ibm_functions_action" "main" {
-  name     = "my-function"
-  runtime  = "nodejs:16"
-  code     = "// Your function code"
-  memory   = 128 # Function memory in MB (default is 128)
-  timeout  = 60 # Function timeout in seconds (default is 60)
-  package  = "// Path to the function code package"
-  namespace = "YOUR_NAMESPACE" # Replace with your IBM Cloud Function namespace
-
-  # Define the function trigger
-  trigger {
-    type    = "http"
-    method  = "GET"
-  }
+# Crie um namespace para suas funções
+resource "ibm_functions_namespace" "my_namespace" {
+  name = "my_namespace"
 }
 
-# Create a resource to invoke the IBM Cloud Function
-resource "ibm_functions_invoke" "main" {
-  name     = "my-function-invoke"
-  action_name = ibm_functions_action.main.name
-  namespace = ibm_functions_action.main.namespace
-  method = "GET" # Specify the method for the invocation
+# Crie uma função
+resource "ibm_functions_action" "my_function" {
+  name        = "my_function"
+  namespace   = ibm_functions_namespace.my_namespace.id
+  kind        = "nodejs:16"
+  runtime     = "nodejs:16"
+  code        = "// Código da função
+console.log('Hello, world!');"
+  memory      = 128
+  timeout_sec = 60
 }
 
-  
+# Crie um trigger para a função
+resource "ibm_functions_trigger" "my_trigger" {
+  namespace  = ibm_functions_namespace.my_namespace.id
+  name       = "my_trigger"
+  action_name = ibm_functions_action.my_function.id
+  kind       = "http"
+}
+    

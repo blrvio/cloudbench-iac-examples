@@ -1,0 +1,62 @@
+
+      // Crie um novo shell de sessão
+
+# Use a API REST
+
+# POST /20160918/cloudshell/sessions
+
+# O corpo da solicitação inclui o nome da sessão e um contexto de rede
+# O contexto da rede define qual região e tenancy a sessão está conectada
+# O contexto da rede também define qual tipo de rede a sessão usa, ou seja, virtual ou privada
+# Por padrão, a sessão é conectada ao ambiente virtual da sua tenancy
+
+# Os exemplos a seguir usam o comando curl
+
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" -H "Content-Type: application/json" -X POST -d '{"name": "MY_SESSION_NAME", "networkContext": {"region": "us-ashburn-1", "tenancyId": "YOUR_TENANCY_ID"}}' "https://cloud.oracle.com/20160918/cloudshell/sessions"
+
+
+// Obtenha a lista de sessions
+
+# GET /20160918/cloudshell/sessions
+
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" -X GET "https://cloud.oracle.com/20160918/cloudshell/sessions"
+
+
+// Obtenha os detalhes de uma sessão específica
+
+# GET /20160918/cloudshell/sessions/{sessionId}
+
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" -X GET "https://cloud.oracle.com/20160918/cloudshell/sessions/YOUR_SESSION_ID"
+
+
+// Exclua uma sessão
+
+# DELETE /20160918/cloudshell/sessions/{sessionId}
+
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" -X DELETE "https://cloud.oracle.com/20160918/cloudshell/sessions/YOUR_SESSION_ID"
+
+
+
+# Use a API de linha de comando
+
+# OCI CLI é uma ferramenta de linha de comando que pode ser usada para gerenciar seus recursos do Oracle Cloud
+
+# Instale o OCI CLI
+# Veja as instruções de instalação no site oficial
+
+# Crie uma nova sessão
+
+ocicli cloudshell session create --name MY_SESSION_NAME --region us-ashburn-1 --tenancy-id YOUR_TENANCY_ID
+
+# Obtenha a lista de sessions
+
+ocicli cloudshell session list
+
+# Obtenha os detalhes de uma sessão específica
+
+ocicli cloudshell session get --session-id YOUR_SESSION_ID
+
+# Exclua uma sessão
+
+ocicli cloudshell session delete --session-id YOUR_SESSION_ID
+    

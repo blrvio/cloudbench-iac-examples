@@ -1,0 +1,7 @@
+
+      // Crie um perfil de CDN
+azurerm cdn profile create --name my-cdn-profile --resource-group my-resource-group --location westus --sku Standard_Verizon
+
+// Crie um endpoint de CDN
+azurerm cdn endpoint create --name my-cdn-endpoint --profile-name my-cdn-profile --resource-group my-resource-group --origin-name my-origin --origin-host-name www.example.com
+    

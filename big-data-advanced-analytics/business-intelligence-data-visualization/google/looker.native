@@ -1,0 +1,17 @@
+
+      // Crie um grupo de usuários
+looker-api user-group:create --name "My Group" --users user_1,user_2
+
+// Crie um projeto
+looker-api project:create --name "My Project" --space_id space_id
+
+// Crie um dashboard
+looker-api dashboard:create --project_id project_id --title "My Dashboard"
+# Adicione elementos do dashboard usando a API
+
+// Crie um alerta
+looker-api alert:create --project_id project_id --title "My Alert Title" --look look_id
+
+// Crie um agendamento de dados
+looker-api scheduled_plan:create --project_id project_id --name "My Plan" --schedule "every 24 hours" --look look_id
+    

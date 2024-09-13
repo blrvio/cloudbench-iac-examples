@@ -1,0 +1,13 @@
+
+      // Create a virtual machine instance with Virtual Server for VPC.
+// This command is deprecated.
+gcloud compute instances create instance-name \
+    --zone=us-central1-a \
+    --machine-type=n1-standard-1 \
+    --image=centos-cloud/centos-7 \
+    --disk=type=pd-standard,auto-delete=true,boot=true,size=100 \
+    --network=default \
+    --subnet=projects/your-project-id/regions/us-central1/subnetworks/default \
+    --maintenance-policy=MIGRATE \
+    --tags=http-server
+    

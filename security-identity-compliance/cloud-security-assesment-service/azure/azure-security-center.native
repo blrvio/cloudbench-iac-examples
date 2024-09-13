@@ -1,0 +1,24 @@
+
+      // Habilite o Azure Security Center para sua subscrição
+azurerm account set --subscription "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+azurerm security center enable --pricing-tier Standard --location westeurope
+
+// Crie um grupo de recursos
+azurerm resource-group create --name example-rg --location westeurope
+
+// Crie uma máquina virtual
+azurerm vm create --resource-group example-rg --name example-vm --location westeurope --size Standard_B2s --admin-username azureuser --admin-password "P@$$wOrd" --network-interface-ids $(azurerm network nic show --resource-group example-rg --name example-nic --query id -o tsv) --image Canonical/UbuntuServer/18.04-LTS/Latest --os-disk-caching ReadWrite --os-disk-storage-account-type Standard_LRS
+
+// Crie uma interface de rede
+azurerm network nic create --resource-group example-rg --name example-nic --location westeurope --network-security-group-id $(azurerm network nsg show --resource-group example-rg --name example-nsg --query id -o tsv) --ip-configuration-name ipconfig1 --subnet-id $(azurerm network subnet show --resource-group example-rg --name example-subnet --query id -o tsv) --private-ip-address-allocation Dynamic
+
+// Crie um grupo de segurança de rede
+azurerm network nsg create --resource-group example-rg --name example-nsg --location westeurope
+
+// Crie uma sub-rede
+azurerm network subnet create --resource-group example-rg --name example-subnet --virtual-network-name example-vnet --address-prefixes "10.0.0.0/24"
+
+// Crie uma rede virtual
+azurerm network vnet create --resource-group example-rg --name example-vnet --location westeurope --address-space "10.0.0.0/16" 
+
+    

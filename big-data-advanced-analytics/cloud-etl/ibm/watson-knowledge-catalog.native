@@ -1,0 +1,10 @@
+
+      // Crie um catálogo de conhecimento
+ibmcloud wkc catalog-create my_catalog -d "My knowledge catalog"
+
+// Crie um conjunto de dados
+ibmcloud wkc data-asset-create --catalog-id my_catalog -n "my_data_asset" -d "My data asset"
+
+// Adicione um esquema ao conjunto de dados
+ibmcloud wkc data-asset-schema-add --data-asset-id my_data_asset --schema '{"fields": [{"name": "name", "type": "string"},{"name": "age", "type": "integer"}]}'
+    

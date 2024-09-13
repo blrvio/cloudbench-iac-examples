@@ -1,46 +1,32 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure the Oracle Cloud Infrastructure provider
 provider "oci" {
-  region     = "us-ashburn-1"
-  tenancy_id = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxx"
-  # Set the compartment ID for resources
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
+  user    = "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
+  key     = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
-# Create a registry resource
-resource "oci_container_registry" "example" {
-  name     = "my-registry"
-  # Set the compartment ID
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
-  # Create a unique name
-  display_name = "My Registry"
-  # Set the description
-  description = "My Registry Description"
-  # Set the resource's tags
-  freeform_tags = {
-    Owner = "My Team"
+# Create a registry
+resource "oci_registry_repository" "example" {
+  namespace = "mynamespace"
+  name       = "myregistry"
+}
+
+# Create a namespace
+resource "oci_registry_namespace" "example" {
+  name  = "mynamespace"
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+# Upload an image to the registry
+resource "oci_registry_image" "example" {
+  namespace  = "mynamespace"
+  repository = "myregistry"
+  image_name  = "myimage:latest"
+  manifest   = "oci_registry_image.example.manifest"
+  tags       = {
+    "key" = "value"
   }
 }
-
-# Create an image resource
-resource "oci_container_image" "example" {
-  # Set the registry namespace
-  registry_namespace = oci_container_registry.example.name
-  name     = "my-image"
-  # Set the compartment ID
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxx"
-  # Create a unique name
-  display_name = "My Image"
-  # Set the description
-  description = "My Image Description"
-  # Set the resource's tags
-  freeform_tags = {
-    Owner = "My Team"
-  }
-  # Create the manifest and push the image
-  source  = "docker-registry:1.0.0"
-  # Set the image's source URI
-  source_uri = "docker.io/library/nginx"
-}
-
-  
+    

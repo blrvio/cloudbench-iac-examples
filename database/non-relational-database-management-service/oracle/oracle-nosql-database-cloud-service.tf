@@ -1,37 +1,35 @@
 
-    # Configure the Oracle Cloud Infrastructure Provider
+      # Configure o provedor do Oracle Cloud
 provider "oci" {
-  region = "us-ashburn-1"
-  # Replace with your Oracle Cloud Infrastructure tenancy OCID
-  tenancy_ocid = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+  region  = "us-ashburn-1"
+  tenancy = "ocid1.tenancy.oc1..aaaaaaaaz554q6q"
+  # Substitua pelos valores corretos
 }
 
-# Create a NoSQL database
-resource "oci_nosql_database" "main" {
-  # The compartment where you want to create the database
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # Unique identifier of the NoSQL database
-  database_name = "my-nosql-database"
-  # The NoSQL database version
-  version = "2.2.1"
-  # Enable or disable encryption at rest
-  is_encryption_at_rest_enabled = true
-  # The NoSQL database security group
-  security_list_id = "ocid1.securitylist.oc1..aaaaaaaaxxxxxxxxxxxxxx"
+# Crie um banco de dados NoSQL
+resource "oci_nosql_table" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaz554q6q"
+  # Substitua pelo ID do compartimento
+  name              = "example-table"
+  table_type        = "KEY_VALUE"
+  initial_capacity  = 1
+  storage_size_in_gb = 10
 }
 
-# Create a NoSQL table
-resource "oci_nosql_table" "main" {
-  # The compartment where you want to create the table
-  compartment_id = "ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxxxxxx"
-  # The NoSQL database where you want to create the table
-  database_id = oci_nosql_database.main.id
-  # Unique identifier of the NoSQL table
-  table_name = "my-nosql-table"
-  # The NoSQL table key schema
-  key_schema = <<EOF
-{"name": "id", "type": "STRING", "is_primary_key": true}
-EOF
+# Crie um índice no banco de dados NoSQL
+resource "oci_nosql_index" "example" {
+  compartment_id = oci_nosql_table.example.compartment_id
+  table_name      = oci_nosql_table.example.name
+  index_name      = "example-index"
+  index_type      = "HASH"
+  key_path         = "["key"]"
 }
 
-  
+# Crie um endpoint de acesso ao banco de dados NoSQL
+resource "oci_nosql_endpoint" "example" {
+  compartment_id = oci_nosql_table.example.compartment_id
+  table_name      = oci_nosql_table.example.name
+  endpoint_type   = "READ_WRITE"
+  is_public       = false
+}
+    

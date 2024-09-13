@@ -1,21 +1,21 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Elasticsearch Domain
+# Crie um domínio Elasticsearch
 resource "aws_elasticsearch_domain" "main" {
   domain_name = "my-elasticsearch-domain"
-  # Elasticsearch version to use
   elasticsearch_version = "7.10"
-  # Configure the Elasticsearch cluster settings
-  elasticsearch_cluster_config {
-    instance_count = 1 # Number of instances in the cluster
-    instance_type = "t2.small.elasticsearch" # Instance type
-    zone_awareness_enabled = false # Enable zone awareness
+  ebs_options {
+    ebs_enabled = true
+    volume_type = "gp2"
+    volume_size = 10
   }
-  # Configure the access policies for the Elasticsearch domain
+  node_to_node_encryption {
+    enabled = true
+  }
   access_policies = <<EOF
 {
   "Version": "2012-10-17",
@@ -25,71 +25,50 @@ resource "aws_elasticsearch_domain" "main" {
       "Principal": {
         "AWS": "arn:aws:iam::123456789012:root"
       },
-      "Action": "es:*",
+      "Action": [
+        "es:ESHttpGet",
+        "es:ESSearch",
+        "es:ESHttpPost",
+        "es:ESHttpPut",
+        "es:ESHttpDelete",
+        "es:ESHttpHead",
+        "es:ESHttpOptions",
+        "es:ESHttpPatch"
+      ],
       "Resource": "arn:aws:es:us-east-1:123456789012:domain/my-elasticsearch-domain/*"
     }
   ]
 }
 EOF
-  # Configure the EBS volume settings
-  ebs_options {
-    # Volume type
-    volume_type = "gp2"
-    # Volume size in GiB
-    volume_size = 10
-  }
-
-  # Configure the node-to-node encryption settings
-  node_to_node_encryption {
-    enabled = true
-  }
-  # Configure the advanced options
-  advanced_options = {
-    "index.max_result_window": "10000"
-  }
-  # Configure the tags for the Elasticsearch domain
-  tags = {
-    Name = "My Elasticsearch Domain"
-  }
 }
 
-# Create an IAM role for the Elasticsearch domain
-resource "aws_iam_role" "main" {
-  name = "my-elasticsearch-domain-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "es.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-# Attach the IAM role to the Elasticsearch domain
-resource "aws_elasticsearch_domain_policy" "main" {
+# Crie um VPC para o domínio
+resource "aws_elasticsearch_domain_vpc_options" "main" {
   domain_name = aws_elasticsearch_domain.main.domain_name
-  access_policies = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::123456789012:role/my-elasticsearch-domain-role"
-      },
-      "Action": "es:*",
-      "Resource": "arn:aws:es:us-east-1:123456789012:domain/my-elasticsearch-domain/*"
-    }
-  ]
-}
-EOF
+  vpc_options {
+    security_group_ids = [aws_security_group.main.id]
+    subnet_ids = [aws_subnet.main.id]
+  }
 }
 
-  
+# Crie um grupo de segurança para o domínio
+resource "aws_security_group" "main" {
+  name   = "es-sg"
+  vpc_id = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Crie uma sub-rede para o domínio
+resource "aws_subnet" "main" {
+  vpc_id = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+  cidr_block = "10.0.0.0/24"
+  availability_zone = "us-east-1a"
+}
+
+    

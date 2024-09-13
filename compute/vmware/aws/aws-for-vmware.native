@@ -1,0 +1,19 @@
+
+      // Criar VPC
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+// Criar sub-rede
+aws ec2 create-subnet --vpc-id vpc-xxxxxxxx --cidr-block 10.0.1.0/24
+
+// Criar grupo de segurança
+aws ec2 create-security-group --group-name vmware_sg --description "VMware Security Group" --vpc-id vpc-xxxxxxxx
+
+// Adicionar regra de entrada para SSH
+aws ec2 authorize-security-group-ingress --group-name vmware_sg --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+// Adicionar regra de saída para todas as portas
+aws ec2 authorize-security-group-egress --group-name vmware_sg --protocol tcp --port 0-65535 --cidr 0.0.0.0/0
+
+// Criar instância EC2 para o vCenter Server
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups vmware_sg --subnet-id subnet-xxxxxxxx
+    

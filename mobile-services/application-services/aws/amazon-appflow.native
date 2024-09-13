@@ -1,0 +1,4 @@
+
+      // Criar um fluxo de dados do AppFlow usando a CLI
+aws appflow create-flow --name example-flow --flow-config '{ "sourceFlowConfig": { "connectorType": "Salesforce", "connectorProperties": { } }, "destinationFlowConfig": { "connectorType": "S3", "connectorProperties": { } } }' --trigger-config '{ "triggerType": "Schedule", "scheduleConfig": { "scheduleExpression": "cron(0 0 * * ? *)" } }'
+    

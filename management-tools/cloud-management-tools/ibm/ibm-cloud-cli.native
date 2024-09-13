@@ -1,0 +1,30 @@
+
+      // Install IBM Cloud CLI
+# For macOS
+brew install ibmcloud
+# For Linux
+# curl -sL https://clis.cloud.ibm.com/install/linux | bash
+# For Windows
+# Download the installer from: https://cloud.ibm.com/docs/cli/install
+# ...
+
+# Login to IBM Cloud
+ibmcloud login
+# ...
+
+# List available resources
+ibmcloud resource list
+# ...
+
+# Create a Cloud Foundry application
+ibmcloud cf push my-app
+# ...
+
+# List available Kubernetes clusters
+ibmcloud ks clusters
+# ...
+
+# Create a Cloud Object Storage bucket
+ibmcloud storage create my-bucket --location us-south
+# ...
+    

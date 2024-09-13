@@ -1,0 +1,10 @@
+
+      // Crie uma função Lambda
+aws lambda create-function --function-name hello_world --runtime nodejs16.x --handler index.handler --role arn:aws:iam::123456789012:role/lambda_role --zip-file fileb://hello_world.zip
+
+// Crie uma função IAM para a Lambda
+aws iam create-role --role-name lambda_role --assume-role-policy document
+
+// Adicione permissões IAM para a Lambda
+aws iam put-role-policy --role-name lambda_role --policy-name lambda_policy --policy document
+    

@@ -1,0 +1,13 @@
+
+      // Crie um cluster EKS
+aws eks create-cluster --name example --role-arn arn:aws:iam::123456789012:role/eks-cluster-role --region us-east-1
+
+// Crie um nó do worker EKS
+aws eks create-nodegroup --cluster-name example --nodegroup-name example --region us-east-1
+
+# Crie um serviço Kubernetes (kubectl)
+kubectl apply -f nginx.yaml
+
+# Crie um deployment Kubernetes (kubectl)
+kubectl apply -f nginx-deployment.yaml
+    

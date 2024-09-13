@@ -1,0 +1,7 @@
+
+      // Crie um conjunto de dados
+gcloud bigquery datasets create my_dataset --dataset_id my_dataset --location US
+
+// Crie uma tabela
+gcloud bigquery tables create my_dataset.my_table --schema=[{"name": "name", "type": "STRING", "mode": "NULLABLE"}, {"name": "age", "type": "INTEGER", "mode": "NULLABLE"}]
+    

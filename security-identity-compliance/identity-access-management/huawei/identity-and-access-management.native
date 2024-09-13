@@ -1,0 +1,10 @@
+
+      // Crie um usuário IAM
+aws iam create-user --user-name my_user
+
+// Crie uma política IAM
+aws iam create-policy --policy-name my_policy --policy-document file://my_policy.json
+
+// Adicione a política ao usuário
+aws iam attach-user-policy --user-name my_user --policy-arn arn:aws:iam::123456789012:policy/my_policy
+    

@@ -1,0 +1,7 @@
+
+      // Crie um diretório de usuário para o WorkSpaces
+aws workspaces create-directory --directory-id d-xxxxxxxx --alias workspaces-dir
+
+// Crie um workspace
+aws workspaces create-workspaces --bundle-id Standard --user-name example-user --workspace-id d-xxxxxxxx
+    

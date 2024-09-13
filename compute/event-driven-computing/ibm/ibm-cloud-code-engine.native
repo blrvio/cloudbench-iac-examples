@@ -1,0 +1,13 @@
+
+      # Crie um serviço Code Engine
+ibmcloud ce create my-service --location us-south --runtime nodejs-16 --git-source https://github.com/your-username/your-repo.git
+
+# Crie uma versão do serviço
+ibmcloud ce update my-service --version 1.0.0 --image us-south.icr.io/your-namespace/your-image:latest
+
+# Crie uma rota para o serviço
+ibmcloud ce route add my-service --domain my-domain.com --path /
+
+# Crie um recurso para o serviço
+ibmcloud ce resource create my-resource --type deployment --service my-service --limits cpu=1 memory=1024
+    

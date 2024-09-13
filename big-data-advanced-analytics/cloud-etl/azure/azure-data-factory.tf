@@ -1,38 +1,56 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {}  # Enable all features
+  features {} # Certifique-se de que a versão mais recente do provedor está sendo utilizada
 }
 
-# Create a Data Factory
+# Crie um espaço de trabalho do Data Factory
 resource "azurerm_data_factory" "example" {
-  name                = "example-data-factory"
-  location            = "westus2"
+  name     = "example-data-factory"
+  location = "westus2"
   resource_group_name = "example-resource-group"
 }
 
-# Create a Linked Service
-resource "azurerm_data_factory_linked_service" "example" {
-  name                = "example-linked-service"
-  data_factory_name = azurerm_data_factory.example.name
-  resource_group_name = azurerm_data_factory.example.resource_group_name
-  type                = "AzureBlobStorage"
-  # Add connection string here
-  connection_string = "[Replace this with your connection string]"
-}
-
-# Create a Pipeline
+# Crie um pipeline de dados
 resource "azurerm_data_factory_pipeline" "example" {
-  name                = "example-pipeline"
-  data_factory_name = azurerm_data_factory.example.name
-  resource_group_name = azurerm_data_factory.example.resource_group_name
+  name             = "example-pipeline"
+  data_factory_id = azurerm_data_factory.example.id
+
+  activities {
+    name     = "example-copy-activity"
+    type     = "Copy"
+    inputs {
+      name = "example-input-dataset"
+    }
+    outputs {
+      name = "example-output-dataset"
+    }
+  }
 }
 
-# Create a Data Flow
-resource "azurerm_data_factory_data_flow" "example" {
-  name                = "example-data-flow"
-  data_factory_name = azurerm_data_factory.example.name
-  resource_group_name = azurerm_data_factory.example.resource_group_name
+# Crie um conjunto de dados de entrada
+resource "azurerm_data_factory_dataset" "example_input_dataset" {
+  name     = "example-input-dataset"
+  type     = "DelimitedText"
+  linked_service_name = "example-linked-service"
+  data_factory_id = azurerm_data_factory.example.id
 }
 
-  
+# Crie um conjunto de dados de saída
+resource "azurerm_data_factory_dataset" "example_output_dataset" {
+  name     = "example-output-dataset"
+  type     = "DelimitedText"
+  linked_service_name = "example-linked-service"
+  data_factory_id = azurerm_data_factory.example.id
+}
+
+# Crie um serviço vinculado
+resource "azurerm_data_factory_linked_service" "example" {
+  name     = "example-linked-service"
+  type     = "AzureBlobStorage"
+  data_factory_id = azurerm_data_factory.example.id
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=example-storage-account;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  # ... outros parâmetros necessários
+}
+
+    

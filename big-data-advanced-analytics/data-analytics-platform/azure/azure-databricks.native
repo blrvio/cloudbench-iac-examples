@@ -1,0 +1,10 @@
+
+      # Crie um workspace do Databricks
+az databricks workspace create -g example-resource-group -n example-databricks-workspace -l westus2
+
+# Crie um cluster do Databricks
+az databricks cluster create -w example-databricks-workspace -n example-databricks-cluster --spark-version 11.3.x-scala2.12 --node-type Standard_DS3_v2 --driver-node-count 1 --worker-node-count 2
+
+# Crie uma tabela de dados no workspace do Databricks
+az databricks table create -w example-databricks-workspace -n example-table --storage-path dbfs:/example/table.parquet --data-format parquet
+    

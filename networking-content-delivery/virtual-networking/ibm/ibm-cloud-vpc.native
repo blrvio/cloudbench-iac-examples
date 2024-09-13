@@ -1,0 +1,10 @@
+
+      // Crie um VPC
+ibmcloud vpc create my-vpc --resource-group default --classic-access false
+
+// Crie uma sub-rede
+ibmcloud vpc subnet create my-subnet --zone us-south-1 --vpc my-vpc --cidr 10.0.0.0/16
+
+// Crie uma instância de servidor
+ibmcloud is instance create my-server --image centos-7.8 --zone us-south-1 --profile bx2-16x32 --subnet my-subnet
+    

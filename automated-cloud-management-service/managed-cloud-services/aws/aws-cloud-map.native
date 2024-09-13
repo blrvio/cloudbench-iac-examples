@@ -1,0 +1,10 @@
+
+      // Crie um namespace para o Cloud Map
+aws servicediscovery create-namespace --name example-namespace --type DNS_PRIVATE
+
+// Crie um serviço no Cloud Map
+aws servicediscovery create-service --name example-service --namespace-id ns-xxxxxxxxxxxxxxxx --dns-config "{"DnsRecords":[{"Type":"SRV"}],"RoutingPolicy":"MULTIVALUE"} --health-check-config "{"Type":"HTTP","FailureThreshold":2,"ResourcePath":"/health"} --region us-east-1
+
+// Crie uma instância de serviço
+aws servicediscovery register-instance --service-id svc-xxxxxxxx --instance-id example-instance --attributes "{"AWS_INSTANCE_IPV4":"10.0.0.1","AWS_INSTANCE_PORT":"80"} --region us-east-1
+    

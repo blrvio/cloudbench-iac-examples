@@ -1,0 +1,10 @@
+
+      // Create a device profile
+# curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: <token>" "https://{endpoint}/v1/{project_id}/device-profiles" -d '{"name": "example", "description": "Example device profile"}'
+
+// Create a device group
+# curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: <token>" "https://{endpoint}/v1/{project_id}/device-groups" -d '{"name": "example", "deviceProfileId": "<device_profile_id>"}'
+
+// Create a device
+# curl -X POST -H "Content-Type: application/json" -H "X-Auth-Token: <token>" "https://{endpoint}/v1/{project_id}/devices" -d '{"name": "example", "deviceGroupId": "<device_group_id>", "deviceId": "example"}'
+    

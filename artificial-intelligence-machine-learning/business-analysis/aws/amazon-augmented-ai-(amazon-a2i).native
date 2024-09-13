@@ -1,0 +1,10 @@
+
+      // Crie um fluxo de trabalho A2I
+aws a2i create-workflow --name example-workflow --human-review-config HumanReviewType=private --output-config S3Uri=s3://bucket-name/output/path --task-config TaskType=image-classification
+
+// Crie um workteam
+aws a2i create-workteam --name example-workteam --workforce-type private --workteam-config WorkforceType=private,WorkforceTypeConfig.Private.TeamArn=arn:aws:workspaces:us-east-1:123456789012:workspace:example-workspace
+
+// Crie um trabalho de A2I
+aws a2i create-labeling-job --name example-labeling-job --human-task-config TaskType=image-classification,WorkteamArn=arn:aws:a2i:us-east-1:123456789012:workteam/example-workteam,HumanTaskInput.DataSource.S3DataSource.ManifestFileUri=s3://bucket-name/manifest.json --output-config S3Uri=s3://bucket-name/output/path
+    

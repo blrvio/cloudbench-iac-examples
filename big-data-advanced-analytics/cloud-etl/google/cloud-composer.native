@@ -1,0 +1,22 @@
+
+      // Crie um ambiente Cloud Composer
+gcloud composer environments create composer-env --location us-central1 --node-config machine-type=n1-standard-1 --airflow-config-overrides core.scheduler_interval=30 --airflow-config-overrides core.dags_folder=/usr/local/airflow/dags
+
+// Crie um bucket do Google Cloud Storage para armazenar os DAGs
+gcloud storage buckets create composer-dags --location US
+
+// Crie um serviço de conta de serviço para o Cloud Composer
+gcloud iam service-accounts create composer-sa --display-name "Cloud Composer Service Account"
+
+// Crie uma função IAM para o Cloud Composer
+gcloud projects add-iam-policy-binding --member "serviceAccount:${google_service_account.composer_service_account.email}" --role roles/cloudkms.cryptoKeyEncrypterDecrypter
+
+// Crie um bucket do Google Cloud Storage para armazenar os logs
+gcloud storage buckets create composer-logs --location US
+
+// Crie um sink para coletar os logs do Cloud Composer no bucket
+gcloud logging sinks create composer-logs --destination "storage.googleapis.com/composer-logs" --filter "resource.type="cloudcomposer.googleapis.com/environment" AND logName="cloudcomposer.googleapis.com/audit"
+
+// Crie um bucket do Google Cloud Storage para armazenar os arquivos de trabalho do Cloud Composer
+gcloud storage buckets create composer-work --location US
+    

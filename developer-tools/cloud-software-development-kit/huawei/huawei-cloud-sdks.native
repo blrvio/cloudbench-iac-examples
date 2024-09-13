@@ -1,0 +1,21 @@
+
+      // Install the SDK
+pip install huaweicloud-sdk-core
+
+// Import the necessary modules
+from huaweicloud_sdk_core.client import Client
+from huaweicloud_sdk_core.auth.basic_auth import BasicAuth
+
+// Set your credentials
+access_key_id = "your_access_key_id"
+secret_access_key = "your_secret_access_key"
+
+# Create a client
+client = Client(BasicAuth(access_key_id, secret_access_key))
+
+# Make an API call
+response = client.get("https://example.com/api/v1")
+
+# Print the response
+print(response.json())
+    

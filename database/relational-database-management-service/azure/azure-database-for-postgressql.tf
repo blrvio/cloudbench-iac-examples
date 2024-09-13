@@ -1,35 +1,26 @@
 
-    # Configure the Azure provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {}  # Enable all features
+  features {} # Use features para habilitar recursos pré-lançados
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "example" {
-  name     = "example-rg"
-  location = "westus2"
-}
-
-# Create an Azure Database for PostgreSQL server
-resource "azurerm_postgresql_server" "example" {
-  name                = "example-server"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
-  administrator_login = "exampleadmin"
-  administrator_password = "ExamplePassword123!"  # Please change this in your real code
+# Crie um servidor Azure PostgreSQL
+resource "azurerm_postgresql_server" "main" {
+  name                = "mypostgresqldb"
+  resource_group_name = "myresourcegroup"
+  location            = "eastus"
+  administrator_login = "myadmin"
+  administrator_password = "mypassword" # Substitua por uma senha forte
   version              = "13"
-  sku {
-    name     = "B_Gen5_1"
-    tier     = "Basic"
-    capacity = 1
-  }
+  sku_name            = "GP_Gen5_2"
+  storage_mb          = 1024
+  backup_retention_days = 7
 }
 
-# Create a PostgreSQL database
-resource "azurerm_postgresql_database" "example" {
-  name                = "example-db"
-  resource_group_name = azurerm_resource_group.example.name
-  server_name         = azurerm_postgresql_server.example.name
+# Crie um banco de dados no servidor PostgreSQL
+resource "azurerm_postgresql_database" "main" {
+  name               = "mydb"
+  server_name         = azurerm_postgresql_server.main.name
+  resource_group_name = azurerm_postgresql_server.main.resource_group_name
 }
-
-  
+    

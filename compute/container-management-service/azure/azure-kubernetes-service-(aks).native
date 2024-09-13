@@ -1,0 +1,10 @@
+
+      az group create --name example-rg --location westus2
+
+az aks create --resource-group example-rg --name example-aks --location westus2 --dns-prefix exampleaks --kubernetes-version 1.20.11 --node-count 1 --vm-size Standard_B2s --os-disk-size-gb 100 --vnet-subnet-id /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/example-rg/providers/Microsoft.Network/virtualNetworks/example-vnet/subnets/example-subnet --availability-zones 1 2
+
+az network vnet create --resource-group example-rg --name example-vnet --location westus2 --address-prefix 10.240.0.0/16
+
+az network subnet create --resource-group example-rg --name example-subnet --vnet-name example-vnet --address-prefix 10.240.0.0/24
+
+    

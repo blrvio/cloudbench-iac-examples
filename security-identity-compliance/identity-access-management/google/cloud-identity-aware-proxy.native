@@ -1,0 +1,7 @@
+
+      # Create an IAP service protection
+gcloud iap web-backend-service create default --backend my-backend-service --port-name http
+
+# Create an IAP tunnel destination
+gcloud iap tunnel-destination create default --address 10.128.0.1 --port 8080 --service my-service-id
+    

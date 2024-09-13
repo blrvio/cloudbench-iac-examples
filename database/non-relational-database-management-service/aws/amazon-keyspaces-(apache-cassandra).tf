@@ -1,36 +1,38 @@
 
-# Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Keyspaces table
-resource "aws_keyspaces_table" "main" {
-  name                 = "my-keyspaces-table"
-  keyspace_name        = "my-keyspace"
-  partition_key        = ["id"]        # Define the partition key
-  clustering_key       = ["timestamp"] # Define the clustering key
-  billing_mode         = "PAY_PER_REQUEST"
-  read_capacity_units  = 10
-  write_capacity_units = 5
+# Crie um Keyspace
+resource "aws_keyspaces_keyspace" "main" {
+  name = "main"
+}
 
-  # Define the table attributes
-  attributes {
-    name = "id"
+# Crie uma tabela
+resource "aws_keyspaces_table" "users" {
+  keyspace = aws_keyspaces_keyspace.main.name
+  name     = "users"
+
+  partition_key {
+    name = "user_id"
     type = "uuid"
   }
-  attributes {
-    name = "timestamp"
-    type = "timestamp"
+
+  clustering_key {
+    name = "username"
+    type = "text"
   }
 }
 
-# Create a Keyspaces keyspace
-resource "aws_keyspaces_keyspace" "main" {
-  name   = "my-keyspace"
-  region = "us-east-1" # Replace with your desired region
-  tags = {
-    Name = "My Keyspaces Keyspace"
-  }
+# Crie um índice
+resource "aws_keyspaces_index" "username_index" {
+  keyspace   = aws_keyspaces_keyspace.main.name
+  table     = aws_keyspaces_table.users.name
+  name       = "username_index"
+  kind       = "COMPOSITE"
+  keys       = ["username"]
+  projection  = "KEYS_ONLY"
+  storage_mode = "KEYS_ONLY"
 }
-  
+    

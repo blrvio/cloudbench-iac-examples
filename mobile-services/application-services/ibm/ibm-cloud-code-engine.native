@@ -1,0 +1,9 @@
+
+      ibmcloud ce service-create my-codeengine-service us-south
+
+# Criar uma aplicação Code Engine
+ibmcloud ce app-create my-codeengine-app us-south my-codeengine-service --runtime nodejs-16 --build-context path/to/your/code --build-command "npm install && npm run build" --image my-docker-image:latest
+
+# Criar um roteamento para a aplicação
+ibmcloud ce route-create my-codeengine-route us-south my-codeengine-service my-codeengine-app --host my-codeengine-app.example.com
+    

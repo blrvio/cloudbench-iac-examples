@@ -1,46 +1,46 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm" {
-  region  = "us-south"
-  account_id = "your-ibm-cloud-account-id"
-  api_key = "your-ibm-cloud-api-key"
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Elasticsearch service instance
-resource "ibm_elasticsearch" "main" {
-  name            = "my-elasticsearch-instance"
-  plan            = "standard-100"
-  zone            = "us-south-1"
-  service_name    = "databases-for-elasticsearch"
-  # You can configure the Elasticsearch instance further by setting additional attributes, 
-  # for example, the number of nodes, the memory size, or the version of Elasticsearch.
-}
-
-# Create a security group for your Elasticsearch instance
-resource "ibm_security_group" "main" {
-  name     = "my-elasticsearch-security-group"
-  network  = "public"
-  location = "us-south"
-
-  # Define the ingress and egress rules for the security group.
-  rule {
-    direction = "inbound"
-    protocol  = "tcp"
-    port_range = "9200-9200"
-    cidr       = "0.0.0.0/0"
+# Crie um domínio Elasticsearch
+resource "aws_elasticsearch_domain" "main" {
+  domain_name = "my-elasticsearch-domain" # Substitua pelo nome desejado
+  elasticsearch_version = "7.10" # Substitua pela versão desejada
+  ebs_options {
+    # Configure as opções do EBS
+    # ...
   }
-  rule {
-    direction = "outbound"
-    protocol  = "tcp"
-    port_range = "0-65535"
-    cidr       = "0.0.0.0/0"
+  node_to_node_encryption {
+    # Configure a criptografia de nó para nó
+    # ...
   }
+  snapshot_options {
+    # Configure as opções de snapshot
+    # ...
+  }
+  vpc_options {
+    # Configure as opções da VPC
+    # ...
+  }
+  advanced_options {
+    # Configure as opções avançadas
+    # ...
+  }
+  access_policies = "# Substitua pela política de acesso desejada"
 }
 
-# Associate the security group with your Elasticsearch instance
-resource "ibm_elasticsearch_security_group" "main" {
-  elasticsearch_id = ibm_elasticsearch.main.id
-  security_group_id = ibm_security_group.main.id
+# Configure um usuário Elasticsearch
+resource "aws_elasticsearch_user" "admin" {
+  domain_name = aws_elasticsearch_domain.main.domain_name
+  username    = "admin"
+  password    = "# Substitua pela senha desejada"
 }
 
-  
+# Crie um endpoint do Kibana
+resource "aws_elasticsearch_domain_endpoint" "kibana" {
+  domain_name = aws_elasticsearch_domain.main.domain_name
+  endpoint    = "kibana"
+}
+    

@@ -1,0 +1,10 @@
+
+      // Crie um recurso de Modelo de Machine Learning no Vertex AI
+gcloud ai models create my-model --display-name "My Model" --description "My custom trained model" --artifact-uri gs://my-bucket/models/my-model/1
+
+// Crie um Endpoint para servir o modelo
+gcloud ai endpoints create my-endpoint --display-name "My Endpoint" --description "Endpoint para servir o modelo" --machine-type n1-standard-1 --deployed-model my-model --model-version-id 1
+
+// Crie um Job de treinamento de modelo
+gcloud ai jobs create my-training-job --display-name "My Training Job" --description "Job de treinamento para o meu modelo" --container-image us-docker.pkg.dev/cloudrun/container/hello --model my-model
+    

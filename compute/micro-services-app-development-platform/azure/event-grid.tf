@@ -1,23 +1,18 @@
 
-    # Configure the Azure Provider
-provider "azurerm" {
-  features {} # Enable all features
+      # Configure o provedor AWS
+provider "aws" {
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Event Grid Topic
-resource "azurerm_eventgrid_topic" "example" {
-  name                = "example-topic"
-  resource_group_name = "example-resources"
-  location            = "westus2"
+# Crie um evento de regra
+resource "aws_eventbridge_rule" "example_rule" {
+  name               = "example_rule"
+  event_bus_name     = "default"
+  description        = "Exemplo de regra de evento"
+  schedule_expression = "rate(5 minutes)"
+  targets {
+    arn = "arn:aws:lambda:us-east-1:123456789012:function:example_function"
+  }
 }
 
-# Create an Event Grid Subscription
-resource "azurerm_eventgrid_subscription" "example" {
-  topic_name          = azurerm_eventgrid_topic.example.name
-  resource_group_name = azurerm_eventgrid_topic.example.resource_group_name
-  endpoint            = "https://example.com/webhook"
-  # Set the event types you want to receive notifications for
-  event_types = ["Microsoft.Storage.BlobCreated"]
-}
-
-  
+    

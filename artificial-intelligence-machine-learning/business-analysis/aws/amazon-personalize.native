@@ -1,0 +1,19 @@
+
+      // Crie um esquema para o dataset
+aws personalize create-schema --name schema --schema "{\"type\": \"record\", \"name\": \"schema\", \"namespace\": \"com.example\", \"fields\": [{\"name\": \"user_id\", \"type\": \"string\"}, {\"name\": \"item_id\", \"type\": \"string\"}, {\"name\": \"event_type\", \"type\": \"string\"}]}"
+
+// Crie um grupo de datasets
+aws personalize create-dataset-group --name dataset-group
+
+// Crie um dataset de eventos
+aws personalize create-dataset --dataset-group-arn arn:aws:personalize:us-east-1:123456789012:dataset-group:dataset-group-123456789012 --name events --dataset-type EVENT --schema-arn arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012
+
+// Crie um dataset de usuários
+aws personalize create-dataset --dataset-group-arn arn:aws:personalize:us-east-1:123456789012:dataset-group:dataset-group-123456789012 --name users --dataset-type USER --schema-arn arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012
+
+// Crie um dataset de itens
+aws personalize create-dataset --dataset-group-arn arn:aws:personalize:us-east-1:123456789012:dataset-group:dataset-group-123456789012 --name items --dataset-type ITEM --schema-arn arn:aws:personalize:us-east-1:123456789012:schema:schema-123456789012
+
+// Crie um modelo de recomendação
+aws personalize create-solution --name recommendation_model --recipe-arn arn:aws:personalize:us-east-1:123456789012:recipe/PERSONALIZE-DEFAULT-USER-PERSONALIZATION --training-data-config '{\"datasetGroupArn\": \"arn:aws:personalize:us-east-1:123456789012:dataset-group:dataset-group-123456789012\"}'
+    

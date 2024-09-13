@@ -1,0 +1,10 @@
+
+      // Crie um volume EBS
+aws ec2 create-volume --availability-zone us-east-1a --size 10 --volume-type gp2
+
+// Crie um snapshot do volume EBS
+aws ec2 create-snapshot --volume-id vol-xxxxxxxx
+
+// Crie um volume EBS a partir de um snapshot
+aws ec2 create-volume --availability-zone us-east-1a --snapshot-id snap-xxxxxxxx --size 10 --volume-type gp2
+    

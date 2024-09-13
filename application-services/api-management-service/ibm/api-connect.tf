@@ -1,50 +1,45 @@
 
-    # Configure the IBM Cloud provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  api_key  = "YOUR_IBM_CLOUD_API_KEY"
-  region    = "us-south"
-  org_id   = "YOUR_ORG_ID"
-  account_id = "YOUR_ACCOUNT_ID"
+  # Substitua pela sua região desejada
+  region = "us-south"
 }
 
-# Create a new IBM Cloud App Connect flow
-resource "ibm_appconnect_flow" "main" {
-  name = "my-appconnect-flow"
-  # Define the flow definition using the YAML syntax
-  definition = <<EOF
----
-openapi: 3.0.0
-info:
-  version: "1.0.0"
-  title: "My App Connect Flow"
-paths:
-  /hello:
-    get:
-      summary: "Simple hello world"
-      responses:
-        '200':
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: string
-                example: "Hello World!"
-EOF
+# Crie um serviço API Connect
+resource "ibm_api_connect_service" "api_connect" {
+  name = "api_connect"
+  # Substitua pelo seu plano desejado
+  plan = "lite"
 }
 
-# Create a connection to a resource using the App Connect connector
-resource "ibm_appconnect_connection" "main" {
-  name         = "my-appconnect-connection"
-  flow_id      = ibm_appconnect_flow.main.id
-  type         = "generic"
-  connector_id = "your-connector-id"
-  # Define the connection configuration
-  properties = <<EOF
----
-host: "your-host"
-port: "your-port"
-username: "your-username"
-password: "your-password"
-EOF
+# Crie um catálogo de APIs
+resource "ibm_api_connect_catalog" "api_catalog" {
+  name = "api_catalog"
+  service_id = ibm_api_connect_service.api_connect.id
+  # Substitua pelo nome do seu espaço de trabalho
+  workspace = "workspace"
 }
-  
+
+# Importe uma definição de API
+resource "ibm_api_connect_api" "imported_api" {
+  name = "imported_api"
+  catalog_id = ibm_api_connect_catalog.api_catalog.id
+  # Substitua pelo caminho para o arquivo de definição da API
+  definition = "path/to/api_definition.yaml"
+}
+
+# Crie um plano de API
+resource "ibm_api_connect_plan" "api_plan" {
+  name = "api_plan"
+  catalog_id = ibm_api_connect_catalog.api_catalog.id
+  api_id = ibm_api_connect_api.imported_api.id
+  # Substitua pelo tipo de plano desejado
+  type = "open"
+}
+
+# Crie uma chave de API
+resource "ibm_api_connect_key" "api_key" {
+  catalog_id = ibm_api_connect_catalog.api_catalog.id
+  plan_id = ibm_api_connect_plan.api_plan.id
+}
+    

@@ -1,0 +1,11 @@
+
+      // Crie um sistema de arquivos EFS
+aws efs create-file-system --performance-mode generalPurpose --throughput-mode bursting --encrypted --kms-key-id alias/aws/efs
+
+// Crie um ponto de montagem EFS
+aws efs create-mount-target --file-system-id fs-xxxxxxxx --subnet-id subnet-xxxxxxxx --security-groups sg-xxxxxxxx --ip-address 172.16.0.100
+
+// Configure um grupo de segurança para o EFS
+aws ec2 create-security-group --group-name allow_ssh --description "Allow SSH access" --vpc-id vpc-xxxxxxxx
+aws ec2 authorize-security-group-ingress --group-name allow_ssh --protocol tcp --port 22 --cidr 0.0.0.0/0
+    

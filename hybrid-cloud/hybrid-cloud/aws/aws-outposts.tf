@@ -1,47 +1,30 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an Outposts Location
-resource "aws_outposts_location" "main" {
-  name    = "my-outposts-location"
-  region  = "us-east-1"           # Replace with the desired region
-  site_id = "my-outposts-site-id" # Replace with your Outposts Site ID
-}
+# Crie um Outpost
+resource "aws_outposts_outpost" "example" {
+  name    = "example-outpost"
+  site_id = "site-xxxxxxxx" # Substitua pelo ID do site
 
-# Create an Outposts Instance
-resource "aws_outposts_instance" "main" {
-  availability_zone = "us-east-1a" # Replace with your desired availability zone
-  instance_type     = "m5.large"   # Replace with your desired instance type
-  location_id       = aws_outposts_location.main.id
-  subnet_id         = "subnet-0123456789abcdef0" # Replace with the subnet ID of your Outposts VPC
-  # Add tags to your Outposts instance
-  tags = {
-    Name = "My Outposts Instance"
+  # Define a configuração do Outpost
+  # Opções como tipo de hardware, capacidade de computação, etc.
+  configuration {
+    # ...
   }
 }
 
-# Create an Outposts Security Group
-resource "aws_outposts_security_group" "main" {
-  description = "My Outposts Security Group"
-  name        = "my-outposts-security-group"
-  location_id = aws_outposts_location.main.id
+# Crie um local do Outpost
+resource "aws_outposts_site" "example" {
+  name  = "example-site"
+  region = "us-east-1" # Substitua pela sua região desejada
 
-  # Define the ingress and egress rules for the security group
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  # Define a configuração do local
+  # Opções como endereço, contato de contato, etc.
+  configuration {
+    # ...
   }
 }
-
-  
+    

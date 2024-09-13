@@ -1,0 +1,7 @@
+
+      // Crie um detector GuardDuty
+aws guardduty create-detector --region us-east-1
+
+// Crie uma regra de detecção personalizada
+aws guardduty create-filter --detector-id xxxxxxxx --filter-name example --action ARCHIVE --finding-criteria '{"Action":{"Equals":["ALLOW"]},"FindingType":{"Equals":["SuspiciousActivity"]},"Condition":{"Equals":["malicious_ip"]}}'
+    

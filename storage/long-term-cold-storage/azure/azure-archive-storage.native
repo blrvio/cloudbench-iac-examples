@@ -1,0 +1,10 @@
+
+      # Crie um container de armazenamento
+ az storage account create -n example-storage-account -g example-resource-group -l West Europe -s Standard -r LRS
+
+# Crie uma política de acesso para o container
+ az storage container create -n example-container -g example-resource-group -a example-storage-account --public-access none
+
+# Crie um arquivo de arquivo
+ az storage blob upload -c example-container -n example-blob -f path/to/your/blob -a example-storage-account --tier Archive
+    

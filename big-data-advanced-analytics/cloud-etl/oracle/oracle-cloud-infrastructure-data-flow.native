@@ -1,0 +1,10 @@
+
+      # Crie um job do Data Flow
+oci dataflow job create --display-name My Data Flow Job --description "This is an example Data Flow job" --project-id ocid1.project.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa --runtime-config '{"key1":"value1","key2":"value2"}'
+
+# Crie um pipeline do Data Flow
+oci dataflow pipeline create --display-name My Data Flow Pipeline --description "This is an example Data Flow pipeline" --project-id ocid1.project.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa --job-id ocid1.dataflowjob.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa --schedule-config '{"cronExpression":"0 0 * * * ?","timezone":"America/Los_Angeles"}'
+
+# Crie um aplicativo do Data Flow
+oci dataflow application create --display-name My Data Flow Application --description "This is an example Data Flow application" --project-id ocid1.project.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa --pipeline-id ocid1.dataflowpipeline.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaa
+    

@@ -1,0 +1,7 @@
+
+      // Crie um grupo de sub-redes para o cache
+aws elasticache create-subnet-group --subnet-group-name my-subnet-group --description "My Redis subnet group" --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx
+
+// Crie o cache Redis
+aws elasticache create-cache-cluster --cache-name my-redis-cache --cache-node-type cache.t2.micro --engine redis --engine-version 6.x --num-cache-nodes 1 --parameter-group-name default.redis6.x --port 6379 --vpc-security-group-ids sg-xxxxxxxx --subnet-group-name my-subnet-group
+    

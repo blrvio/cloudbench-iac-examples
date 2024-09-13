@@ -1,0 +1,7 @@
+
+      // Crie um conjunto de renderização
+aws elemental-conductor create-job-template --name my_render_job --job-type RENDER --inputs '{ "input1": "value1", "input2": "value2" }' --outputs '{ "output1": "value1", "output2": "value2" }' --pipeline '{ "step1": { "action": "action1" }, "step2": { "action": "action2" } }'
+
+// Crie uma pipeline de processamento
+aws elemental-conductor create-pipeline --name my_pipeline --pipeline '{ "step1": { "action": "action1" }, "step2": { "action": "action2" } }'
+    

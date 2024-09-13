@@ -1,0 +1,13 @@
+
+      // Crie um recurso de Media Services
+azurerm media services create -n example-media-services -g example-resources -l westus2 --storage-account example-storage
+
+// Crie um ponto final de Media Services
+azurerm media services endpoint create -n example-endpoint -g example-resources -s example-media-services
+
+// Crie um conta de armazenamento para o Media Services
+azurerm storage account create -n example-storage -g example-resources -l westus2 -p Standard -r LRS
+
+// Crie um CDN perfil para o Media Services
+azurerm cdn profile create -n example-cdn-profile -g example-resources -l westus2 -s Standard_Verizon
+    

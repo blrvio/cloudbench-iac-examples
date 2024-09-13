@@ -1,89 +1,60 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use this to enable features not available in the current version
+  features {} # Use 'features {}' for the latest AzureRM provider features
 }
 
-# Create a resource group
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "rg" {
   name     = "my-resource-group"
-  location = "eastus2"
+  location = "westus2"
 }
 
-# Create a virtual network
+# Crie uma instância de servidor de metal nu
+resource "azurerm_bare_metal_server" "server" {
+  name                = "my-bare-metal-server"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  size                = "Standard_A80_v2"
+  os_disk             = "Standard_LRS"
+  offer               = "Standard_A80_v2"
+  sku                 = "Standard_A80_v2"
+  hardware_profile     = "SAP"
+  network_interface_id = azurerm_network_interface.nic.id
+  public_ip_address_id = azurerm_public_ip.ip.id
+}
+
+# Crie uma interface de rede
+resource "azurerm_network_interface" "nic" {
+  name                = "my-nic"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  subnet_id          = azurerm_subnet.subnet.id
+  private_ip_address = "10.0.0.4"
+}
+
+# Crie uma rede virtual
 resource "azurerm_virtual_network" "vnet" {
   name                = "my-vnet"
-  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   address_space       = ["10.0.0.0/16"]
 }
 
-# Create a subnet
+# Crie uma sub-rede
 resource "azurerm_subnet" "subnet" {
   name                 = "my-subnet"
   resource_group_name = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes      = ["10.0.1.0/24"]
+  address_prefixes     = ["10.0.0.0/24"]
 }
 
-# Create a network security group
-resource "azurerm_network_security_group" "nsg" {
-  name                = "my-nsg"
+# Crie um endereço IP público
+resource "azurerm_public_ip" "ip" {
+  name                = "my-public-ip"
+  resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method  = "Static"
 }
 
-# Create a network security group rule
-resource "azurerm_network_security_group_rule" "nsg_rule" {
-  name                = "allow-ssh"
-  priority            = 100
-  direction           = "Inbound"
-  access              = "Allow"
-  protocol            = "Tcp"
-  source_port_range    = "*"
-  destination_port_range = "22"
-  source_address_prefix = "*"
-  destination_address_prefix = "*
-  resource_group_name = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# Create a virtual machine
-resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "my-vm"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  size                = "Standard_A2_v2"
-  # Choose a suitable Linux distribution
-  # See the documentation for more available options
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
-  network_interface_ids = [azurerm_network_interface.nic.id]
-  # Create a password for the virtual machine
-  # You can also use a key pair for authentication
-  admin_password = "MyStrongP@ssw0rd"
-  # Attach the network security group
-  network_security_group_ids = [azurerm_network_security_group.nsg.id]
-  # Assign the virtual machine to the subnet
-  subnet_id = azurerm_subnet.subnet.id
-}
-
-# Create a network interface
-resource "azurerm_network_interface" "nic" {
-  name                = "my-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  # Configure the network interface for the virtual network and subnet
-  network_security_group_id = azurerm_network_security_group.nsg.id
-  ip_configuration {
-    name = "my-ip-config"
-    subnet_id = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
-  
+    

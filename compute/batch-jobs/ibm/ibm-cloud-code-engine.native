@@ -1,0 +1,10 @@
+
+      // Configure a IBM Cloud Code Engine service
+ibmcloud ce service create --name my-service --location us-south --runtime nodejs-16 --git-url https://github.com/example/my-app --build-type docker --dockerfile Dockerfile
+
+// Deploy the service
+ibmcloud ce deployment create --name my-deployment --service my-service --scale-strategy auto --replicas 1
+
+// Create a route
+ibmcloud ce route create --name my-route --deployment my-deployment --host my-app.example.com --route-type http
+    

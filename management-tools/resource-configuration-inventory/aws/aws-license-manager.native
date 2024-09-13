@@ -1,0 +1,10 @@
+
+      // Crie uma associação de licença
+aws license-manager associate-licenses --license-arn arn:aws:license-manager:us-east-1:123456789012:license:license-123456789012 --resource-arn arn:aws:ec2:us-east-1:123456789012:instance/i-123456789012
+
+// Crie um conjunto de licenças
+aws license-manager create-license-configuration --name ExampleLicenseConfiguration --license-counting-type COUNT_ONLY --description "Example license configuration" --license-rules '{"name": "Allow Linux", "match": {"resourceType": ["EC2_INSTANCE"], "osType": ["Linux"]}, "requirements": []}' 
+
+// Importe uma licença do arquivo local
+aws license-manager import-license --license-name example-license --license-key license-key --beneficiary account-id --license-type bring-your-own_license --license-content file://path/to/license.txt
+    

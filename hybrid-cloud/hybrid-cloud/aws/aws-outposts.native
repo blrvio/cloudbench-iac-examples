@@ -1,0 +1,7 @@
+
+      // Crie um Outpost
+aws outposts create-outpost --name example-outpost --site-id site-xxxxxxxx --configuration "# JSON com as configurações do Outpost"
+
+// Crie um local do Outpost
+aws outposts create-site --name example-site --region us-east-1 --configuration "# JSON com as configurações do local"
+    

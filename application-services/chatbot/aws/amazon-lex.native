@@ -1,0 +1,8 @@
+
+      // Crie um bot do Amazon Lex
+aws lex create-bot --name MyBot --locale en-US --child-directed false --intent-names GreetingIntent --role-arn arn:aws:iam::123456789012:role/lex-bot-role
+
+// Crie um intent do Amazon Lex
+aws lex create-intent --name GreetingIntent --bot-name MyBot
+
+    

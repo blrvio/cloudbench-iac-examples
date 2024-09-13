@@ -1,0 +1,10 @@
+
+      // Crie um grupo de usuários
+# az ad group create --id example_group_object_id --display-name "Example Group" --description "A sample group" --mail-nickname example_group --visibility private
+
+// Crie um usuário
+# az ad user create --display-name "Example User" --upn example_user@example.com --password "example_password"
+
+// Adicione o usuário ao grupo
+# az ad group member add --id example_group_object_id --member-id example_user_object_id
+    

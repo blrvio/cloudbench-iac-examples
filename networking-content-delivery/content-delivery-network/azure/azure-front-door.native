@@ -1,0 +1,26 @@
+
+      // Crie um Front Door
+ az frontdoor create --name example-frontdoor --resource-group example-resource-group --location westus2
+
+// Crie um ponto de extremidade frontal
+ az frontdoor frontend-endpoint create --name example-frontend --frontdoor example-frontdoor --host-names example.com --session-affinity Enabled
+
+// Defina uma regra de roteamento
+ az frontdoor routing-rule create --name example-routing-rule --frontend example-frontend --frontdoor example-frontdoor
+
+// Encaminhe todo o tráfego para o backend
+ az frontdoor forwarding-configuration create --routing-rule example-routing-rule --frontend example-frontend --frontdoor example-frontdoor --backend-pool example-backend-pool
+
+// Crie um grupo de backend
+ az frontdoor backend-pool create --name example-backend-pool --frontdoor example-frontdoor --resource-group example-resource-group
+
+// Adicione um backend ao grupo de backend
+ az frontdoor backend create --backend-pool example-backend-pool --frontdoor example-frontdoor --resource-group example-resource-group --address 192.168.0.1
+
+// Crie um perfil de segurança de aplicação (WAF)
+ az frontdoor waf-policy create --name example-waf-policy --resource-group example-resource-group --location westus2
+
+// Defina uma regra de WAF
+ az frontdoor waf-policy rule create --name example-rule --waf-policy example-waf-policy --resource-group example-resource-group --match-condition "REQUEST_HEADERS,Contains,User-Agent,malware-bot"
+
+    

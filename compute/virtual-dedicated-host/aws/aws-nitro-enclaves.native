@@ -1,0 +1,10 @@
+
+      # Crie um Enclave
+aws enclaves create-enclave --enclave-type nitro --name my-enclave --region us-east-1
+
+# Crie uma instância EC2 com suporte a Enclaves
+aws ec2 run-instances --image-id ami-xxxxxxxx --instance-type c5.xlarge --key-name key_name --security-groups sg-xxxxxxxx --region us-east-1
+
+# Associe o Enclave à instância EC2
+aws enclaves associate-enclave --enclave-arn arn:aws:enclaves:us-east-1:123456789012:enclave/my-enclave --instance-id i-xxxxxxxx --region us-east-1
+    

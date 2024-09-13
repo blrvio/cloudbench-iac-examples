@@ -1,39 +1,26 @@
 
-    # Configure the Alibaba Cloud provider
+      # Configure o provedor Alibaba Cloud
 provider "alicloud" {
-  region  = "cn-hangzhou" # Replace with your desired region
-  profile = "default"  # Replace with your Alibaba Cloud profile
+  # Substitua pelos seus valores
+  region = "cn-hangzhou"
+  # ...
 }
 
-# Create an ApsaraDB for Redis instance
+# Crie um cache do ApsaraDB for Redis
 resource "alicloud_redis_instance" "example" {
-  engine_version        = "5.0"
-  instance_class        = "redis.m1.small"
-  instance_name        = "example-redis"
-  password              = "your-password"
-  security_group_id      = "your-security-group-id"
-  shard_num             = 1
-  vpc_id               = "your-vpc-id"
-  vswitch_id            = "your-vswitch-id"
+  # Substitua pelos seus valores
+  name            = "example"
+  engine_version  = "3.2"
+  instance_class  = "redis.shared.small"
+  password        = "# senha do Redis"
+  security_group_id = "sg-xxxxxxxx"
+  # ...
 }
 
-# Create a security group
-resource "alicloud_security_group" "example" {
-  name   = "example-redis-sg"
-  vpc_id = "your-vpc-id"
-  # Define ingress and egress rules
-  ingress {
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# Crie um endpoint para acesso ao cache
+resource "alicloud_redis_instance_endpoint" "example" {
+  # Substitua pelos seus valores
+  instance_id = alicloud_redis_instance.example.id
+  # ...
 }
-
-  
+    

@@ -1,0 +1,11 @@
+
+      # Criar um índice do Amazon Kendra
+aws kendra create-index --name "MyIndex" --role-arn "arn:aws:iam::123456789012:role/kendra-role"
+
+# Criar uma fonte de dados para o índice do Amazon Kendra
+aws kendra create-data-source --index-id "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" --type S3 --s3-configuration BucketName="my-bucket"
+
+# Criar um usuário do Amazon Kendra
+aws kendra create-user --index-id "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+    

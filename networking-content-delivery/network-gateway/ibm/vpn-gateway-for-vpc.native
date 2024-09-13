@@ -1,0 +1,10 @@
+
+      // Crie um VPN gateway
+aws ec2 create-vpn-gateway --type ipsec.1 --tag-specifications 'ResourceType=vpn-gateway,Tags=[{Key=Name,Value=Main VPN Gateway}]'
+
+// Crie uma VPN connection
+aws ec2 create-vpn-connection --vpn-gateway-id vgw-xxxxxxxx --customer-gateway-id cgw-xxxxxxxx --type ipsec.1 --static-routes-only false --tag-specifications 'ResourceType=vpn-connection,Tags=[{Key=Name,Value=Main VPN Connection}]'
+
+// Crie uma VPN route
+aws ec2 create-vpn-connection-route --vpn-connection-id vpn-xxxxxxxx --destination-cidr-block 10.0.0.0/16
+    

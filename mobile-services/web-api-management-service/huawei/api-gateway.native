@@ -1,0 +1,28 @@
+
+      // Crie uma API Gateway REST API
+aws apigateway create-rest-api --name example --description "Example API Gateway"
+
+// Crie um recurso da API
+aws apigateway create-resource --rest-api-id <API_ID> --parent-id <ROOT_ID> --path-part items
+
+// Crie um método da API
+aws apigateway put-method --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method GET --authorizationType NONE
+
+// Crie uma integração da API
+aws apigateway put-integration --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method GET --integration-type AWS_PROXY --integration-uri "arn:aws:lambda:us-east-1:123456789012:function:example-function"
+
+// Crie um modelo de resposta
+aws apigateway put-integration-response --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method GET --status-code 200 --selection-pattern "$default" --content-handling CONVERT_TO_TEXT
+
+// Crie um modelo de solicitação
+aws apigateway create-request-validator --rest-api-id <API_ID> --name example_validator --validateRequestBody true
+
+// Crie um modelo de deployment
+aws apigateway create-deployment --rest-api-id <API_ID> --stage-name prod --stage-description "Production stage"
+
+// Crie uma definição de recurso
+aws apigateway create-resource --rest-api-id <API_ID> --parent-id <ROOT_ID> --path-part items
+
+aws apigateway put-method --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method GET --authorizationType NONE
+aws apigateway put-integration --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method GET --integration-type AWS_PROXY --integration-uri "arn:aws:lambda:us-east-1:123456789012:function:example-function"
+    

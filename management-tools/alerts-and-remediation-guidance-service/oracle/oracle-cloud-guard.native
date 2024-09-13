@@ -1,0 +1,10 @@
+
+      // Criar uma regra de Cloud Guard
+oci cloud-guard detector-rule create -c ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --name example-rule --description "Regra de exemplo para Cloud Guard" --detector-type DEFAULT --detector-subtype COMPUTE --rule-type PREVENTIVE --target-details "{"targetType":"INSTANCE","targetDetails":"{"ANY"}"}" --actions "{"actionType":"ALERT"}" --severity HIGH --enabled true
+
+// Criar um detector de Cloud Guard
+oci cloud-guard detector create -c ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --name example-detector --description "Detector de exemplo para Cloud Guard" --enabled true --detector-rule-ids <detector-rule-id>
+
+// Criar uma tarefa de Cloud Guard
+oci cloud-guard task create -c ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaa --name example-task --description "Tarefa de exemplo para Cloud Guard" --detector-id <detector-id> --enabled true
+    

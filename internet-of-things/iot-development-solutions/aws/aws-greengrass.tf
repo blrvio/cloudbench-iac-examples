@@ -1,88 +1,84 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor do AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Greengrass Core Definition Version
-resource "aws_greengrass_core_definition_version" "main" {
-  core_definition_id = aws_greengrass_core_definition.main.id
-  name                 = "greengrass-core-definition-version"
-  # Add your desired components
-  components {
-    # Example component
-    component_name = "example-component"
-    # ... add component configuration
+# Crie um grupo Greengrass
+resource "aws_greengrass_group" "example" {
+  name = "example"
+}
+
+# Crie um núcleo Greengrass
+resource "aws_greengrass_core" "example" {
+  group_id  = aws_greengrass_group.example.id
+  thing_name = "example"
+}
+
+# Crie uma função Lambda para o Greengrass
+resource "aws_lambda_function" "example" {
+  function_name = "example"
+  runtime       = "nodejs14.x"
+  handler      = "index.handler"
+  memory_size   = 128
+  timeout      = 30
+  code = {
+    zip_file = "# Supress código da função Lambda"
   }
 }
 
-# Create a Greengrass Core Definition
-resource "aws_greengrass_core_definition" "main" {
-  name = "greengrass-core-definition"
-}
-
-# Create a Greengrass Group
-resource "aws_greengrass_group" "main" {
-  name = "greengrass-group"
-
-  # Specify the Greengrass Core Definition Version to use
-  core_definition {
-    id = aws_greengrass_core_definition_version.main.id
+# Crie uma função Lambda para o Greengrass
+resource "aws_greengrass_function_definition" "example" {
+  name = "example"
+  function {
+    id = aws_lambda_function.example.arn
+    function_configuration {
+      memory_size = 128
+      timeout     = 30
+    }
   }
 }
 
-# Create a Greengrass Group Version
-resource "aws_greengrass_group_version" "main" {
-  group_id = aws_greengrass_group.main.id
-  name     = "greengrass-group-version"
-}
-
-# Create a Greengrass Subscription Definition Version
-resource "aws_greengrass_subscription_definition_version" "main" {
-  subscription_definition_id = aws_greengrass_subscription_definition.main.id
-  name                        = "greengrass-subscription-definition-version"
-  # Add your desired subscriptions
-  subscriptions {
-    # Example subscription
-    id          = "example-subscription-id"
-    source_arn = "arn:aws:iot:us-east-1:123456789012:topic/example-topic"
-    # ... add subscription configuration
+# Crie uma definição de recurso para o Greengrass
+resource "aws_greengrass_resource_definition" "example" {
+  name = "example"
+  resource {
+    id = aws_greengrass_function_definition.example.id
   }
 }
 
-# Create a Greengrass Subscription Definition
-resource "aws_greengrass_subscription_definition" "main" {
-  name = "greengrass-subscription-definition"
-}
-
-# Create a Greengrass Deployment
-resource "aws_greengrass_deployment" "main" {
-  group_id = aws_greengrass_group.main.id
-  # Define the deployment configuration
-  deployment_config {
-    # ... add deployment configuration details
-  }
-  # Define the deployment information
-  deployment_type = "NewDeployment"
-  # ... add deployment information details
-}
-
-# Create a Greengrass Device Definition Version
-resource "aws_greengrass_device_definition_version" "main" {
-  device_definition_id = aws_greengrass_device_definition.main.id
-  name                   = "greengrass-device-definition-version"
-  # Add your desired device definitions
-  devices {
-    # Example device
-    id            = "example-device-id"
-    certificate_arn = "arn:aws:iot:us-east-1:123456789012:cert/example-certificate"
-    # ... add device configuration
+# Crie uma definição de subscrição para o Greengrass
+resource "aws_greengrass_subscription_definition" "example" {
+  name = "example"
+  subscription {
+    id               = aws_greengrass_resource_definition.example.id
+    source            = "aws/greengrass/example"
+    target           = "aws/greengrass/example"
+    subject           = "# Supress assunto da subscrição"
+    qos              = "at_least_once"
+    retry_interval_seconds = 60
+    timeout_in_seconds   = 60
+    max_queue_size     = 10
   }
 }
 
-# Create a Greengrass Device Definition
-resource "aws_greengrass_device_definition" "main" {
-  name = "greengrass-device-definition"
+# Crie uma definição de grupo Greengrass
+resource "aws_greengrass_group_version" "example" {
+  group_id = aws_greengrass_group.example.id
+  definition {
+    function_definitions = [aws_greengrass_function_definition.example.id]
+    resource_definitions = [aws_greengrass_resource_definition.example.id]
+    subscription_definitions = [aws_greengrass_subscription_definition.example.id]
+  }
 }
 
-  
+# Crie uma versão do grupo Greengrass
+resource "aws_greengrass_group_version" "example" {
+  group_id = aws_greengrass_group.example.id
+  definition {
+    function_definitions = [aws_greengrass_function_definition.example.id]
+    resource_definitions = [aws_greengrass_resource_definition.example.id]
+    subscription_definitions = [aws_greengrass_subscription_definition.example.id]
+  }
+}
+    

@@ -1,0 +1,7 @@
+
+      // Crie um cache do ApsaraDB for Redis
+ali redis create-instance --name example --engine-version 3.2 --instance-class redis.shared.small --password "# senha do Redis" --security-group-id sg-xxxxxxxx
+
+// Crie um endpoint para acesso ao cache
+ali redis create-instance-endpoint --instance-id instanceId --endpointType --netType --port --endpointName --endpointDesc
+    

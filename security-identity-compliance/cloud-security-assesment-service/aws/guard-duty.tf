@@ -1,55 +1,25 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a GuardDuty detector
-resource "aws_guardduty_detector" "main" {
+# Crie um detector GuardDuty
+resource "aws_guardduty_detector" "example" {
   enable  = true
-  # Define the finding publishing options
-  finding_publishing_options {
-    # Publish findings to CloudTrail
-    cloudtrail {
-      enable = true
-    }
-  }
+  finding_publishing_frequency = "ONE_HOUR"
 }
 
-# Create a GuardDuty filter
-resource "aws_guardduty_filter" "main" {
-  detector_id = aws_guardduty_detector.main.id
-  name        = "my-guardduty-filter"
-  # Define the filter criteria
-  action {
-    findings {
-      # Define the actions to take on findings
-      # For example, archive findings older than 30 days
-      archive_findings {
-        archive_after = 2592000 # 30 days in seconds
-      }
-    }
-  }
-  # Define the filter rules
-  finding_criteria {
-    # Filter by severity
-    criterion {
-      key     = "severity"
-      values = ["HIGH"]
-    }
-    # Filter by resource type
-    criterion {
-      key     = "resource.type"
-      values = ["AWS::S3::Bucket"]
-    }
+# Crie uma regra de detecção personalizada
+resource "aws_guardduty_detector_finding_filter" "example" {
+  detector_id  = aws_guardduty_detector.example.id
+  action       = "ARCHIVE"
+  description = "Regra personalizada para bloquear IPs maliciosos"
+  filter {
+    action      = "ALLOW"
+    finding_type = "SuspiciousActivity"
+    condition = "EQUALS"
+    value      = "malicious_ip"
   }
 }
-
-# Create a GuardDuty invitation
-resource "aws_guardduty_invitation_accepter" "main" {
-  detector_id = aws_guardduty_detector.main.id
-  # Accept the invitation from the specified account
-  master_id = "123456789012" # Replace with the master account ID
-}
-
-  
+    

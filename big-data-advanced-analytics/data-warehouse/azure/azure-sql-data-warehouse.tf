@@ -1,38 +1,32 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable experimental features
+  features {} # Enable all features
 }
 
-# Create a Resource Group
-resource "azurerm_resource_group" "main" {
-  name     = "my-sql-dw-rg"
+# Crie um grupo de recursos
+resource "azurerm_resource_group" "example" {
+  name     = "example-rg"
   location = "westus2"
 }
 
-# Create a SQL Server
-resource "azurerm_sql_server" "main" {
-  name                = "my-sql-server"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  version             = "2017-10-01-core"
-  administrator_login = "my-admin-user"
-  administrator_password = "MyStrongPassword123"
+# Crie um servidor SQL
+resource "azurerm_sql_server" "example" {
+  name                = "example-server"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.example.location
+  administrator_login = "admin"
+  administrator_password = "P@$$wOrd"
 }
 
-# Create a SQL Data Warehouse
-resource "azurerm_sql_database" "main" {
-  name                = "my-sql-dw"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  server_name        = azurerm_sql_server.main.name
-  edition             = "DataWarehouse"
-  service_tier        = "Standard"
-  max_size_gb        = 100
-  # Add tags
-  tags = {
-    Environment = "Dev"
-  }
+# Crie um data warehouse
+resource "azurerm_sql_data_warehouse" "example" {
+  name                = "example-dw"
+  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.example.location
+  edition            = "Enterprise"
+  service_level       = "DW100c"
+  server_name         = azurerm_sql_server.example.name
 }
 
-  
+    

@@ -1,0 +1,13 @@
+
+      # Crie um cluster de computação do AWS Batch
+aws batch create-compute-environment --compute-environment-name default --type MANAGED --service-role arn:aws:iam::123456789012:role/aws-batch-service-role --state ENABLED
+
+# Crie um job do AWS Batch
+aws batch register-job-definition --job-definition-name example --type container --container-properties image=ubuntu:latest,command=[echo,hello,world],memory=1024,vcpus=1 --retry-strategy attempts=3,evaluate-on-exit.on-status=FAILED
+
+# Crie uma fila de jobs
+aws batch create-job-queue --job-queue-name default --priority 100 --compute-environment-order order=1,compute-environment=default
+
+# Envie um job para o AWS Batch
+aws batch submit-job --job-name example_job --job-definition example --job-queue default --container-overrides command=[echo,hello,world]
+    

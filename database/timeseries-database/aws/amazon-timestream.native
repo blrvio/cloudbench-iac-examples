@@ -1,0 +1,13 @@
+
+      // Crie um banco de dados do Timestream
+aws timestream-write create-database --database-name example
+
+// Crie uma tabela do Timestream
+aws timestream-write create-table --database-name example --table-name example --retention-properties MemoryStoreRetentionPeriodInHours=24
+
+// Escreva dados na tabela
+aws timestream-write write-records --database-name example --table-name example --records '[{"MeasureName":"value","MeasureValue":"10","Time":"2023-10-26T12:00:00Z","Dimensions":{"region":"us-east-1"}}]' --client-request-token 'xxxxxxxx'
+
+// Leia dados da tabela
+aws timestream-query query --database-name example --table-name example --query "SELECT * FROM example WHERE time > '2023-10-26T12:00:00Z'"
+    

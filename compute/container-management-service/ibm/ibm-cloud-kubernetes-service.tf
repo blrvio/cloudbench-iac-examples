@@ -1,61 +1,40 @@
 
-    # Configure the IBM Cloud Provider
+      # Configure o provedor IBM Cloud
 provider "ibm" {
-  region = "us-south"
-  # Add your IBM Cloud API Key
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
+  region  = "us-south"
+  account_id = "xxxxxxxx"
+  api_key    = "xxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
-# Create a Kubernetes Cluster
-resource "ibm_container_cluster" "main" {
-  name = "my-kubernetes-cluster"
-  # Choose the appropriate worker node type
-  worker_node_type = "bx2-1x16"
-  # Add cluster resource settings
-  resource_group = "my-resource-group"
+# Crie um cluster Kubernetes
+resource "ibm_container_cluster" "my_cluster" {
+  name      = "my-cluster"
   location = "us-south"
-}
-
-# Create a Kubernetes Namespace
-resource "ibm_container_namespace" "main" {
-  name = "my-namespace"
-  cluster_id = ibm_container_cluster.main.id
-  # Add additional namespace settings
-  #  resource_group = "my-resource-group"
-  #  location = "us-south"
-}
-
-# Deploy a simple Nginx Deployment
-resource "ibm_container_deployment" "nginx" {
-  name = "nginx-deployment"
-  cluster_id = ibm_container_cluster.main.id
-  namespace = ibm_container_namespace.main.name
-  # Add details about the container
-  container {
-    name = "nginx"
-    image = "nginx:latest"
+  version   = "1.23.x-default"
+  worker_pool {
+    size = 2
+    flavor = "bx2.16x64"
   }
-  # Set a minimum number of replicas for the deployment
-  replicas = 2
-}
-
-# Create a Kubernetes Service
-resource "ibm_container_service" "nginx" {
-  name = "nginx-service"
-  cluster_id = ibm_container_cluster.main.id
-  namespace = ibm_container_namespace.main.name
-  # Define the service type
-  type = "LoadBalancer"
-  # Define the ports
-  port {
-    name = "http"
-    port = 80
-    target_port = 80
-  }
-  # Link the service to the deployment
-  selector = {
-    app = "nginx"
+  addons {
+    istio {
+      enabled = true
+    }
   }
 }
 
-  
+# Crie um namespace no cluster
+resource "ibm_container_namespace" "my_namespace" {
+  cluster_id = ibm_container_cluster.my_cluster.id
+  name       = "my-namespace"
+}
+
+# Importe o aplicativo para o cluster
+resource "ibm_container_deployment" "my_deployment" {
+  cluster_id  = ibm_container_cluster.my_cluster.id
+  namespace   = ibm_container_namespace.my_namespace.name
+  image       = "my-image:latest"
+  replicas    = 2
+  name        = "my-deployment"
+}
+
+    

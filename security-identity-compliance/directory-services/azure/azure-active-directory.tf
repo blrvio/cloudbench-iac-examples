@@ -1,47 +1,36 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Use the latest AzureRM features
+  features {} # Use as features necessárias
 }
 
-# Create an Azure Active Directory Application
-resource "azurerm_ad_application" "main" {
-  name     = "my-azure-ad-app"
-  display_name = "My Azure AD App"
-  # Optionally define a group that can be assigned to the application
-  # group_object_id = azurerm_ad_group.main.object_id
-  # Optionally define the application's home page URL
-  # homepage = "https://www.example.com"
-  # Optionally define the application's sign-on URL
-  # sign_on_url = "https://www.example.com/signon"
-  # Optionally define the application's identifier URI
-  # identifier_uris = ["https://www.example.com/api"]
-  # Optionally define the application's reply URLs
-  # reply_urls = ["https://www.example.com/callback"]
+# Crie um grupo de usuários
+resource "azurerm_ad_group" "example_group" {
+  name = "example_group"
+  display_name = "Example Group"
+  description = "A sample group"
+  object_id = "example_group_object_id"
+  security_enabled = true
+  mail_enabled = false
+  visibility = "Private"
+  location = "global"
+  # ... outros parâmetros
 }
 
-# (Optional) Create an Azure Active Directory Group
-# resource "azurerm_ad_group" "main" {
-#   name = "my-azure-ad-group"
-#   display_name = "My Azure AD Group"
-#   # Optionally define the group's description
-#   # description = "My Azure AD Group Description"
-#   # Optionally define the group's security enabled property
-#   # security_enabled = true
-# }
-
-# Create an Azure Active Directory Service Principal
-resource "azurerm_service_principal" "main" {
-  application_id = azurerm_ad_application.main.application_id
-  # Optionally define a group that can be assigned to the service principal
-  # group_object_id = azurerm_ad_group.main.object_id
+# Crie um usuário
+resource "azurerm_ad_user" "example_user" {
+  display_name = "Example User"
+  user_principal_name = "example_user@example.com"
+  password = "example_password"
+  # ... outros parâmetros
+  account_enabled = true
+  # ... outros parâmetros
 }
 
-# (Optional) Assign Application Roles to the Service Principal
-# resource "azurerm_role_assignment" "main" {
-#   scope            = "my-resource-group"
-#   role_definition_id = "b24988ac-6180-42a0-ab88-84f7dc0f8243" # "Contributor" role
-#   principal_id      = azurerm_service_principal.main.id
-# }
-
-  
+# Adicione o usuário ao grupo
+resource "azurerm_ad_group_member" "example_user_in_group" {
+  group_object_id = azurerm_ad_group.example_group.object_id
+  member_object_id = azurerm_ad_user.example_user.object_id
+  # ... outros parâmetros
+}
+    

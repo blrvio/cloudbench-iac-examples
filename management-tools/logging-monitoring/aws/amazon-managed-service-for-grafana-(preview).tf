@@ -1,69 +1,36 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired AWS region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Managed Service for Grafana (Preview) workspace
-resource "aws_managed_grafana_workspace" "main" {
-  name = "my-grafana-workspace" # Name of your Managed Service for Grafana (Preview) workspace
-  # Optional parameters:
-  # authentication_mode = "AWS_IAM"
-  # auth_provider_arn = "arn:aws:iam::123456789012:role/my-grafana-auth-role"
-  #  Tags
+# Crie um workspace do Amazon Managed Service for Grafana
+resource "aws_grafana_workspace" "example" {
+  name = "example"
   tags = {
-    Name = "My Grafana Workspace"
+    Name = "example"
   }
 }
 
-# Create a Managed Service for Grafana (Preview) dashboard
-resource "aws_managed_grafana_dashboard" "main" {
-  workspace_id = aws_managed_grafana_workspace.main.id # ID of the workspace
-  name         = "My Dashboard"                        # Name of the dashboard
-  # Optional parameters:
-  # description      = "My Grafana Dashboard"
-  # tags = {
-  #   Name = "My Grafana Dashboard"
-  # }
-  #  dashboard_json  = "{ ... }"  #  JSON structure of the dashboard
+# Crie um usuário do Amazon Managed Service for Grafana
+resource "aws_grafana_user" "example" {
+  workspace_id = aws_grafana_workspace.example.id
+  username     = "example"
+  password     = "example"
 }
 
-# Create a Managed Service for Grafana (Preview) data source
-resource "aws_managed_grafana_datasource" "main" {
-  workspace_id = aws_managed_grafana_workspace.main.id # ID of the workspace
-  name         = "My Data Source"                      # Name of the data source
-  # Optional parameters:
-  # type          = "cloudwatch"
-  # access         = "proxy"
-  #  region        = "us-east-1"
-  #  http_headers  = {
-  #    "Authorization" = "Bearer my-token"
-  #  }
+# Crie um dashboard do Amazon Managed Service for Grafana
+resource "aws_grafana_dashboard" "example" {
+  workspace_id = aws_grafana_workspace.example.id
+  dashboard_json = <<DASHBOARD
+{
+  "id": null,
+  "uid": null,
+  "title": "Example Dashboard",
+  "tags": [],
+  "panels": []
 }
-
-# Create a Managed Service for Grafana (Preview) user
-resource "aws_managed_grafana_user" "main" {
-  workspace_id = aws_managed_grafana_workspace.main.id # ID of the workspace
-  username     = "my-grafana-user"                     # Username of the user
-  # Optional parameters:
-  # email          = "my-user@example.com"
-  #  password      = "my-password"
-  #  role          = "Admin"
-  #  tags = {
-  #    Name = "My Grafana User"
-  #  }
-  #  auth_provider_arn = "arn:aws:iam::123456789012:role/my-grafana-auth-role"
+DASHBOARD
 }
-
-# Create a Managed Service for Grafana (Preview) organization
-resource "aws_managed_grafana_organization" "main" {
-  workspace_id = aws_managed_grafana_workspace.main.id # ID of the workspace
-  name         = "My Organization"                     # Name of the organization
-  # Optional parameters:
-  #  description  = "My Grafana Organization"
-  #  tags = {
-  #    Name = "My Grafana Organization"
-  #  }
 }
-
-  
+    

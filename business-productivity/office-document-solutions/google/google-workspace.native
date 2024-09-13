@@ -1,0 +1,20 @@
+
+      // Use o Google Workspace Admin SDK para realizar a configuração
+// Exemplo: crie uma nova conta do Google Workspace
+gcloud workspace accounts create --display-name "My Google Workspace Account" --customer-type BUSINESS --edition BUSINESS_STANDARD --language en --timezone "America/Los_Angeles"
+
+// Crie um novo usuário do Google Workspace
+gcloud workspace users create admin@example.com --password "password" --name "Admin User" --given-name "Admin" --family-name "User"
+
+// Crie um novo grupo do Google Workspace
+gcloud workspace groups create admins --email admins@example.com --name "Admins"
+
+// Adicione o usuário ao grupo
+gcloud workspace groups add-member admins --member admin@example.com
+
+// Crie uma nova unidade compartilhada no Google Drive
+gcloud drive shareddrives create "Shared Drive" --team-drive-type TEAM_DRIVE --description "Shared Drive for Team"
+
+// Configure a permissão de acesso ao compartilhamento
+gcloud drive shareddrives update "Shared Drive" --add-permission user:admin@example.com:owner
+    

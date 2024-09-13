@@ -1,76 +1,36 @@
 
-# Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a Transit Gateway
-resource "aws_transit_gateway" "main" {
-  description = "My Transit Gateway"
-  # Enable DNS support for the Transit Gateway
-  enable_dns_support = true
-  # Enable DNS hostnames for the Transit Gateway
-  enable_dns_hostnames = true
-  # Tags for the Transit Gateway
+# Crie um Transit Gateway
+resource "aws_transit_gateway" "example" {
+  description = "Example Transit Gateway"
   tags = {
-    Name = "My Transit Gateway"
+    Name = "Example Transit Gateway"
   }
 }
 
-# Create a Transit Gateway VPC Attachment
-resource "aws_transit_gateway_vpc_attachment" "main" {
-  transit_gateway_id = aws_transit_gateway.main.id
-  vpc_id             = aws_vpc.main.id
-  subnet_ids         = [aws_subnet.main.id]
-  # Optionally, define the DNS options for the VPC attachment
-  dns_options {
-    # Enable DNS support for the VPC attachment
-    enable_dns_support = true
-    # Enable DNS hostnames for the VPC attachment
-    enable_dns_hostnames = true
-  }
+# Crie uma associação de VPC ao Transit Gateway
+resource "aws_transit_gateway_vpc_attachment" "example" {
+  transit_gateway_id = aws_transit_gateway.example.id
+  vpc_id              = "vpc-xxxxxxxx" # Substitua pelo ID da sua VPC
+  subnet_ids          = ["subnet-xxxxxxxx", "subnet-xxxxxxxx"] # Substitua pelos IDs das sub-redes
 }
 
-# Create a VPC
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  # Tags for the VPC
+# Crie uma rota no Transit Gateway
+resource "aws_transit_gateway_route" "example" {
+  transit_gateway_route_table_id = aws_transit_gateway_route_table.example.id
+  destination_cidr_block     = "10.0.0.0/16"
+  transit_gateway_attachment_id = aws_transit_gateway_vpc_attachment.example.id
+}
+
+# Crie uma tabela de rotas do Transit Gateway
+resource "aws_transit_gateway_route_table" "example" {
+  transit_gateway_id = aws_transit_gateway.example.id
   tags = {
-    Name = "My VPC"
+    Name = "Example Route Table"
   }
 }
-
-# Create a Subnet
-resource "aws_subnet" "main" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a" # Choose an Availability Zone
-  # Tags for the Subnet
-  tags = {
-    Name = "My Subnet"
-  }
-}
-
-# Create a Route Table
-resource "aws_route_table" "main" {
-  vpc_id = aws_vpc.main.id
-  # Tags for the Route Table
-  tags = {
-    Name = "My Route Table"
-  }
-}
-
-# Associate the Route Table with the Subnet
-resource "aws_route_table_association" "main" {
-  subnet_id      = aws_subnet.main.id
-  route_table_id = aws_route_table.main.id
-}
-
-# Create a Route for the Transit Gateway
-resource "aws_route" "main" {
-  route_table_id         = aws_route_table.main.id
-  destination_cidr_block = "0.0.0.0/0"
-  transit_gateway_id     = aws_transit_gateway.main.id
-}
-
-  
+    

@@ -1,0 +1,20 @@
+
+      // Crie um cluster MemoryDB
+aws memorydb create-cluster --cluster-name my-memorydb-cluster --engine-version 6.x --node-type cache.t2.medium --num-nodes 2 --security-groups sg-xxxxxxxx --parameter-group-name default.memorydb6.x.cluster.parameter.group.name
+
+// Crie um sub-rede para o cluster
+aws memorydb create-subnet-group --name my-memorydb-subnet-group --subnet-ids subnet-xxxxxxxx,subnet-xxxxxxxx
+
+// Crie um grupo de segurança para permitir o acesso
+aws ec2 create-security-group --group-name allow_access --description "Allow access to MemoryDB cluster" --vpc-id vpc-xxxxxxxx
+aws ec2 authorize-security-group-ingress --group-name allow_access --protocol tcp --port 6379 --cidr 0.0.0.0/0
+
+// Crie um usuário MemoryDB
+aws memorydb create-user --cluster-name my-memorydb-cluster --user-name my-user --password my-password
+
+// Crie um grupo de usuários
+aws memorydb create-user-group --cluster-name my-memorydb-cluster --name my-group --user-names my-user
+
+// Crie uma permissão para o usuário
+aws memorydb authorize-user --cluster-name my-memorydb-cluster --user-group-name my-group --read --write
+    

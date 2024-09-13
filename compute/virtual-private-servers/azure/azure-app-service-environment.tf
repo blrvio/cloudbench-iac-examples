@@ -1,52 +1,39 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Use as últimas funcionalidades
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "main" {
-  name     = "my-resource-group"
-  location = "eastus"
-}
+# Crie um ambiente de App Service
+resource "azurerm_app_service_environment" "ase" {
+  name = "ase-example"
+  location = "westus2" # Substitua pela região desejada
+  resource_group_name = "resource-group-name" # Substitua pelo nome do grupo de recursos
 
-# Create an App Service Environment
-resource "azurerm_app_service_environment" "main" {
-  name                  = "my-ase"
-  location              = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  pricing_tier         = "Isolated"
-}
-
-# Create an App Service Plan
-resource "azurerm_app_service_plan" "main" {
-  name                  = "my-app-service-plan"
-  location              = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
   sku {
-    tier         = "Free"
-    size         = "F1"
-    family       = "F"
-    capacity     = 1
-    worker_size   = "Small"
-    worker_count  = 1
-    premium_app_count = 1
-  }
-  kind = "app,linux"
-  # Associate the app service plan to the App Service Environment
-  app_service_environment_id = azurerm_app_service_environment.main.id
-}
-
-# Create an App Service
-resource "azurerm_app_service" "main" {
-  name                  = "my-app-service"
-  location              = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  app_service_plan_id = azurerm_app_service_plan.main.id
-  # Specify the runtime stack
-  runtime_stack {
-    name = "DOTNETCORE|3.1"
+    tier = "Isolated"
   }
 }
 
-  
+# Crie um plano de App Service
+resource "azurerm_app_service_plan" "plan" {
+  name = "app-service-plan"
+  location = "westus2" # Substitua pela região desejada
+  resource_group_name = "resource-group-name" # Substitua pelo nome do grupo de recursos
+  kind = "app,function"
+  sku {
+    tier = "Free"
+    size = "S1"
+  }
+  app_service_environment_id = azurerm_app_service_environment.ase.id
+}
+
+# Crie uma aplicação web
+resource "azurerm_app_service" "web_app" {
+  name = "web-app"
+  location = "westus2" # Substitua pela região desejada
+  resource_group_name = "resource-group-name" # Substitua pelo nome do grupo de recursos
+  app_service_plan_id = azurerm_app_service_plan.plan.id
+}
+
+    

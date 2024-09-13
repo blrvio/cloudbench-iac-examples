@@ -1,59 +1,72 @@
 
-    # Configure the Oracle Cloud Provider
+      # Configure o provedor Oracle Cloud
 provider "oci" {
-  # Replace with your Oracle Cloud tenancy information
-  tenancy = "ocid1.tenancy.oc1..."
-  user = "ocid1.user.oc1..."
-  fingerprint = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  private_key = "~/.oci/oci_api_key.pem"
   region = "us-ashburn-1"
+  # Adicione suas credenciais
 }
 
-# Create a VCN (Virtual Cloud Network)
-resource "oci_core_vcn" "main" {
+# Crie um VCN para sua rede
+resource "oci_core_virtual_network" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   cidr_block = "10.0.0.0/16"
-  display_name = "my-vcn"
-  # Add any other relevant options here
+  display_name = "My VCN"
 }
 
-# Create a Subnet
-resource "oci_core_subnet" "main" {
-  vcn_id = oci_core_vcn.main.id
+# Crie uma sub-rede no VCN
+resource "oci_core_subnet" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  display_name = "My Subnet"
+  virtual_network_id = oci_core_virtual_network.example.id
   cidr_block = "10.0.1.0/24"
-  display_name = "my-subnet"
-  # Add any other relevant options here
 }
 
-# Create a Security List
-resource "oci_core_security_list" "main" {
-  vcn_id = oci_core_vcn.main.id
-  display_name = "my-security-list"
-  # Define the ingress rules
-  ingress {
-    protocol = "tcp"
-    source_type = "cidr_block"
-    source = "0.0.0.0/0"
-    destination = "0.0.0.0/0"
-    tcp_options {
-      max = 22
-      min = 22
-    }
-  }
-  # Define the egress rules
+# Crie um grupo de segurança para sua rede
+resource "oci_network_security_list" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  display_name = "My Security List"
+  vcn_id = oci_core_virtual_network.example.id
+
   egress {
     protocol = "all"
-    source = "0.0.0.0/0"
     destination = "0.0.0.0/0"
+  }
+
+  ingress {
+    protocol = "tcp"
+    source = "0.0.0.0/0"
+    destination = "10.0.1.0/24"
+    port_range = "22,80,443"
   }
 }
 
-# Create a VMware Instance
-resource "oci_vmware_instance" "main" {
-  vcn_id = oci_core_vcn.main.id
-  subnet_id = oci_core_subnet.main.id
-  display_name = "my-vmware-instance"
-  # Add any other relevant options here
-  security_list_ids = [oci_core_security_list.main.id]
+# Crie um grupo de instâncias para seus servidores virtuais
+resource "oci_core_instance_group" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  display_name = "My Instance Group"
+  shape = "VM.Standard.A1.Flex"
+  subnet_id = oci_core_subnet.example.id
+  availability_domain = "us-ashburn-1a"
+  security_list_ids = [oci_network_security_list.example.id]
 }
 
-  
+# Crie um servidor virtual
+resource "oci_core_instance" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  display_name = "My Instance"
+  shape = "VM.Standard.A1.Flex"
+  availability_domain = "us-ashburn-1a"
+  subnet_id = oci_core_subnet.example.id
+  instance_group_id = oci_core_instance_group.example.id
+}
+
+# Crie uma imagem de máquina virtual
+resource "oci_core_image" "example" {
+  compartment_id = "ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  display_name = "My Image"
+  source_details {
+    source_type = "instance"
+    source_id = oci_core_instance.example.id
+  }
+}
+
+    

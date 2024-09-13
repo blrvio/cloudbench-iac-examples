@@ -1,0 +1,17 @@
+
+      // Crie um grupo de segurança
+aws ec2 create-security-group --group-name allow_ssh --description "Allow SSH access" --vpc-id vpc-xxxxxxxx
+
+// Adicione uma regra de entrada para o grupo de segurança
+aws ec2 authorize-security-group-ingress --group-name allow_ssh --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+// Crie uma configuração de lançamento
+aws autoscaling create-launch-configuration --launch-configuration-name example --image-id ami-xxxxxxxx --instance-type t2.micro --key-name key_name --security-groups allow_ssh
+
+// Crie um grupo de autoescalonamento
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name example --launch-configuration-name example --min-size 1 --max-size 5 --desired-capacity 2 --availability-zones us-east-1a,us-east-1b --vpc-zone-identifier subnet-xxxxxxxx,subnet-xxxxxxxx
+
+// Adicione uma política de escalonamento (opcional)
+aws autoscaling put-scaling-policy --auto-scaling-group-name example --policy-name example-policy --scaling-adjustment 1 --adjustment-type PercentChangeInCapacity --cooldown 60
+
+    

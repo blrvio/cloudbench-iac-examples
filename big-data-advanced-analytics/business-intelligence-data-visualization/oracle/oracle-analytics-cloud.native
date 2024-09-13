@@ -1,0 +1,19 @@
+
+      // Crie um data warehouse
+oci data-warehouse create-data-warehouse --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --display-name my-data-warehouse --shape-name DW.Standard.1
+
+// Crie um usuário do data warehouse
+oci data-warehouse create-user --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaaxxxxxx --display-name my-user
+
+// Crie uma conexão de rede
+oci data-warehouse create-network-connection --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaaxxxxxx --display-name my-network-connection --subnet-id ocid1.subnet.oc1..aaaaaaaaxxxxxx
+
+// Crie um banco de dados
+oci data-warehouse create-database --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaaxxxxxx --display-name my-database
+
+// Crie um esquema
+oci data-warehouse create-schema --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaaxxxxxx --display-name my-schema
+
+// Crie uma tabela
+oci data-warehouse create-table --compartment-id ocid1.compartment.oc1..aaaaaaaaxxxxxx --data-warehouse-id ocid1.datawarehouse.oc1..aaaaaaaaxxxxxx --display-name my-table --schema-name my-schema
+    

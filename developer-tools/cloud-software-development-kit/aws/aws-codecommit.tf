@@ -1,45 +1,47 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an AWS CodeCommit Repository
-resource "aws_codecommit_repository" "main" {
-  repository_name = "my-codecommit-repo" # Name of your CodeCommit repository
-
-  # Optional settings
-  #  The encryption configuration for the repository.
-  encryption_configuration {
-    enabled = true # Enable encryption at rest
-    kms_key_id = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012" # KMS key ID for encryption
-  }
-
-  #  The repository's default branch name.
-  default_branch_name = "main"
-
-  #  A list of repository triggers.
-  trigger {
-    name = "MyTrigger"
-    branches = ["main"]
-    events = ["all"]
-    #  Configuration for invoking a webhook URL when an event occurs in the repository.
-    destination_arn = "arn:aws:lambda:us-east-1:123456789012:function:my-lambda-function"
-    #  The custom data that is included in the webhook payload.
-    custom_data = "{"key1": "value1", "key2": "value2"}"
-  }
+# Crie um repositório CodeCommit
+resource "aws_codecommit_repository" "example" {
+  repository_name = "my-repo" # Substitua pelo nome do repositório desejado
 }
 
-# Create an AWS CodeCommit Trigger
-resource "aws_codecommit_trigger" "main" {
-  repository_name = aws_codecommit_repository.main.repository_name
-  name              = "MyTrigger"
-  branches          = ["main"]
-  events            = ["all"]
-  # Configuration for invoking a webhook URL when an event occurs in the repository.
-  destination_arn = "arn:aws:lambda:us-east-1:123456789012:function:my-lambda-function"
-  # The custom data that is included in the webhook payload.
-  custom_data = "{"key1": "value1", "key2": "value2"}"
+# Crie um usuário IAM com acesso ao repositório
+resource "aws_iam_user" "example" {
+  name = "codecommit-user" # Substitua pelo nome do usuário desejado
 }
 
-  
+# Crie uma chave de acesso para o usuário
+resource "aws_iam_access_key" "example" {
+  user = aws_iam_user.example.name
+}
+
+# Adicione a política IAM para acesso ao repositório CodeCommit
+resource "aws_iam_policy" "example" {
+  name = "codecommit-policy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "codecommit:GitPull",
+          "codecommit:GitPush"
+        ],
+        "Resource": [
+          "arn:aws:codecommit:us-east-1:123456789012:my-repo"
+        ]
+      }
+    ]
+  })
+}
+
+# Adicione a política ao usuário
+resource "aws_iam_user_policy" "example" {
+  user = aws_iam_user.example.name
+  policy_arn = aws_iam_policy.example.arn
+}
+    

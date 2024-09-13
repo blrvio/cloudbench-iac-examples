@@ -1,0 +1,8 @@
+
+      // Crie um bucket S3
+aws s3api create-bucket --bucket my-static-content --acl public-read
+
+// Crie uma distribuição CloudFront
+aws cloudfront create-distribution --origin-domain-name s3-my-static-content.s3.amazonaws.com --default-root-object index.html --caller-reference 123456789012 --price-class PriceClass_100 --enabled true --comment "My CloudFront distribution"
+
+    

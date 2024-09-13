@@ -1,38 +1,45 @@
 
-    # Configure the Alibaba Cloud Provider
+      # Configure o provedor Alibaba Cloud
 provider "alicloud" {
-  # Replace with your Alibaba Cloud region
-  region = "cn-hangzhou"
+  region = "cn-hangzhou" # Substitua pela sua região desejada
 }
 
-# Create a Log Service Project
+# Crie um projeto de log
 resource "alicloud_log_project" "default" {
-  name = "my-log-service-project"
+  name = "my-log-project"
 }
 
-# Create a Log Service Store
+# Crie um logstore
 resource "alicloud_log_store" "default" {
-  project_name = alicloud_log_project.default.name
-  name = "my-log-service-store"
-  # Set your preferred retention period
-  retention_period = 3600
-  shard_count = 1
+  project = alicloud_log_project.default.id
+  name     = "my-log-store"
 }
 
-# Create a Log Service Logtail Configuration
-resource "alicloud_log_logtail_config" "default" {
-  project_name = alicloud_log_project.default.name
-  store_name = alicloud_log_store.default.name
-  name = "my-logtail-config"
-  # Define the logtail configuration details
-  input_type = "file"
-  # Replace with your actual log file path
-  input_path = "/var/log/nginx/access.log"
-  # Replace with your actual log format
-  log_format = "${timestamp} ${remote_addr} ${remote_user} ${request} ${status} ${body_bytes_sent} ${http_referer} ${http_user_agent} ${request_time}"
-  # Replace with your preferred log source and target
-  log_source = "nginx"
-  log_target = "access_log"
+# Crie um índice de log
+resource "alicloud_log_index" "default" {
+  project = alicloud_log_project.default.id
+  logstore = alicloud_log_store.default.id
+  name     = "my-log-index"
+  keys      = ["timestamp", "message"]
 }
 
-  
+# Crie uma regra de exportação de log
+resource "alicloud_log_export" "default" {
+  project = alicloud_log_project.default.id
+  logstore = alicloud_log_store.default.id
+  name     = "my-log-export"
+  destination = "oss://my-oss-bucket/logs"
+  filter   = "timestamp > 1600000000"
+}
+
+# Crie uma regra de ingestão de log
+resource "alicloud_log_ingest_rule" "default" {
+  project = alicloud_log_project.default.id
+  logstore = alicloud_log_store.default.id
+  name = "my-ingest-rule"
+  content = "{
+      "condition": "timestamp > 1600000000",
+      "action": "drop"
+  }"
+}
+    

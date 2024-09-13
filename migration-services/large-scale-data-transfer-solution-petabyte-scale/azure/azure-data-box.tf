@@ -1,69 +1,53 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # This is needed to enable the Data Box resources
+  features {} # Adicione aqui recursos adicionais para o provedor
 }
 
-# Create a Data Box Disk order
-resource "azurerm_data_box_disk_order" "example" {
-  name                 = "example-disk-order"
-  resource_group_name  = "example-resources"
-  location              = "westus"
+# Crie um recurso Data Box Disk
+resource "azurerm_data_box_disk" "example" {
+  name                 = "example-disk"
+  resource_group_name  = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  location             = "westus" # Substitua pela localização desejada
+  transfer_type         = "Import"
+  storage_account_type = "Standard_LRS" # Substitua pelo tipo de conta de armazenamento desejado
+  size_in_tb           = "10" # Substitua pelo tamanho em TB desejado
   shipping_address {
-    address_type      = "business"
-    country           = "US"
-    state             = "WA"
-    city              = "Seattle"
-    street_address1   = "1 Microsoft Way"
-    postal_code       = "98052"
-    contact_person     = "John Doe"
-    phone              = "555-555-5555"
-    shipping_instructions = "Ship to the front desk"
-  }
-  # Choose the disks that will be shipped.
-  disks {
-    disk_type = "HDD"
-    count      = 2
-  }
-  # These details are for the data box disk return.
-  return_shipping_address {
-    address_type     = "business"
-    country          = "US"
-    state            = "WA"
-    city             = "Seattle"
-    street_address1  = "1 Microsoft Way"
-    postal_code      = "98052"
-    contact_person   = "John Doe"
-    phone            = "555-555-5555"
-    shipping_instructions = "Ship to the front desk"
-  }
-  # Use the following tags for the data box order resource
-  tags = {
-    Environment = "Production"
+    street_address_line1 = "123 Main St"
+    city                 = "Anytown"
+    state                 = "CA"
+    postal_code           = "12345"
+    country               = "US"
   }
 }
 
-# Configure the location where the data box disk will be shipped
-resource "azurerm_data_box_location" "example" {
-  name                 = "example-data-box-disk-location"
-  resource_group_name  = "example-resources"
-  location              = "westus"
-  data_box_disk_order_id = azurerm_data_box_disk_order.example.id
-  # Shipping location details. Provide a valid address for shipping.
+# Crie um recurso Data Box Edge
+resource "azurerm_data_box_edge" "example" {
+  name                 = "example-edge"
+  resource_group_name  = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  location             = "westus" # Substitua pela localização desejada
+  sku                  = "DataBoxEdgeGen2"
   shipping_address {
-    address_type      = "business"
-    country           = "US"
-    state             = "WA"
-    city              = "Seattle"
-    street_address1   = "1 Microsoft Way"
-    postal_code       = "98052"
-    contact_person     = "John Doe"
-    phone              = "555-555-5555"
-    shipping_instructions = "Ship to the front desk"
-  }
-  # Use the following tags for the data box location resource
-  tags = {
-    Environment = "Production"
+    street_address_line1 = "123 Main St"
+    city                 = "Anytown"
+    state                 = "CA"
+    postal_code           = "12345"
+    country               = "US"
   }
 }
-  
+
+# Crie um recurso Data Box Gateway
+resource "azurerm_data_box_gateway" "example" {
+  name                 = "example-gateway"
+  resource_group_name  = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  location             = "westus" # Substitua pela localização desejada
+  sku                  = "DataBoxGatewayGen2"
+  shipping_address {
+    street_address_line1 = "123 Main St"
+    city                 = "Anytown"
+    state                 = "CA"
+    postal_code           = "12345"
+    country               = "US"
+  }
+}
+    

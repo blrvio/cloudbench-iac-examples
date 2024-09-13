@@ -1,62 +1,70 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create an EC2 instance for PyTorch
-resource "aws_instance" "pytorch" {
-  ami           = "ami-08c40ec972c57421d" # Ubuntu Server 20.04 LTS AMI
-  instance_type = "t2.medium" # Choose a suitable instance type
-  key_name      = "my-ssh-key" # Replace with your SSH key pair
+# Crie uma instância EC2 com GPU
+resource "aws_instance" "pytorch_instance" {
+  ami           = "ami-xxxxxxxx" # Substitua pela AMI do PyTorch desejada
+  instance_type = "p3.2xlarge" # Substitua pelo tipo de instância com GPU desejado
+  key_name     = "key_name" # Substitua pelo nome da chave SSH
+
   tags = {
     Name = "PyTorch Instance"
   }
-  # Configure network settings
-  vpc_security_group_ids = [aws_security_group.pytorch.id]
 }
 
-# Create a security group to allow SSH access
-resource "aws_security_group" "pytorch" {
-  name   = "sg-pytorch"
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# (Optional) Create an EBS volume for persistent storage
-resource "aws_ebs_volume" "pytorch_storage" {
-  availability_zone = "us-east-1a"
-  size              = 100
-  type              = "gp2"
-  tags = {
-    Name = "PyTorch Storage"
-  }
-}
-
-# (Optional) Attach the EBS volume to the EC2 instance
-resource "aws_instance_volume_attachment" "pytorch_storage_attach" {
-  device_name = "/dev/sdf"
-  instance_id = aws_instance.pytorch.id
-  volume_id   = aws_ebs_volume.pytorch_storage.id
-}
-
-# Install PyTorch on the instance
+# Instale o PyTorch na instância
 resource "null_resource" "install_pytorch" {
   provisioner "local-exec" {
-    command = "sudo apt update && sudo apt install -y python3-pip && sudo pip3 install torch torchvision torchaudio"
+    command = "sudo apt-get update && sudo apt-get install python3-pip && pip3 install torch torchvision torchaudio"
   }
-  # You can add more commands to configure your PyTorch environment
-  # like installing specific libraries or setting up virtual environments.
 }
 
-  
+# Crie um bucket S3 para armazenar dados
+resource "aws_s3_bucket" "pytorch_data" {
+  bucket = "pytorch-data-bucket"
+
+  tags = {
+    Name = "PyTorch Data Bucket"
+  }
+}
+
+# Configure o IAM para acesso ao bucket S3
+resource "aws_iam_role" "pytorch_role" {
+  name = "pytorch_role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "pytorch_policy" {
+  role       = aws_iam_role.pytorch_role.id
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+# Crie um perfil de instância EC2 associado ao IAM
+resource "aws_instance_profile" "pytorch_profile" {
+  name = "pytorch_profile"
+  role = aws_iam_role.pytorch_role.name
+}
+
+# Associe o perfil de instância ao EC2
+resource "aws_instance" "pytorch_instance" {
+  # ... (configuração da instância EC2 já definida)
+  iam_instance_profile = aws_instance_profile.pytorch_profile.id
+}
+
+    

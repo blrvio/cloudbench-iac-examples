@@ -1,56 +1,18 @@
 
-    # Configure the Google Cloud provider
+      # Configure o provedor do Google Cloud
 provider "google" {
-  project = "your-gcp-project-id"
+  project = "gcp-project-id"
   region  = "us-central1"
 }
 
-# Create a Google Kubernetes Engine (GKE) cluster
-resource "google_container_cluster" "main" {
+# Crie um cluster Anthos
+resource "google_anthos_cluster" "example" {
   name     = "my-anthos-cluster"
-  location = "us-central1-a"
-  initial_node_count = 3
-  node_config {
-    machine_type = "n1-standard-1"
-  }
+  location = google_anthos_cluster.example.location
 
-  # Enable Anthos features
-  enable_anthos_features = true
-
-  # Configure authentication settings
-  authentication {
-    provider = "google_key"
-    admin_users = ["user@example.com"]
-  }
-
-  # Network settings
-  network_config {
-    network = "my-network"
-    subnetwork = "my-subnetwork"
+  config {
+    project = "gcp-project-id"
+    zone    = "us-central1-a"
   }
 }
-
-# Create an Anthos Config Management repository
-resource "google_configmanagement_repository" "main" {
-  name    = "my-anthos-repo"
-  location = "us-central1"
-  git {
-    url = "https://github.com/my-org/my-repo.git"
-  }
-}
-
-# Deploy a sample application to the cluster
-resource "google_container_cluster_deployment" "main" {
-  name       = "my-app-deployment"
-  cluster    = google_container_cluster.main.name
-  location = "us-central1"
-  template {
-    spec {
-      containers {
-        name = "my-app"
-        image = "my-app:latest"
-      }
-    }
-  }
-}
-  
+    

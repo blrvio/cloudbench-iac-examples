@@ -1,23 +1,20 @@
 
-    # Configure the IBM Cloud provider
-provider "ibm-cloud" {
-  api_key = "YOUR_IBM_CLOUD_API_KEY"
-  region = "us-south"
+      # Configure o provedor IBM Cloud
+provider "ibm" {
+  api_key  = "YOUR_IBM_CLOUD_API_KEY"
+  region   = "us-south"
 }
 
-# Create an IBM Cloud service instance
-resource "ibm_cloud_service_instance" "my_service" {
-  name      = "my-service"
-  plan      = "standard"
-  service   = "cloudant"
-  location = "us-south"
-  tags      = {
-    "Environment": "Development"
-  }
+# Crie um serviço de API
+resource "ibm_api_service" "my_api_service" {
+  name = "my-api-service"
+  plan = "basic"
+  # ... outros atributos
 }
 
-# Get the service credentials
-output "service_credentials" {
-  value = ibm_cloud_service_instance.my_service.credentials
+# Crie uma chave de API
+resource "ibm_api_key" "my_api_key" {
+  service_id = ibm_api_service.my_api_service.id
+  # ... outros atributos
 }
-  
+    

@@ -1,0 +1,12 @@
+
+      // Crie um hub IoT
+az iot hub create -n example-hub -l westus2 -g example-resources -s S1
+
+// Crie um dispositivo IoT
+az iot hub device create -n example-device -g example-resources -h example-hub
+
+// Crie uma regra de encaminhamento para o hub IoT
+az iot hub route create -g example-resources -n example-route -h example-hub --source DeviceMessages --endpoint EventHubs --endpoint-name example-eventhub --condition "true" --ttl 7200
+
+// ... mais recursos do Azure IoT Platform ...
+    

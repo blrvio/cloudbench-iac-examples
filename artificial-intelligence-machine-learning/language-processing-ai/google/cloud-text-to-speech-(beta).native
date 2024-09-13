@@ -1,0 +1,7 @@
+
+      // Use the Google Cloud SDK to create a text-to-speech audio file
+gcloud text-to-speech synthesize --text "Hello, world!" --output "output.mp3" --voice "en-US-Standard-A"
+
+// You can also use the Google Cloud Text-to-Speech API
+// https://cloud.google.com/text-to-speech/docs
+    

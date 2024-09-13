@@ -1,61 +1,106 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # This is required for the latest Azure provider features.
+  features {} # Certifique-se de que todas as features estão habilitadas.
 }
 
-# Create an Azure Machine Learning workspace
-resource "azurerm_machine_learning_workspace" "main" {
-  name                = "my-workspace"
-  resource_group_name = "my-resource-group"
-  location            = "eastus"
-  # Set storage account configuration
-  storage_account {
-    name = "my-storage-account"
-    sku  = "Standard_LRS"
-  }
-  # Set key vault configuration
-  key_vault {
-    name = "my-key-vault"
-  }
+# Crie um workspace do Azure Machine Learning
+resource "azurerm_machine_learning_workspace" "example" {
+  name                = "example-workspace"
+  resource_group_name = azurerm_resource_group.example.name
+  location             = azurerm_resource_group.example.location
+  storage_account_name = azurerm_storage_account.example.name
+  application_insights_instrumentation_key = azurerm_application_insights.example.instrumentation_key
+  key_vault_id       = azurerm_key_vault.example.id
 }
 
-# Create an Azure Machine Learning model
-resource "azurerm_machine_learning_model" "main" {
-  name                = "my-model"
-  workspace_id        = azurerm_machine_learning_workspace.main.id
-  description         = "My first ML model"
-  # Set model properties
-  properties {
-    model_framework = "TensorFlow"
-    model_type       = "Classification"
-  }
-  # Set model container image
-  image {
-    docker_image = "mcr.microsoft.com/azureml/openmpi3.1.6-ubuntu18.04"
-    image_tag    = "latest"
+# Crie um modelo de Machine Learning
+resource "azurerm_machine_learning_model" "example" {
+  name                = "example-model"
+  workspace_id       = azurerm_machine_learning_workspace.example.id
+  description         = "Exemplo de modelo de Machine Learning"
+  model_framework     = "TensorFlow"
+  model_version        = "1.0"
+  model_file_uri      = "https://mystorage.blob.core.windows.net/models/example-model.zip"
+  model_size_in_kb    = 1024
+  model_type           = "Classification"
+  model_hash          = "hash-do-modelo"
+  model_description   = "Descrição do modelo"
+  model_properties    = {
+    "prop1": "valor1"
+    "prop2": "valor2"
   }
 }
 
-# Create an Azure Machine Learning model deployment
-resource "azurerm_machine_learning_model_deployment" "main" {
-  name                = "my-deployment"
-  workspace_id        = azurerm_machine_learning_workspace.main.id
-  model_id            = azurerm_machine_learning_model.main.id
-  endpoint_name       = "my-endpoint"
-  # Set deployment properties
-  properties {
-    # Define deployment configuration
-    deployment_config {
-      deployment_type = "Batch"
-      # Define the compute target for the deployment
-      compute_target {
-        type = "AzureMLCompute"
-        # Set the compute target name
-        name = "my-compute-target"
-      }
-    }
+# Crie uma versão do modelo
+resource "azurerm_machine_learning_model_version" "example" {
+  name                = "example-model-version"
+  workspace_id       = azurerm_machine_learning_workspace.example.id
+  model_id            = azurerm_machine_learning_model.example.id
+  model_version        = "1.1"
+  model_file_uri      = "https://mystorage.blob.core.windows.net/models/example-model-v1.zip"
+  model_size_in_kb    = 1024
+  model_type           = "Classification"
+  model_hash          = "hash-do-modelo-v1"
+  model_description   = "Descrição do modelo v1"
+  model_properties    = {
+    "prop1": "valor1"
+    "prop2": "valor2"
   }
 }
 
-  
+# Importe o modelo de Machine Learning para um ambiente de destino
+resource "azurerm_machine_learning_model_deployment" "example" {
+  name                = "example-model-deployment"
+  workspace_id       = azurerm_machine_learning_workspace.example.id
+  endpoint_id         = azurerm_machine_learning_endpoint.example.id
+  model_id            = azurerm_machine_learning_model.example.id
+  model_version        = "1.0"
+  description         = "Exemplo de implantação de modelo de Machine Learning"
+}
+
+# Crie um endpoint para hospedar os modelos
+resource "azurerm_machine_learning_endpoint" "example" {
+  name                = "example-endpoint"
+  workspace_id       = azurerm_machine_learning_workspace.example.id
+  description         = "Exemplo de endpoint de Machine Learning"
+  scoring_uri         = "https://myendpoint.azureml.net/score"
+  auth_mode           = "Key"
+  properties          = {
+    "property1": "valor1"
+    "property2": "valor2"
+  }
+}
+
+# Crie um recurso de grupo
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "westus2"
+}
+
+# Crie um recurso de conta de armazenamento
+resource "azurerm_storage_account" "example" {
+  name                     = "example-storage"
+  resource_group_name     = azurerm_resource_group.example.name
+  location                 = azurerm_resource_group.example.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+# Crie um recurso de Application Insights
+resource "azurerm_application_insights" "example" {
+  name                = "example-insights"
+  resource_group_name = azurerm_resource_group.example.name
+  location             = azurerm_resource_group.example.location
+  application_type     = "web"
+}
+
+# Crie um recurso de Key Vault
+resource "azurerm_key_vault" "example" {
+  name                = "example-vault"
+  resource_group_name = azurerm_resource_group.example.name
+  location             = azurerm_resource_group.example.location
+  sku_name            = "standard"
+}
+
+    

@@ -1,38 +1,32 @@
 
-    # Configure the Alibaba Cloud Provider
+      # Configure o provedor Alibaba Cloud
 provider "alicloud" {
-  region = "cn-hangzhou"
-  # Replace with your desired region
+  # Substitua as credenciais de acesso e região
+  access_key  = "AKIAXXXXXXXXXXXXXXXX"
+  secret_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  region      = "cn-hangzhou"
 }
 
-# Create a MaxCompute Project
-resource "alicloud_maxcompute_project" "main" {
-  name = "my-maxcompute-project"
-  # Replace with your desired project name
+# Crie um projeto MaxCompute
+resource "alicloud_odps_project" "example" {
+  name = "example-project"
 }
 
-# Create a MaxCompute Table
-resource "alicloud_maxcompute_table" "main" {
-  project_name = alicloud_maxcompute_project.main.name
-  name         = "my-maxcompute-table"
-  # Replace with your desired table name
-  # Define table schema
-  schema = <<EOF
-col1 string
-col2 int
-EOF
+# Crie um banco de dados MaxCompute
+resource "alicloud_odps_database" "example" {
+  name = "example_database"
+  project = alicloud_odps_project.example.id
 }
 
-# Create a MaxCompute Job
-resource "alicloud_maxcompute_job" "main" {
-  project_name = alicloud_maxcompute_project.main.name
-  name         = "my-maxcompute-job"
-  # Replace with your desired job name
-  type         = "sql"
-  # Define the SQL query to execute
-  sql = <<EOF
-SELECT * FROM my-maxcompute-table
-EOF
+# Crie uma tabela MaxCompute
+resource "alicloud_odps_table" "example" {
+  name = "example_table"
+  database = alicloud_odps_database.example.name
+  project = alicloud_odps_project.example.id
+  columns = <<EOF
+  {"name": "id", "type": "BIGINT", "comment": "ID"}
+  {"name": "name", "type": "STRING", "comment": "Nome"}
+  EOF
 }
 
-  
+    

@@ -1,0 +1,9 @@
+
+      // Crie um banco de dados MySQL
+# Aliyun CLI
+abs rds create-instance --engine MySQL --engine-version 5.7 --instance-type rds.mysql.t1.small --instance-charge-type Postpaid --storage 10 --connection-mode Public --security-group-ids sg-xxxxxxxx --db-name my_database --db-instance-class Basic --tags "Name=My MySQL Database"
+
+// Crie um usuário do banco de dados
+# Aliyun CLI
+abs rds create-account --db-instance-id i-xxxxxxxx --account-name my_user --account-password my_password --account-type Normal
+    

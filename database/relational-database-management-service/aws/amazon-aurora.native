@@ -1,0 +1,10 @@
+
+      // Crie um cluster Aurora MySQL
+aws rds create-db-cluster --db-cluster-identifier my-aurora-cluster --engine aurora-mysql --engine-version 5.7.mysql_aurora.2.06.1 --master-username admin --master-password password --database-name mydb
+
+// Crie um banco de dados no cluster Aurora
+aws rds create-db-instance --db-instance-identifier aurora-instance --db-name mydb --db-cluster-identifier my-aurora-cluster
+
+// Crie um endpoint para o cluster Aurora
+aws rds create-db-cluster-endpoint --db-cluster-endpoint-identifier my-aurora-endpoint --db-cluster-identifier my-aurora-cluster --endpoint-type READER --static-members aurora-instance
+    

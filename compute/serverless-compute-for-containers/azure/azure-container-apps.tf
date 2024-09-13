@@ -1,49 +1,34 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Para habilitar novas funcionalidades
 }
 
-# Create a Resource Group
+# Crie um grupo de recursos
 resource "azurerm_resource_group" "example" {
   name     = "example-rg"
   location = "westus2"
 }
 
-# Create a Container App
+# Crie um aplicativo de contêiner
 resource "azurerm_container_app" "example" {
   name                = "example-app"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
-  # Configure the Container App's environment
-  environment {
-    name              = "example-environment"
-    app_insights_key = "example-key"
-    managed_identity {
-      type = "systemAssigned"
-    }
-  }
-  # Configure the Container App's container
-  container {
-    name             = "example-container"
-    image            = "mcr.microsoft.com/azuredocs/containerapps/sample:v1"
-    replicas         = 1
-    resources {
-      requests {
-        memory = "1Gi"
-        cpu    = "1"
-      }
+  os                  = "linux"
+  revision_template {
+    containers {
+      name  = "my-app"
+      image = "mcr.microsoft.com/azuredocs/containerapps/sample"
     }
   }
 }
 
-# Create a Container App Revision
-resource "azurerm_container_app_revision" "example" {
-  name                = "example-revision"
+# Crie um registro de contêiner
+resource "azurerm_container_registry" "example" {
+  name                = "example-registry"
   resource_group_name = azurerm_resource_group.example.name
-  container_app_name = azurerm_container_app.example.name
-  environment_name   = azurerm_container_app.example.environment.name
-  image              = "mcr.microsoft.com/azuredocs/containerapps/sample:v1"
+  location            = azurerm_resource_group.example.location
+  sku                  = "Basic"
 }
-
-  
+    

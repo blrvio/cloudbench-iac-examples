@@ -1,33 +1,23 @@
 
-    # Configure the Azure Provider
+      # Configure o provedor do Azure
 provider "azurerm" {
-  features {} # Enable all features
+  features {} # Habilite as funcionalidades desejadas
 }
 
-# Create a Web PubSub service
+# Crie um recurso de Web PubSub
 resource "azurerm_web_pubsub" "example" {
-  name                = "my-webpubsub-service"
-  location            = "westus2"
-  resource_group_name = "my-resource-group"
-  # Optional settings
-  # sku                 = "Standard"
-  # capacity             = 1
+  name                = "example-webpubsub"
+  location            = "westus2" # Substitua pela sua região desejada
+  resource_group_name = "example-resource-group" # Substitua pelo nome do seu grupo de recursos
+  sku                 = "Free"
 }
 
-# Create a Web PubSub Hub
-resource "azurerm_web_pubsub_hub" "example" {
-  name                = "my-hub"
-  web_pubsub_name      = azurerm_web_pubsub.example.name
+# Crie um endpoint de Web PubSub
+resource "azurerm_web_pubsub_endpoint" "example" {
+  name                = "example-endpoint"
+  web_pubsub_name     = azurerm_web_pubsub.example.name
   resource_group_name = azurerm_web_pubsub.example.resource_group_name
-  # Optional settings
-  # event_handler_endpoint = "my-event-handler-endpoint"
+  location            = azurerm_web_pubsub.example.location
 }
 
-# Create a Web PubSub Connection string
-resource "azurerm_web_pubsub_connection_string" "example" {
-  name                = "my-connection-string"
-  web_pubsub_name      = azurerm_web_pubsub.example.name
-  resource_group_name = azurerm_web_pubsub.example.resource_group_name
-}
-
-  
+    

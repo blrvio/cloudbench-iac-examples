@@ -1,0 +1,13 @@
+
+      // Create a Cloud Guard Detector
+# ocid of the compartment in which you want to create the Cloud Guard detector
+compartment_id="ocid1.compartment.oc1..aaaaaaaaxxxxxxxxxx"
+# Create a Cloud Guard detector using the oclif CLI tool
+oci cloud-guard detector create --compartment-id $compartment_id --detector-name "MyDetector" --display-name "MyDetector" --enabled true --target-type "all" --target-details '{"target-types": ["all"]}' --ruleset-id 'ocid1.cloudguardruleset.oc1..aaaaaaaaxxxxxxxxxx' --detector-type "DEFAULT" --enabled-policy-count 5 --policy-violation-action '{"action": "NOTIFICATION"}' --policy-violation-actions '{"action": "NOTIFICATION"}' --recommended-actions '{"action": "NOTIFICATION"}'
+
+// Create a Cloud Guard policy
+# ocid of the Cloud Guard detector to which you want to add the Cloud Guard policy
+detector_id="ocid1.cloudguarddetector.oc1..aaaaaaaaxxxxxxxxxx"
+# Create a Cloud Guard policy using the oclif CLI tool
+oci cloud-guard policy create --detector-id $detector_id --policy-name "MyPolicy" --display-name "MyPolicy" --description "My Policy Description" --enabled true --policy-rule '{"rule-name": "MyRule", "rule-description": "My Rule Description", "match-type": "ANY", "rule-details": '{"rule-details": [{"rule-type": "INSTANCE_IAM_POLICY_MISSING", "rule-value": "{"service":"compute","action":"INSTANCE_LAUNCH","effect":"ALLOW"}'}]'}
+    

@@ -1,0 +1,13 @@
+
+      // Crie um banco de dados do Lake Formation
+aws lakeformation create-database --database-name my_database
+
+// Crie uma tabela do Lake Formation
+aws lakeformation create-table --database-name my_database --table-name my_table --table-type EXTERNAL --location s3://my-bucket/my-data/
+
+// Conceda permissões a um usuário para acessar o banco de dados
+aws lakeformation grant-permissions --principal "arn:aws:iam::123456789012:user/my_user" --resource "database:my_database" --permissions SELECT
+
+// Conceda permissões a um usuário para acessar a tabela
+aws lakeformation grant-permissions --principal "arn:aws:iam::123456789012:user/my_user" --resource "table:my_database.my_table" --permissions SELECT
+    

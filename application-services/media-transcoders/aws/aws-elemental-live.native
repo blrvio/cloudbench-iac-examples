@@ -1,0 +1,10 @@
+
+      // Crie um canal de transmissão ao vivo
+aws elemental-live create-channel --name my-channel --input-type RTMP # ... outras configurações
+
+// Crie um recurso de origem para o canal
+aws elemental-live create-source --channel-id my-channel-id --name my-source # ... outras configurações
+
+// Crie um ponto de acesso para o canal
+aws elemental-live create-channel-access --channel-id my-channel-id --access-type public # ... outras configurações
+    

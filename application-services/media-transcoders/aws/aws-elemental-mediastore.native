@@ -1,0 +1,10 @@
+
+      // Crie um container MediaStore
+aws mediastore create-container --container-name example
+
+// Crie um endpoint MediaStore
+aws mediastore create-endpoint --container-name example
+
+// Crie uma política de acesso MediaStore
+aws mediastore put-policy --container-name example --policy '{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Principal\": {\"AWS\": \"arn:aws:iam::123456789012:root\"}, \"Action\": [\"mediastore:PutObject\", \"mediastore:GetObject\", \"mediastore:ListObjects\"], \"Resource\": \"arn:aws:mediastore:us-east-1:123456789012:container/example/*\"}]}'
+    

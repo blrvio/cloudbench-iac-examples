@@ -1,0 +1,13 @@
+
+      // Criar um repositório
+gcloud artifacts repositories create my-repo --location=us-central1 --repository-format=DOCKER
+
+// Criar uma chave de serviço
+gcloud iam service-accounts create artifact-registry-sa --display-name="Artifact Registry Service Account"
+
+// Obter a chave de serviço e o ID do projeto
+gcloud iam service-accounts list
+
+// Adicionar permissões de leitor à chave de serviço
+gcloud artifacts repositories add-iam-policy-binding my-repo --member=serviceAccount:${google_service_account.default.email} --role=roles/artifactregistry.reader
+    

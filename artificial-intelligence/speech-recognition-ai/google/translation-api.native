@@ -1,0 +1,11 @@
+
+      // Autenticação no Google Cloud (pode ser feita por meio de uma chave de serviço ou credenciais de conta de serviço)
+
+// Traduzir um texto
+const text = 'Olá Mundo';
+const targetLanguage = 'en';
+const request = { text: text, targetLanguage: targetLanguage };
+
+const response = await translate.translateText(request);
+console.log('Texto traduzido:', response.data.translations[0].translatedText);
+    

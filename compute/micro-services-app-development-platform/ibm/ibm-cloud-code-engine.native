@@ -1,0 +1,11 @@
+
+      // Crie um namespace para o Code Engine
+ibmcloud ce namespace create my-namespace --location us-south
+
+// Crie um serviço Code Engine
+ibmcloud ce service create my-service --namespace my-namespace --runtime nodejs-16 --image us-docker.pkg.dev/cloudrun/container/nodejs --replicas 1 --timeout 120 --memory 1Gi
+
+// Crie um roteamento para o serviço Code Engine
+ibmcloud ce route create my-route --namespace my-namespace --service my-service --domain my-domain.com --path /
+
+    

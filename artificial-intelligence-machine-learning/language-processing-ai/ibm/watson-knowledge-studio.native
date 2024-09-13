@@ -1,0 +1,13 @@
+
+      # Crie um projeto do Watson Knowledge Studio
+ibmcloud ks project-create my-knowledge-studio-project --location us-south
+
+# Crie um conjunto de dados do Watson Knowledge Studio
+ibmcloud ks dataset-create my-knowledge-studio-dataset --project my-knowledge-studio-project
+
+# Crie um modelo de conhecimento do Watson Knowledge Studio
+ibmcloud ks model-create my-knowledge-studio-knowledge-model --dataset my-knowledge-studio-dataset --project my-knowledge-studio-project
+
+# Crie um endpoint do Watson Knowledge Studio
+ibmcloud ks endpoint-create my-knowledge-studio-endpoint --model my-knowledge-studio-knowledge-model --project my-knowledge-studio-project
+    

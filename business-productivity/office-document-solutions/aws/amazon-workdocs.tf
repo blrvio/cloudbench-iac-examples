@@ -1,35 +1,31 @@
 
-    # Configure the AWS provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1" # Substitua pela sua região desejada
 }
 
-# Create a WorkDocs user
-resource "aws_workdocs_user" "main" {
-  email_address = "john.doe@example.com"
-  # Optional fields
-  # user_name     = "johndoe"
-  # given_name    = "John"
-  # surname       = "Doe"
-  # role          = "USER"
-  # storage_rule  = "STANDARD"
-  # organization_id = aws_workdocs_organization.main.id
+# Crie um usuário do WorkDocs
+resource "aws_workdocs_user" "user" {
+  username = "user_name" # Substitua pelo nome de usuário desejado
+  password = "password" # Substitua pela senha desejada
+  storage_rule {
+    type = "STORAGE_LIMIT"
+    limit = 10240
+  }
 }
 
-# Create a WorkDocs organization
-resource "aws_workdocs_organization" "main" {
-  # Optional fields
-  # directory_id = "your_directory_id"
+# Crie uma pasta compartilhada
+resource "aws_workdocs_folder" "shared_folder" {
+  name           = "Shared Folder"
+  parent_folder_id = aws_workdocs_folder.root_folder.id
+  permissions {
+    type = "SHARED"
+    principals = [aws_workdocs_user.user.id]
+  }
 }
 
-# Create a WorkDocs folder
-resource "aws_workdocs_folder" "main" {
-  name     = "My Folder"
-  parent_id = "root"
-  # Optional fields
-  # storage_rule = "STANDARD"
-  # organization_id = aws_workdocs_organization.main.id
-  # user_id       = aws_workdocs_user.main.id
+# Crie uma pasta raiz
+resource "aws_workdocs_folder" "root_folder" {
+  name = "Root Folder"
 }
-
-  
+    

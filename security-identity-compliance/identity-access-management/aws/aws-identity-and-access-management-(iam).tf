@@ -1,60 +1,38 @@
 
-    # Configure the AWS Provider
+      # Configure o provedor AWS
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = "us-east-1"
 }
 
-# Create an IAM User
-resource "aws_iam_user" "main" {
-  name = "my-iam-user" # Name of the IAM user
+# Crie um usuário IAM
+resource "aws_iam_user" "example" {
+  name = "example-user"
 }
 
-# Create an IAM Policy
-resource "aws_iam_policy" "main" {
-  name = "my-iam-policy" # Name of the IAM policy
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "s3:*"
-        ],
-        "Resource": [
-          "arn:aws:s3:::my-s3-bucket/*"
-        ]
-      }
-    ]
-  })
+# Crie uma política IAM
+resource "aws_iam_policy" "admin_policy" {
+  name = "admin_policy"
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+POLICY
 }
 
-# Attach the IAM Policy to the IAM User
-resource "aws_iam_user_policy_attachment" "main" {
-  user      = aws_iam_user.main.name
-  policy_arn = aws_iam_policy.main.arn
+# Anexe a política ao usuário
+resource "aws_iam_user_policy" "admin_policy_attachment" {
+  user = aws_iam_user.example.name
+  policy_arn = aws_iam_policy.admin_policy.arn
 }
-
-# Create an IAM Role
-resource "aws_iam_role" "main" {
-  name = "my-iam-role" # Name of the IAM role
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-# Attach the IAM Policy to the IAM Role
-resource "aws_iam_role_policy_attachment" "main" {
-  role       = aws_iam_role.main.name
-  policy_arn = aws_iam_policy.main.arn
-}
-
-  
+    

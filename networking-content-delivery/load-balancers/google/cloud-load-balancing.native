@@ -1,0 +1,8 @@
+
+      // Código nativo para configurar o balanceador de carga (substitua pelo código do provedor específico)
+// Crie um balanceador de carga
+// Crie um listener para o balanceador de carga
+// Crie um pool de instâncias para o balanceador de carga
+// Adicione instâncias ao pool de instâncias
+// Crie uma regra para o listener
+    

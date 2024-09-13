@@ -1,0 +1,7 @@
+
+      // Crie um projeto CodeStar
+aws codestar create-project --name my-project --source-code-type GitHub --source-code-connection-arn arn:aws:codestar-connections:us-east-1:xxxxxxxxxxxx:connection:xxxxxxxxxxxx --source-code-repository-url https://github.com/example/my-repo --source-code-branch master --template-name aws-sam-quickstart
+
+// Crie um pipeline CodePipeline
+aws codepipeline create-pipeline --name my-pipeline --role-arn arn:aws:iam::xxxxxxxxxxxx:role/CodeStar-xxxxxxxxxxxx --artifact-store-type S3 --artifact-store-location codestar-artifacts-xxxxxxxxxxxx --stages '[{"name": "Source", "actions": [{"name": "Source", "actionType": {"owner": "AWS", "category": "Source", "version": "1", "provider": "GitHub"}, "configuration": {"Owner": "GitHub", "Repo": "my-repo", "Branch": "master"}}]}, {"name": "Build", "actions": [{"name": "Build", "actionType": {"owner": "AWS", "category": "Build", "version": "1", "provider": "CodeBuild"}, "configuration": {"ProjectName": "my-build-project"}}]}, {"name": "Deploy", "actions": [{"name": "Deploy", "actionType": {"owner": "AWS", "category": "Deploy", "version": "1", "provider": "CloudFormation"}, "configuration": {"StackName": "my-stack", "TemplatePath": "s3://my-bucket/my-template.yaml", "Capabilities": ["CAPABILITY_IAM"]}}]}]'
+    
